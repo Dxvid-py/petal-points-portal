@@ -1,4 +1,4 @@
-import { Link, useLocation } from "@tanstack/react-router";
+import { Link, useLocation } from "react-router-dom";
 import {
   LayoutDashboard,
   User,
@@ -11,7 +11,7 @@ import { Logo } from "@/components/Logo";
 import { Avatar } from "./Avatar";
 
 type NavItem = {
-  to: "/dashboard" | "/dashboard/perfil" | "/dashboard/recompensas" | "/dashboard/compras" | "/dashboard/soporte";
+  to: string;
   label: string;
   icon: typeof LayoutDashboard;
   exact?: boolean;
@@ -38,18 +38,12 @@ export function DashboardSidebar() {
         <div className="flex items-center gap-3">
           <Avatar name="Angie Restrepo" size="md" ring />
           <div className="min-w-0 leading-tight">
-            <p className="truncate text-sm font-medium text-sidebar-foreground">
-              Angie Restrepo
-            </p>
-            <p className="text-[10px] uppercase tracking-[0.22em] text-gold">
-              ✦ Nivel Oro
-            </p>
+            <p className="truncate text-sm font-medium text-sidebar-foreground">Angie Restrepo</p>
+            <p className="text-[10px] uppercase tracking-[0.22em] text-gold">✦ Nivel Oro</p>
           </div>
         </div>
         <div className="mt-3 flex items-baseline justify-between border-t border-sidebar-border/60 pt-3">
-          <span className="text-[10px] uppercase tracking-[0.22em] text-sidebar-foreground/50">
-            Balance
-          </span>
+          <span className="text-[10px] uppercase tracking-[0.22em] text-sidebar-foreground/50">Balance</span>
           <span className="font-serif text-base font-semibold text-sidebar-foreground">
             1.250 <span className="text-xs font-normal text-sidebar-foreground/60">pts</span>
           </span>

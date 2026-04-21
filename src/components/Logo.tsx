@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link } from "react-router-dom";
 
 interface LogoProps {
   to?: string;
@@ -16,7 +16,14 @@ export function Logo({ to = "/", variant = "default" }: LogoProps) {
             : "border-foreground/15 bg-card text-primary"
         }`}
       >
-        <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+        <svg
+          viewBox="0 0 24 24"
+          className="h-5 w-5"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+        >
           <path d="M12 3c2.5 3 4 6 4 9a4 4 0 0 1-8 0c0-3 1.5-6 4-9z" />
           <path d="M12 13v8" />
           <path d="M9 18c1.5 1 4.5 1 6 0" />

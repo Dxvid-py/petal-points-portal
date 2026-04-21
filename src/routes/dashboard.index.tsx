@@ -1,4 +1,5 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import {
   ArrowUpRight,
   Flower2,
@@ -14,75 +15,26 @@ import rewardWorkshop from "@/assets/reward-workshop.jpg";
 import rewardGiftcard from "@/assets/reward-giftcard.jpg";
 import rewardDiscount from "@/assets/reward-discount.jpg";
 
-export const Route = createFileRoute("/dashboard/")({
-  head: () => ({
-    meta: [
-      { title: "Mi Atelier — Botanique Luxe" },
-      {
-        name: "description",
-        content:
-          "Tu balance, recompensas y movimientos del Club Botanique Luxe.",
-      },
-    ],
-  }),
-  component: DashboardHome,
-});
-
 const activity = [
-  {
-    icon: ShoppingBag,
-    title: "Ramo silvestre",
-    meta: "Tienda · Hace 2 días",
-    delta: "+150",
-    positive: true,
-  },
-  {
-    icon: Gift,
-    title: "Canje envío gratis",
-    meta: "Recompensa · 12 Oct",
-    delta: "−500",
-    positive: false,
-  },
-  {
-    icon: Award,
-    title: "Bono aniversario",
-    meta: "Promo · 01 Oct",
-    delta: "+100",
-    positive: true,
-  },
-  {
-    icon: ShoppingBag,
-    title: "Centro de mesa otoñal",
-    meta: "Tienda · 24 Sep",
-    delta: "+220",
-    positive: true,
-  },
+  { icon: ShoppingBag, title: "Ramo silvestre", meta: "Tienda · Hace 2 días", delta: "+150", positive: true },
+  { icon: Gift, title: "Canje envío gratis", meta: "Recompensa · 12 Oct", delta: "−500", positive: false },
+  { icon: Award, title: "Bono aniversario", meta: "Promo · 01 Oct", delta: "+100", positive: true },
+  { icon: ShoppingBag, title: "Centro de mesa otoñal", meta: "Tienda · 24 Sep", delta: "+220", positive: true },
 ];
 
 const featured = [
-  {
-    image: rewardDiscount,
-    title: "15% en tu próximo ramo",
-    points: 400,
-    badge: "Popular",
-  },
-  {
-    image: rewardWorkshop,
-    title: "Taller botánico privado",
-    points: 1200,
-    badge: "Edición limitada",
-  },
-  {
-    image: rewardGiftcard,
-    title: "Tarjeta regalo con sello",
-    points: 800,
-    badge: "Nuevo",
-  },
+  { image: rewardDiscount, title: "15% en tu próximo ramo", points: 400, badge: "Popular" },
+  { image: rewardWorkshop, title: "Taller botánico privado", points: 1200, badge: "Edición limitada" },
+  { image: rewardGiftcard, title: "Tarjeta regalo con sello", points: 800, badge: "Nuevo" },
 ];
 
-function DashboardHome() {
+export default function DashboardHome() {
   return (
     <div className="flex flex-col gap-10">
+      <Helmet>
+        <title>Mi Atelier — Botanique Luxe</title>
+        <meta name="description" content="Tu balance, recompensas y movimientos del Club Botanique Luxe." />
+      </Helmet>
       <PageHeader
         eyebrow="Mi atelier"
         title={
@@ -94,10 +46,8 @@ function DashboardHome() {
         description="Llevas 1.250 puntos acumulados — estás a 250 de tu próxima recompensa de Nivel Oro."
       />
 
-      {/* Hero balance — editorial split card */}
       <section className="grid gap-6 lg:grid-cols-5">
         <div className="relative overflow-hidden rounded-3xl bg-gradient-ink p-8 text-primary-foreground shadow-ink lg:col-span-3 md:p-10">
-          {/* Decorative botanical illustration */}
           <svg
             className="pointer-events-none absolute -right-8 -top-8 h-72 w-72 text-primary-foreground/[0.06]"
             viewBox="0 0 200 200"
@@ -135,27 +85,18 @@ function DashboardHome() {
             <div className="mt-10 max-w-md">
               <div className="flex items-end justify-between text-xs uppercase tracking-[0.22em]">
                 <span className="text-primary-foreground/60">Progreso a Platino</span>
-                <span className="font-serif text-base normal-case tracking-normal text-gold">
-                  83%
-                </span>
+                <span className="font-serif text-base normal-case tracking-normal text-gold">83%</span>
               </div>
               <div className="mt-3 h-[3px] overflow-hidden rounded-full bg-primary-foreground/10">
-                <div
-                  className="h-full rounded-full bg-gradient-terracotta"
-                  style={{ width: "83%" }}
-                />
+                <div className="h-full rounded-full bg-gradient-terracotta" style={{ width: "83%" }} />
               </div>
               <p className="mt-3 text-sm text-primary-foreground/70">
-                Te faltan <span className="text-primary-foreground">250 puntos</span>{" "}
-                para desbloquear un ramo cortesía.
+                Te faltan <span className="text-primary-foreground">250 puntos</span> para desbloquear un ramo cortesía.
               </p>
             </div>
 
             <div className="mt-10 flex flex-wrap gap-3">
-              <Button
-                asChild
-                className="rounded-full bg-terracotta px-6 text-terracotta-foreground hover:bg-terracotta/90"
-              >
+              <Button asChild className="rounded-full bg-terracotta px-6 text-terracotta-foreground hover:bg-terracotta/90">
                 <Link to="/dashboard/recompensas">
                   Canjear puntos
                   <ArrowUpRight className="ml-1 h-4 w-4" />
@@ -172,16 +113,11 @@ function DashboardHome() {
           </div>
         </div>
 
-        {/* Quick stats column */}
         <div className="grid gap-4 lg:col-span-2">
           <article className="flex items-start justify-between rounded-3xl border border-border bg-card p-6 shadow-soft">
             <div>
-              <p className="text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
-                Compras del año
-              </p>
-              <p className="mt-3 font-serif text-4xl font-semibold text-foreground">
-                14
-              </p>
+              <p className="text-[10px] uppercase tracking-[0.24em] text-muted-foreground">Compras del año</p>
+              <p className="mt-3 font-serif text-4xl font-semibold text-foreground">14</p>
               <p className="mt-1 text-xs text-muted-foreground">+3 este trimestre</p>
             </div>
             <span className="flex h-11 w-11 items-center justify-center rounded-full bg-primary-soft text-forest">
@@ -190,12 +126,8 @@ function DashboardHome() {
           </article>
           <article className="flex items-start justify-between rounded-3xl border border-border bg-card p-6 shadow-soft">
             <div>
-              <p className="text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
-                Recompensas canjeadas
-              </p>
-              <p className="mt-3 font-serif text-4xl font-semibold text-foreground">
-                7
-              </p>
+              <p className="text-[10px] uppercase tracking-[0.24em] text-muted-foreground">Recompensas canjeadas</p>
+              <p className="mt-3 font-serif text-4xl font-semibold text-foreground">7</p>
               <p className="mt-1 text-xs text-muted-foreground">2 disponibles ahora</p>
             </div>
             <span className="flex h-11 w-11 items-center justify-center rounded-full bg-blush text-blush-foreground">
@@ -204,12 +136,8 @@ function DashboardHome() {
           </article>
           <article className="flex items-start justify-between rounded-3xl border border-border bg-card p-6 shadow-soft">
             <div>
-              <p className="text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
-                Próximo evento
-              </p>
-              <p className="mt-3 font-serif text-2xl font-semibold leading-tight text-foreground">
-                Taller de peonías
-              </p>
+              <p className="text-[10px] uppercase tracking-[0.24em] text-muted-foreground">Próximo evento</p>
+              <p className="mt-3 font-serif text-2xl font-semibold leading-tight text-foreground">Taller de peonías</p>
               <p className="mt-1 text-xs text-muted-foreground">28 Oct · 6:00pm</p>
             </div>
             <span className="flex h-11 w-11 items-center justify-center rounded-full bg-gold/30 text-gold-foreground">
@@ -219,13 +147,10 @@ function DashboardHome() {
         </div>
       </section>
 
-      {/* Featured rewards — editorial row */}
       <section>
         <div className="flex items-end justify-between">
           <div>
-            <p className="text-[10px] uppercase tracking-[0.32em] text-terracotta">
-              Selección del atelier
-            </p>
+            <p className="text-[10px] uppercase tracking-[0.32em] text-terracotta">Selección del atelier</p>
             <h2 className="mt-2 font-serif text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
               Recompensas <em className="italic">para ti</em>
             </h2>
@@ -258,9 +183,7 @@ function DashboardHome() {
                 </span>
               </div>
               <div className="p-5">
-                <h3 className="font-serif text-lg font-semibold leading-tight text-foreground">
-                  {r.title}
-                </h3>
+                <h3 className="font-serif text-lg font-semibold leading-tight text-foreground">{r.title}</h3>
                 <div className="mt-3 flex items-center justify-between border-t border-border/60 pt-3">
                   <span className="text-sm text-muted-foreground">
                     <span className="font-serif text-base font-semibold text-foreground">
@@ -281,22 +204,14 @@ function DashboardHome() {
         </div>
       </section>
 
-      {/* Activity feed */}
       <section className="grid gap-6 lg:grid-cols-3">
         <div className="rounded-3xl border border-border bg-card p-6 shadow-soft lg:col-span-2">
           <div className="flex items-baseline justify-between">
             <div>
-              <p className="text-[10px] uppercase tracking-[0.24em] text-terracotta">
-                Movimiento
-              </p>
-              <h3 className="mt-1 font-serif text-2xl font-semibold text-foreground">
-                Actividad reciente
-              </h3>
+              <p className="text-[10px] uppercase tracking-[0.24em] text-terracotta">Movimiento</p>
+              <h3 className="mt-1 font-serif text-2xl font-semibold text-foreground">Actividad reciente</h3>
             </div>
-            <Link
-              to="/dashboard/compras"
-              className="text-xs text-muted-foreground hover:text-foreground"
-            >
+            <Link to="/dashboard/compras" className="text-xs text-muted-foreground hover:text-foreground">
               Historial completo →
             </Link>
           </div>
@@ -326,12 +241,8 @@ function DashboardHome() {
         >
           <Flower2 className="h-8 w-8 opacity-80" strokeWidth={1.5} />
           <div>
-            <p className="text-[10px] uppercase tracking-[0.24em] text-terracotta-foreground/70">
-              Casi llegas
-            </p>
-            <p className="mt-3 font-serif text-3xl font-semibold leading-tight">
-              250 puntos
-            </p>
+            <p className="text-[10px] uppercase tracking-[0.24em] text-terracotta-foreground/70">Casi llegas</p>
+            <p className="mt-3 font-serif text-3xl font-semibold leading-tight">250 puntos</p>
             <p className="mt-1 text-sm text-terracotta-foreground/85">
               te separan de un ramo cortesía hecho a mano por el atelier.
             </p>
