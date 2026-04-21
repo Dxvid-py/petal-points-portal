@@ -47,9 +47,9 @@ function ProfilePage() {
           <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-soft">
             <div className="bg-gradient-ink h-28" />
             <div className="-mt-12 flex flex-col items-center px-6 pb-6 text-center">
-              <Avatar name="Ana Restrepo" size="xl" ring />
+              <Avatar name="Angie Restrepo" size="xl" ring />
               <h2 className="mt-4 font-serif text-2xl font-semibold text-foreground">
-                Ana Restrepo
+                Angie Restrepo
               </h2>
               <p className="mt-1 text-xs uppercase tracking-[0.22em] text-gold-foreground">
                 ✦ Nivel Oro · 1.250 pts
@@ -133,7 +133,7 @@ function ProfilePage() {
             <div className="grid gap-5 md:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="firstName">Nombre</Label>
-                <Input id="firstName" defaultValue="Ana María" />
+                <Input id="firstName" defaultValue="Angie María" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="lastName">Apellidos</Label>
@@ -144,7 +144,7 @@ function ProfilePage() {
                   <Mail className="mr-1.5 inline h-3 w-3" />
                   Correo
                 </Label>
-                <Input id="email" type="email" defaultValue="ana.restrepo@correo.co" />
+                <Input id="email" type="email" defaultValue="angie.restrepo@correo.co" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="phone">
@@ -165,7 +165,7 @@ function ProfilePage() {
                   <MapPin className="mr-1.5 inline h-3 w-3" />
                   Ciudad
                 </Label>
-                <Input id="address" defaultValue="Bogotá, Colombia" />
+                <Input id="address" defaultValue="Barranquilla, Colombia" />
               </div>
             </div>
 
@@ -243,7 +243,7 @@ function ProfilePage() {
                   Seguridad de la cuenta
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  Última sesión: hoy · Bogotá
+                  Última sesión: hoy · Barranquilla
                 </p>
               </div>
             </div>

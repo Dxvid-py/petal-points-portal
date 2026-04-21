@@ -4,6 +4,9 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { Button } from "@/components/ui/button";
 import heroImg from "@/assets/hero-flowers.jpg";
+import serviceIglesia from "@/assets/service-iglesia.jpg";
+import serviceEventos from "@/assets/service-eventos.jpg";
+import serviceLocal from "@/assets/service-local.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -12,7 +15,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Floristería premium en Bogotá. Arreglos de autor, decoración de eventos y un club de puntos exclusivo para nuestros clientes.",
+          "Floristería premium en Barranquilla. Arreglos de autor, decoración de eventos y un club de puntos exclusivo para nuestros clientes.",
       },
       { property: "og:title", content: "Botanique Luxe — Atelier Floral" },
       {
@@ -29,18 +32,21 @@ export const Route = createFileRoute("/")({
 const services = [
   {
     icon: Heart,
+    image: serviceIglesia,
     title: "Decoración de Iglesias",
     description:
       "Ambientes ceremoniales con arreglos de altar, pasillos y bancas. Composiciones a medida para bodas y bautizos.",
   },
   {
     icon: Sparkles,
+    image: serviceEventos,
     title: "Eventos & Banquetes",
     description:
       "Centros de mesa, arcos florales e instalaciones inmersivas para eventos corporativos y celebraciones íntimas.",
   },
   {
     icon: Store,
+    image: serviceLocal,
     title: "Venta en Local",
     description:
       "Visita nuestro atelier y descubre arreglos frescos del día, plantas de interior y obsequios botánicos.",
@@ -153,17 +159,29 @@ function LandingPage() {
             {services.map((service) => (
               <article
                 key={service.title}
-                className="group flex flex-col rounded-3xl border border-border/60 bg-card p-8 shadow-soft transition-all hover:-translate-y-1 hover:border-primary/30 hover:shadow-card"
+                className="group flex flex-col overflow-hidden rounded-3xl border border-border/60 bg-card shadow-soft transition-all hover:-translate-y-1 hover:border-primary/30 hover:shadow-card"
               >
-                <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary-soft text-forest transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
-                  <service.icon className="h-5 w-5" strokeWidth={2} />
-                </span>
-                <h3 className="mt-6 font-serif text-2xl font-semibold text-foreground">
-                  {service.title}
-                </h3>
-                <p className="mt-3 flex-1 text-sm leading-relaxed text-muted-foreground">
-                  {service.description}
-                </p>
+                <div className="aspect-[4/3] overflow-hidden bg-muted">
+                  <img
+                    src={service.image}
+                    alt={service.title}
+                    loading="lazy"
+                    width={512}
+                    height={384}
+                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                </div>
+                <div className="flex flex-1 flex-col p-7">
+                  <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary-soft text-forest transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+                    <service.icon className="h-5 w-5" strokeWidth={2} />
+                  </span>
+                  <h3 className="mt-5 font-serif text-2xl font-semibold text-foreground">
+                    {service.title}
+                  </h3>
+                  <p className="mt-3 flex-1 text-sm leading-relaxed text-muted-foreground">
+                    {service.description}
+                  </p>
+                </div>
               </article>
             ))}
           </div>
@@ -172,24 +190,34 @@ function LandingPage() {
 
       {/* CTA */}
       <section className="px-6 pb-24 lg:px-10">
-        <div className="mx-auto max-w-7xl overflow-hidden rounded-3xl bg-gradient-sage p-12 text-center text-primary-foreground md:p-20">
-          <h2 className="mx-auto max-w-2xl font-serif text-4xl font-semibold md:text-5xl">
-            Únete al Club de Puntos
-          </h2>
-          <p className="mx-auto mt-4 max-w-xl text-primary-foreground/85">
-            Cada compra te acerca a recompensas únicas: arreglos sorpresa, talleres
-            exclusivos y envíos cortesía.
-          </p>
-          <Button
-            asChild
-            size="lg"
-            className="mt-8 rounded-full bg-primary-foreground px-8 text-forest hover:bg-primary-foreground/90"
-          >
-            <Link to="/dashboard">
-              Acceder a mi cuenta
-              <ArrowRight className="ml-1 h-4 w-4" />
-            </Link>
-          </Button>
+        <div className="relative mx-auto max-w-7xl overflow-hidden rounded-3xl bg-gradient-ink p-12 text-center text-primary-foreground md:p-20">
+          {/* decorative blobs */}
+          <div className="pointer-events-none absolute -left-20 -top-20 h-64 w-64 rounded-full bg-primary-foreground/10 blur-3xl" />
+          <div className="pointer-events-none absolute -right-16 -bottom-16 h-72 w-72 rounded-full bg-terracotta/30 blur-3xl" />
+
+          <div className="relative">
+            <span className="inline-flex items-center gap-2 rounded-full border border-primary-foreground/25 bg-primary-foreground/10 px-4 py-1.5 text-[10px] font-medium uppercase tracking-[0.24em] text-primary-foreground/90 backdrop-blur">
+              <Sparkles className="h-3 w-3" />
+              Club de Puntos
+            </span>
+            <h2 className="mx-auto mt-6 max-w-2xl font-serif text-4xl font-semibold leading-tight text-primary-foreground md:text-5xl">
+              Únete al club y celebra <em className="italic">con flores.</em>
+            </h2>
+            <p className="mx-auto mt-5 max-w-xl text-base text-primary-foreground/85 md:text-lg">
+              Cada compra te acerca a recompensas únicas: arreglos sorpresa, talleres
+              exclusivos y envíos cortesía.
+            </p>
+            <Button
+              asChild
+              size="lg"
+              className="mt-9 rounded-full bg-primary-foreground px-8 text-primary hover:bg-primary-foreground/90"
+            >
+              <Link to="/dashboard">
+                Acceder a mi cuenta
+                <ArrowRight className="ml-1 h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
         </div>
       </section>
 

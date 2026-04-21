@@ -35,7 +35,7 @@ export function Logo({ to = "/", variant = "default" }: LogoProps) {
             isLight ? "text-sidebar-foreground/50" : "text-muted-foreground"
           }`}
         >
-          Atelier · Bogotá
+          Atelier · Barranquilla
         </span>
       </span>
     </Link>

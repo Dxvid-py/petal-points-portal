@@ -36,10 +36,10 @@ export function DashboardSidebar() {
 
       <div className="mx-6 mb-6 rounded-2xl border border-sidebar-border bg-sidebar-accent/40 p-4">
         <div className="flex items-center gap-3">
-          <Avatar name="Ana Restrepo" size="md" ring />
+          <Avatar name="Angie Restrepo" size="md" ring />
           <div className="min-w-0 leading-tight">
             <p className="truncate text-sm font-medium text-sidebar-foreground">
-              Ana Restrepo
+              Angie Restrepo
             </p>
             <p className="text-[10px] uppercase tracking-[0.22em] text-gold">
               ✦ Nivel Oro
