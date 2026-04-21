@@ -87,7 +87,7 @@ function DashboardHome() {
         eyebrow="Mi atelier"
         title={
           <>
-            Hola, <em className="italic">Ana</em>.<br />
+            Hola, <em className="italic">Angie</em>.<br />
             Tus flores te esperan.
           </>
         }
