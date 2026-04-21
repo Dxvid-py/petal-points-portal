@@ -1,5 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
+import { Helmet } from "react-helmet-async";
 import {
   MessageCircle,
   Phone,
@@ -23,68 +23,21 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/dashboard/soporte")({
-  head: () => ({
-    meta: [
-      { title: "Soporte — Botanique Luxe" },
-      {
-        name: "description",
-        content:
-          "Atención personalizada del Club Botanique Luxe. Habla con el atelier.",
-      },
-    ],
-  }),
-  component: SupportPage,
-});
-
 const channels = [
-  {
-    icon: MessageCircle,
-    label: "Chat con el atelier",
-    desc: "Respondemos en menos de 5 minutos",
-    detail: "Lun a Sáb · 9am – 7pm",
-    accent: "bg-gradient-ink text-primary-foreground",
-  },
-  {
-    icon: Phone,
-    label: "Línea directa",
-    desc: "+57 (1) 555 0188",
-    detail: "Atención 24/7 para urgencias",
-    accent: "bg-gradient-terracotta text-terracotta-foreground",
-  },
-  {
-    icon: Mail,
-    label: "Correo concierge",
-    desc: "atelier@botaniqueluxe.co",
-    detail: "Respuesta en 24h hábiles",
-    accent: "bg-blush text-blush-foreground",
-  },
+  { icon: MessageCircle, label: "Chat con el atelier", desc: "Respondemos en menos de 5 minutos", detail: "Lun a Sáb · 9am – 7pm", accent: "bg-gradient-ink text-primary-foreground" },
+  { icon: Phone, label: "Línea directa", desc: "+57 (1) 555 0188", detail: "Atención 24/7 para urgencias", accent: "bg-gradient-terracotta text-terracotta-foreground" },
+  { icon: Mail, label: "Correo concierge", desc: "atelier@botaniqueluxe.co", detail: "Respuesta en 24h hábiles", accent: "bg-blush text-blush-foreground" },
 ];
 
 const faqs = [
-  {
-    q: "¿Cómo gano puntos en el club?",
-    a: "Por cada $1.000 COP de compra recibes 1 punto. Además, ganas bonos por aniversario, cumpleaños, referidos y compras en colecciones especiales.",
-  },
-  {
-    q: "¿Los puntos vencen?",
-    a: "Tus puntos tienen una vigencia de 18 meses desde la última compra activa. Te avisaremos por correo 30 días antes de cualquier expiración.",
-  },
-  {
-    q: "¿Cómo subo de nivel?",
-    a: "Los niveles se alcanzan al acumular puntos: Pétalo (0), Jardín (500), Oro (1.000) y Platino (2.500). Tu nivel se renueva cada 12 meses.",
-  },
-  {
-    q: "¿Puedo regalar mis puntos?",
-    a: "Sí. Desde tu perfil puedes transferir hasta el 30% de tu balance a otra cuenta del club, una vez cada trimestre.",
-  },
-  {
-    q: "¿Cómo canjeo una recompensa?",
-    a: "Entra a la sección Recompensas, elige tu favorita y haz clic en Canjear. Recibirás un correo con tu código y las instrucciones de uso.",
-  },
+  { q: "¿Cómo gano puntos en el club?", a: "Por cada $1.000 COP de compra recibes 1 punto. Además, ganas bonos por aniversario, cumpleaños, referidos y compras en colecciones especiales." },
+  { q: "¿Los puntos vencen?", a: "Tus puntos tienen una vigencia de 18 meses desde la última compra activa. Te avisaremos por correo 30 días antes de cualquier expiración." },
+  { q: "¿Cómo subo de nivel?", a: "Los niveles se alcanzan al acumular puntos: Pétalo (0), Jardín (500), Oro (1.000) y Platino (2.500). Tu nivel se renueva cada 12 meses." },
+  { q: "¿Puedo regalar mis puntos?", a: "Sí. Desde tu perfil puedes transferir hasta el 30% de tu balance a otra cuenta del club, una vez cada trimestre." },
+  { q: "¿Cómo canjeo una recompensa?", a: "Entra a la sección Recompensas, elige tu favorita y haz clic en Canjear. Recibirás un correo con tu código y las instrucciones de uso." },
 ];
 
-function SupportPage() {
+export default function SupportPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [form, setForm] = useState({ subject: "", topic: "", message: "" });
 
@@ -102,6 +55,10 @@ function SupportPage() {
 
   return (
     <div className="flex flex-col gap-10">
+      <Helmet>
+        <title>Soporte — Botanique Luxe</title>
+        <meta name="description" content="Atención personalizada del Club Botanique Luxe. Habla con el atelier." />
+      </Helmet>
       <PageHeader
         eyebrow="Soporte"
         title={
@@ -112,7 +69,6 @@ function SupportPage() {
         description="Nuestro equipo concierge está listo para ayudarte con tu cuenta, pedidos y experiencias."
       />
 
-      {/* Channels */}
       <section className="grid gap-4 md:grid-cols-3">
         {channels.map((c) => (
           <article
@@ -121,12 +77,8 @@ function SupportPage() {
           >
             <c.icon className="h-7 w-7 opacity-80" strokeWidth={1.5} />
             <div>
-              <p className="text-[10px] uppercase tracking-[0.24em] opacity-70">
-                {c.detail}
-              </p>
-              <p className="mt-2 font-serif text-2xl font-semibold leading-tight">
-                {c.label}
-              </p>
+              <p className="text-[10px] uppercase tracking-[0.24em] opacity-70">{c.detail}</p>
+              <p className="mt-2 font-serif text-2xl font-semibold leading-tight">{c.label}</p>
               <p className="mt-1 text-sm opacity-85">{c.desc}</p>
             </div>
           </article>
@@ -134,20 +86,14 @@ function SupportPage() {
       </section>
 
       <div className="grid gap-6 lg:grid-cols-5">
-        {/* Contact form */}
         <section className="lg:col-span-3">
-          <form
-            onSubmit={handleSubmit}
-            className="rounded-3xl border border-border bg-card p-7 shadow-soft"
-          >
+          <form onSubmit={handleSubmit} className="rounded-3xl border border-border bg-card p-7 shadow-soft">
             <div className="flex items-start gap-3">
               <span className="flex h-10 w-10 items-center justify-center rounded-full bg-terracotta/15 text-terracotta">
                 <Send className="h-4 w-4" strokeWidth={1.75} />
               </span>
               <div>
-                <h3 className="font-serif text-2xl font-semibold text-foreground">
-                  Escríbenos
-                </h3>
+                <h3 className="font-serif text-2xl font-semibold text-foreground">Escríbenos</h3>
                 <p className="mt-1 text-sm text-muted-foreground">
                   Cuéntanos en detalle y te conectamos con el especialista correcto.
                 </p>
@@ -167,10 +113,7 @@ function SupportPage() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="topic">Tema</Label>
-                <Select
-                  value={form.topic}
-                  onValueChange={(v) => setForm({ ...form, topic: v })}
-                >
+                <Select value={form.topic} onValueChange={(v) => setForm({ ...form, topic: v })}>
                   <SelectTrigger id="topic">
                     <SelectValue placeholder="Selecciona un tema" />
                   </SelectTrigger>
@@ -193,9 +136,7 @@ function SupportPage() {
                   onChange={(e) => setForm({ ...form, message: e.target.value })}
                   placeholder="Cuéntanos cómo podemos ayudarte…"
                 />
-                <p className="text-right text-[10px] text-muted-foreground">
-                  {form.message.length}/1000
-                </p>
+                <p className="text-right text-[10px] text-muted-foreground">{form.message.length}/1000</p>
               </div>
             </div>
 
@@ -204,10 +145,7 @@ function SupportPage() {
                 <Clock className="mr-1 inline h-3 w-3" />
                 Tiempo de respuesta promedio: 4 horas
               </p>
-              <Button
-                type="submit"
-                className="rounded-full bg-ink px-6 text-ink-foreground hover:bg-ink/90"
-              >
+              <Button type="submit" className="rounded-full bg-ink px-6 text-ink-foreground hover:bg-ink/90">
                 Enviar mensaje
                 <Send className="ml-1 h-4 w-4" />
               </Button>
@@ -215,15 +153,10 @@ function SupportPage() {
           </form>
         </section>
 
-        {/* FAQ */}
         <section className="lg:col-span-2">
           <div className="rounded-3xl border border-border bg-card p-7 shadow-soft">
-            <p className="text-[10px] uppercase tracking-[0.24em] text-terracotta">
-              Respuestas rápidas
-            </p>
-            <h3 className="mt-1 font-serif text-2xl font-semibold text-foreground">
-              Preguntas frecuentes
-            </h3>
+            <p className="text-[10px] uppercase tracking-[0.24em] text-terracotta">Respuestas rápidas</p>
+            <h3 className="mt-1 font-serif text-2xl font-semibold text-foreground">Preguntas frecuentes</h3>
 
             <ul className="mt-6 space-y-1">
               {faqs.map((f, i) => {
@@ -235,20 +168,12 @@ function SupportPage() {
                       onClick={() => setOpenFaq(isOpen ? null : i)}
                       className="flex w-full items-center justify-between gap-3 py-4 text-left"
                     >
-                      <span className="text-sm font-medium text-foreground">
-                        {f.q}
-                      </span>
+                      <span className="text-sm font-medium text-foreground">{f.q}</span>
                       <ChevronDown
-                        className={`h-4 w-4 shrink-0 text-muted-foreground transition-transform ${
-                          isOpen ? "rotate-180" : ""
-                        }`}
+                        className={`h-4 w-4 shrink-0 text-muted-foreground transition-transform ${isOpen ? "rotate-180" : ""}`}
                       />
                     </button>
-                    {isOpen && (
-                      <p className="pb-4 text-sm leading-relaxed text-muted-foreground">
-                        {f.a}
-                      </p>
-                    )}
+                    {isOpen && <p className="pb-4 text-sm leading-relaxed text-muted-foreground">{f.a}</p>}
                   </li>
                 );
               })}
@@ -260,8 +185,7 @@ function SupportPage() {
             <div>
               <p className="font-serif text-lg font-semibold">Atención prioritaria Oro</p>
               <p className="mt-1 text-sm text-terracotta-foreground/85">
-                Como miembro Oro, tus consultas se atienden con prioridad y un asesor
-                dedicado.
+                Como miembro Oro, tus consultas se atienden con prioridad y un asesor dedicado.
               </p>
             </div>
           </div>

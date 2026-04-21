@@ -1,8 +1,8 @@
-import { Link, useLocation } from "@tanstack/react-router";
+import { Link, useLocation } from "react-router-dom";
 import { LayoutDashboard, User, Gift, ShoppingBag, MessageCircle } from "lucide-react";
 
 type Item = {
-  to: "/dashboard" | "/dashboard/perfil" | "/dashboard/recompensas" | "/dashboard/compras" | "/dashboard/soporte";
+  to: string;
   label: string;
   icon: typeof LayoutDashboard;
   exact?: boolean;
@@ -31,9 +31,7 @@ export function MobileBottomNav() {
               <Link
                 to={item.to}
                 className={`flex flex-col items-center gap-0.5 rounded-xl px-2 py-1.5 text-[10px] transition-colors ${
-                  isActive
-                    ? "text-primary"
-                    : "text-muted-foreground hover:text-foreground"
+                  isActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
                 }`}
               >
                 <item.icon className="h-4 w-4" strokeWidth={1.75} />

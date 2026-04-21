@@ -1,4 +1,5 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { Flower2, Heart, Sparkles, Store, ArrowRight } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -7,27 +8,6 @@ import heroImg from "@/assets/hero-flowers.jpg";
 import serviceIglesia from "@/assets/service-iglesia.jpg";
 import serviceEventos from "@/assets/service-eventos.jpg";
 import serviceLocal from "@/assets/service-local.jpg";
-
-export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "Botanique Luxe — Atelier Floral & Club de Puntos" },
-      {
-        name: "description",
-        content:
-          "Floristería premium en Barranquilla. Arreglos de autor, decoración de eventos y un club de puntos exclusivo para nuestros clientes.",
-      },
-      { property: "og:title", content: "Botanique Luxe — Atelier Floral" },
-      {
-        property: "og:description",
-        content: "El atelier de las flores. Únete a nuestro club de puntos.",
-      },
-      { property: "og:image", content: heroImg },
-      { name: "twitter:image", content: heroImg },
-    ],
-  }),
-  component: LandingPage,
-});
 
 const services = [
   {
@@ -53,9 +33,23 @@ const services = [
   },
 ];
 
-function LandingPage() {
+export default function LandingPage() {
   return (
     <div className="flex min-h-screen flex-col bg-background">
+      <Helmet>
+        <title>Botanique Luxe — Atelier Floral & Club de Puntos</title>
+        <meta
+          name="description"
+          content="Floristería premium en Barranquilla. Arreglos de autor, decoración de eventos y un club de puntos exclusivo para nuestros clientes."
+        />
+        <meta property="og:title" content="Botanique Luxe — Atelier Floral" />
+        <meta
+          property="og:description"
+          content="El atelier de las flores. Únete a nuestro club de puntos."
+        />
+        <meta property="og:image" content={heroImg} />
+        <meta name="twitter:image" content={heroImg} />
+      </Helmet>
       <SiteHeader />
 
       {/* Hero */}
@@ -88,9 +82,7 @@ function LandingPage() {
                 variant="outline"
                 className="rounded-full border-foreground/15 px-7"
               >
-                <Link to="/" hash="servicios">
-                  Conocer servicios
-                </Link>
+                <a href="#servicios">Conocer servicios</a>
               </Button>
             </div>
 
@@ -191,7 +183,6 @@ function LandingPage() {
       {/* CTA */}
       <section className="px-6 pb-24 lg:px-10">
         <div className="relative mx-auto max-w-7xl overflow-hidden rounded-3xl bg-gradient-ink p-12 text-center text-primary-foreground md:p-20">
-          {/* decorative blobs */}
           <div className="pointer-events-none absolute -left-20 -top-20 h-64 w-64 rounded-full bg-primary-foreground/10 blur-3xl" />
           <div className="pointer-events-none absolute -right-16 -bottom-16 h-72 w-72 rounded-full bg-terracotta/30 blur-3xl" />
 

@@ -1,12 +1,8 @@
-import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { Outlet } from "react-router-dom";
 import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
 import { MobileBottomNav } from "@/components/dashboard/MobileTopBar";
 
-export const Route = createFileRoute("/dashboard")({
-  component: DashboardLayout,
-});
-
-function DashboardLayout() {
+export default function DashboardLayout() {
   return (
     <div className="flex min-h-screen flex-col bg-background lg:flex-row">
       <DashboardSidebar />
