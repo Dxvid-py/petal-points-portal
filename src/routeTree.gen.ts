@@ -11,6 +11,11 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
+import { Route as DashboardSoporteRouteImport } from './routes/dashboard.soporte'
+import { Route as DashboardRecompensasRouteImport } from './routes/dashboard.recompensas'
+import { Route as DashboardPerfilRouteImport } from './routes/dashboard.perfil'
+import { Route as DashboardComprasRouteImport } from './routes/dashboard.compras'
 
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
@@ -22,31 +27,91 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardIndexRoute = DashboardIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardSoporteRoute = DashboardSoporteRouteImport.update({
+  id: '/soporte',
+  path: '/soporte',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardRecompensasRoute = DashboardRecompensasRouteImport.update({
+  id: '/recompensas',
+  path: '/recompensas',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardPerfilRoute = DashboardPerfilRouteImport.update({
+  id: '/perfil',
+  path: '/perfil',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardComprasRoute = DashboardComprasRouteImport.update({
+  id: '/compras',
+  path: '/compras',
+  getParentRoute: () => DashboardRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/dashboard': typeof DashboardRoute
+  '/dashboard': typeof DashboardRouteWithChildren
+  '/dashboard/compras': typeof DashboardComprasRoute
+  '/dashboard/perfil': typeof DashboardPerfilRoute
+  '/dashboard/recompensas': typeof DashboardRecompensasRoute
+  '/dashboard/soporte': typeof DashboardSoporteRoute
+  '/dashboard/': typeof DashboardIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/dashboard': typeof DashboardRoute
+  '/dashboard/compras': typeof DashboardComprasRoute
+  '/dashboard/perfil': typeof DashboardPerfilRoute
+  '/dashboard/recompensas': typeof DashboardRecompensasRoute
+  '/dashboard/soporte': typeof DashboardSoporteRoute
+  '/dashboard': typeof DashboardIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/dashboard': typeof DashboardRoute
+  '/dashboard': typeof DashboardRouteWithChildren
+  '/dashboard/compras': typeof DashboardComprasRoute
+  '/dashboard/perfil': typeof DashboardPerfilRoute
+  '/dashboard/recompensas': typeof DashboardRecompensasRoute
+  '/dashboard/soporte': typeof DashboardSoporteRoute
+  '/dashboard/': typeof DashboardIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/dashboard'
+  fullPaths:
+    | '/'
+    | '/dashboard'
+    | '/dashboard/compras'
+    | '/dashboard/perfil'
+    | '/dashboard/recompensas'
+    | '/dashboard/soporte'
+    | '/dashboard/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dashboard'
-  id: '__root__' | '/' | '/dashboard'
+  to:
+    | '/'
+    | '/dashboard/compras'
+    | '/dashboard/perfil'
+    | '/dashboard/recompensas'
+    | '/dashboard/soporte'
+    | '/dashboard'
+  id:
+    | '__root__'
+    | '/'
+    | '/dashboard'
+    | '/dashboard/compras'
+    | '/dashboard/perfil'
+    | '/dashboard/recompensas'
+    | '/dashboard/soporte'
+    | '/dashboard/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  DashboardRoute: typeof DashboardRoute
+  DashboardRoute: typeof DashboardRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -65,12 +130,67 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard/': {
+      id: '/dashboard/'
+      path: '/'
+      fullPath: '/dashboard/'
+      preLoaderRoute: typeof DashboardIndexRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/soporte': {
+      id: '/dashboard/soporte'
+      path: '/soporte'
+      fullPath: '/dashboard/soporte'
+      preLoaderRoute: typeof DashboardSoporteRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/recompensas': {
+      id: '/dashboard/recompensas'
+      path: '/recompensas'
+      fullPath: '/dashboard/recompensas'
+      preLoaderRoute: typeof DashboardRecompensasRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/perfil': {
+      id: '/dashboard/perfil'
+      path: '/perfil'
+      fullPath: '/dashboard/perfil'
+      preLoaderRoute: typeof DashboardPerfilRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/compras': {
+      id: '/dashboard/compras'
+      path: '/compras'
+      fullPath: '/dashboard/compras'
+      preLoaderRoute: typeof DashboardComprasRouteImport
+      parentRoute: typeof DashboardRoute
+    }
   }
 }
 
+interface DashboardRouteChildren {
+  DashboardComprasRoute: typeof DashboardComprasRoute
+  DashboardPerfilRoute: typeof DashboardPerfilRoute
+  DashboardRecompensasRoute: typeof DashboardRecompensasRoute
+  DashboardSoporteRoute: typeof DashboardSoporteRoute
+  DashboardIndexRoute: typeof DashboardIndexRoute
+}
+
+const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardComprasRoute: DashboardComprasRoute,
+  DashboardPerfilRoute: DashboardPerfilRoute,
+  DashboardRecompensasRoute: DashboardRecompensasRoute,
+  DashboardSoporteRoute: DashboardSoporteRoute,
+  DashboardIndexRoute: DashboardIndexRoute,
+}
+
+const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
+  DashboardRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  DashboardRoute: DashboardRoute,
+  DashboardRoute: DashboardRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
