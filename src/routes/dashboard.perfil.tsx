@@ -133,7 +133,7 @@ function ProfilePage() {
             <div className="grid gap-5 md:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="firstName">Nombre</Label>
-                <Input id="firstName" defaultValue="Ana María" />
+                <Input id="firstName" defaultValue="Angie María" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="lastName">Apellidos</Label>
@@ -144,7 +144,7 @@ function ProfilePage() {
                   <Mail className="mr-1.5 inline h-3 w-3" />
                   Correo
                 </Label>
-                <Input id="email" type="email" defaultValue="ana.restrepo@correo.co" />
+                <Input id="email" type="email" defaultValue="angie.restrepo@correo.co" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="phone">
