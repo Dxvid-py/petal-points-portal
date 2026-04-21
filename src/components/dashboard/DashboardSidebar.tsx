@@ -10,13 +10,20 @@ import {
 import { Logo } from "@/components/Logo";
 import { Avatar } from "./Avatar";
 
-const navItems = [
+type NavItem = {
+  to: "/dashboard" | "/dashboard/perfil" | "/dashboard/recompensas" | "/dashboard/compras" | "/dashboard/soporte";
+  label: string;
+  icon: typeof LayoutDashboard;
+  exact?: boolean;
+};
+
+const navItems: NavItem[] = [
   { to: "/dashboard", label: "Resumen", icon: LayoutDashboard, exact: true },
   { to: "/dashboard/perfil", label: "Mi perfil", icon: User },
   { to: "/dashboard/recompensas", label: "Recompensas", icon: Gift },
   { to: "/dashboard/compras", label: "Mis compras", icon: ShoppingBag },
   { to: "/dashboard/soporte", label: "Soporte", icon: MessageCircle },
-] as const;
+];
 
 export function DashboardSidebar() {
   const location = useLocation();

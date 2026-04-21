@@ -1,13 +1,20 @@
 import { Link, useLocation } from "@tanstack/react-router";
 import { LayoutDashboard, User, Gift, ShoppingBag, MessageCircle } from "lucide-react";
 
-const items = [
+type Item = {
+  to: "/dashboard" | "/dashboard/perfil" | "/dashboard/recompensas" | "/dashboard/compras" | "/dashboard/soporte";
+  label: string;
+  icon: typeof LayoutDashboard;
+  exact?: boolean;
+};
+
+const items: Item[] = [
   { to: "/dashboard", label: "Inicio", icon: LayoutDashboard, exact: true },
   { to: "/dashboard/perfil", label: "Perfil", icon: User },
   { to: "/dashboard/recompensas", label: "Premios", icon: Gift },
   { to: "/dashboard/compras", label: "Compras", icon: ShoppingBag },
   { to: "/dashboard/soporte", label: "Soporte", icon: MessageCircle },
-] as const;
+];
 
 export function MobileBottomNav() {
   const location = useLocation();
