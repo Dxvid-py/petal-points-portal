@@ -4,17 +4,25 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Botanique Luxe — Floristería Deluxe design system
- * Palette: cream off-white, sage green, forest green, soft pastel pink, gold accent
- * Typography: Playfair Display (serif headings) + Inter (sans body)
+/* Botanique Luxe — Atelier Floral
+ * Editorial palette: warm bone, ink green, terracotta, dusty rose, mustard
+ * Typography: Fraunces (display serif w/ optical sizes) + Inter
  */
 
 @font-face {
-  font-family: "Playfair Display";
+  font-family: "Fraunces";
   font-style: normal;
-  font-weight: 400 900;
+  font-weight: 100 900;
   font-display: swap;
-  src: url("https://fonts.gstatic.com/s/playfairdisplay/v37/nuFvD-vYSZviVYUb_rj3ij__anPXJzDwcbmjWBN2PKdFvUDQZNLo_U2r.woff2")
+  src: url("https://fonts.gstatic.com/s/fraunces/v37/6NUh8FyLNQOQZAnv9bYEvDiIdE9Ea92uemAk.woff2")
+    format("woff2");
+}
+@font-face {
+  font-family: "Fraunces";
+  font-style: italic;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("https://fonts.gstatic.com/s/fraunces/v37/6NUu8FyLNQOQZAnv9ZwJqHKqM4ZgX5VHpQ.woff2")
     format("woff2");
 }
 @font-face {
@@ -27,7 +35,7 @@
 }
 
 @theme inline {
-  --font-serif: "Playfair Display", "Merriweather", Georgia, serif;
+  --font-serif: "Fraunces", "Playfair Display", Georgia, serif;
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
 
   --radius-sm: calc(var(--radius) - 6px);
@@ -58,6 +66,11 @@
   --color-gold-foreground: var(--gold-foreground);
   --color-forest: var(--forest);
   --color-forest-foreground: var(--forest-foreground);
+  --color-terracotta: var(--terracotta);
+  --color-terracotta-foreground: var(--terracotta-foreground);
+  --color-ink: var(--ink);
+  --color-ink-foreground: var(--ink-foreground);
+  --color-bone: var(--bone);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
@@ -72,102 +85,116 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  --shadow-soft: 0 1px 2px oklch(0.3 0.04 140 / 0.04), 0 8px 24px oklch(0.3 0.04 140 / 0.06);
-  --shadow-card: 0 2px 4px oklch(0.3 0.04 140 / 0.05), 0 12px 32px oklch(0.3 0.04 140 / 0.08);
-  --shadow-glow: 0 20px 60px -20px oklch(0.45 0.06 145 / 0.35);
+  --shadow-soft: 0 1px 2px oklch(0.2 0.02 145 / 0.04), 0 8px 24px oklch(0.2 0.02 145 / 0.05);
+  --shadow-card: 0 2px 4px oklch(0.2 0.02 145 / 0.05), 0 16px 40px oklch(0.2 0.02 145 / 0.08);
+  --shadow-glow: 0 30px 80px -30px oklch(0.32 0.05 150 / 0.45);
+  --shadow-ink: 0 24px 60px -24px oklch(0.18 0.04 150 / 0.5);
 }
 
 :root {
-  --radius: 1rem;
+  --radius: 1.25rem;
 
-  /* Cream off-white background */
-  --background: oklch(0.985 0.012 90);
-  --foreground: oklch(0.22 0.02 145);
+  /* Warm bone background — slightly warmer than cream */
+  --background: oklch(0.97 0.018 75);
+  --bone: oklch(0.94 0.022 75);
+  --foreground: oklch(0.2 0.025 150);
 
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.22 0.02 145);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.22 0.02 145);
+  --card: oklch(0.99 0.01 80);
+  --card-foreground: oklch(0.2 0.025 150);
+  --popover: oklch(0.99 0.01 80);
+  --popover-foreground: oklch(0.2 0.025 150);
 
-  /* Sage green primary */
-  --primary: oklch(0.55 0.06 145);
-  --primary-foreground: oklch(0.985 0.012 90);
-  --primary-soft: oklch(0.92 0.025 145);
+  /* Ink green — deep, rich, almost-black green for primary */
+  --primary: oklch(0.32 0.045 150);
+  --primary-foreground: oklch(0.97 0.018 75);
+  --primary-soft: oklch(0.9 0.03 150);
 
-  /* Forest green for emphasis */
-  --forest: oklch(0.42 0.06 145);
-  --forest-foreground: oklch(0.985 0.012 90);
+  --ink: oklch(0.22 0.03 150);
+  --ink-foreground: oklch(0.97 0.018 75);
 
-  /* Warm cream secondary */
-  --secondary: oklch(0.96 0.018 90);
-  --secondary-foreground: oklch(0.3 0.03 145);
+  /* Forest accent (mid green) */
+  --forest: oklch(0.5 0.06 150);
+  --forest-foreground: oklch(0.97 0.018 75);
 
-  --muted: oklch(0.95 0.015 95);
-  --muted-foreground: oklch(0.48 0.02 140);
+  --secondary: oklch(0.94 0.022 75);
+  --secondary-foreground: oklch(0.28 0.03 150);
 
-  --accent: oklch(0.93 0.03 145);
-  --accent-foreground: oklch(0.3 0.04 145);
+  --muted: oklch(0.93 0.018 80);
+  --muted-foreground: oklch(0.46 0.02 145);
 
-  /* Blush pink — soft alerts and promo banners */
-  --blush: oklch(0.9 0.045 15);
-  --blush-foreground: oklch(0.4 0.08 15);
+  --accent: oklch(0.91 0.035 150);
+  --accent-foreground: oklch(0.28 0.04 150);
 
-  /* Gold — premium tier accent */
-  --gold: oklch(0.78 0.12 80);
-  --gold-foreground: oklch(0.3 0.05 80);
+  /* Dusty rose blush */
+  --blush: oklch(0.88 0.05 25);
+  --blush-foreground: oklch(0.38 0.09 25);
 
-  --destructive: oklch(0.6 0.2 25);
-  --destructive-foreground: oklch(0.985 0.012 90);
+  /* Terracotta — main warm accent (replaces purple/pink saas vibe) */
+  --terracotta: oklch(0.62 0.13 45);
+  --terracotta-foreground: oklch(0.98 0.012 75);
 
-  --border: oklch(0.9 0.015 110);
-  --input: oklch(0.92 0.015 110);
-  --ring: oklch(0.55 0.06 145);
+  /* Mustard gold for premium tier */
+  --gold: oklch(0.74 0.13 75);
+  --gold-foreground: oklch(0.32 0.06 75);
 
-  --sidebar: oklch(0.97 0.012 100);
-  --sidebar-foreground: oklch(0.3 0.02 145);
-  --sidebar-primary: oklch(0.55 0.06 145);
-  --sidebar-primary-foreground: oklch(0.985 0.012 90);
-  --sidebar-accent: oklch(0.92 0.025 145);
-  --sidebar-accent-foreground: oklch(0.42 0.06 145);
-  --sidebar-border: oklch(0.9 0.015 110);
-  --sidebar-ring: oklch(0.55 0.06 145);
+  --destructive: oklch(0.58 0.2 25);
+  --destructive-foreground: oklch(0.97 0.018 75);
+
+  --border: oklch(0.88 0.018 95);
+  --input: oklch(0.91 0.015 95);
+  --ring: oklch(0.32 0.045 150);
+
+  /* Sidebar = dark ink — bold contrast */
+  --sidebar: oklch(0.22 0.03 150);
+  --sidebar-foreground: oklch(0.88 0.02 80);
+  --sidebar-primary: oklch(0.62 0.13 45);
+  --sidebar-primary-foreground: oklch(0.98 0.012 75);
+  --sidebar-accent: oklch(0.28 0.035 150);
+  --sidebar-accent-foreground: oklch(0.97 0.018 75);
+  --sidebar-border: oklch(1 0 0 / 8%);
+  --sidebar-ring: oklch(0.62 0.13 45);
 }
 
 .dark {
-  --background: oklch(0.18 0.015 145);
-  --foreground: oklch(0.95 0.012 90);
-  --card: oklch(0.22 0.02 145);
-  --card-foreground: oklch(0.95 0.012 90);
-  --popover: oklch(0.22 0.02 145);
-  --popover-foreground: oklch(0.95 0.012 90);
-  --primary: oklch(0.7 0.07 145);
-  --primary-foreground: oklch(0.18 0.015 145);
-  --primary-soft: oklch(0.3 0.04 145);
-  --forest: oklch(0.55 0.06 145);
-  --forest-foreground: oklch(0.95 0.012 90);
-  --secondary: oklch(0.28 0.02 145);
-  --secondary-foreground: oklch(0.95 0.012 90);
-  --muted: oklch(0.28 0.02 145);
-  --muted-foreground: oklch(0.7 0.02 140);
-  --accent: oklch(0.32 0.04 145);
-  --accent-foreground: oklch(0.95 0.012 90);
-  --blush: oklch(0.4 0.08 15);
-  --blush-foreground: oklch(0.95 0.04 15);
-  --gold: oklch(0.7 0.12 80);
-  --gold-foreground: oklch(0.18 0.015 145);
+  --background: oklch(0.16 0.02 150);
+  --bone: oklch(0.2 0.025 150);
+  --foreground: oklch(0.95 0.015 80);
+  --card: oklch(0.22 0.025 150);
+  --card-foreground: oklch(0.95 0.015 80);
+  --popover: oklch(0.22 0.025 150);
+  --popover-foreground: oklch(0.95 0.015 80);
+  --primary: oklch(0.85 0.04 80);
+  --primary-foreground: oklch(0.18 0.025 150);
+  --primary-soft: oklch(0.3 0.04 150);
+  --ink: oklch(0.95 0.015 80);
+  --ink-foreground: oklch(0.18 0.025 150);
+  --forest: oklch(0.6 0.06 150);
+  --forest-foreground: oklch(0.97 0.018 75);
+  --secondary: oklch(0.26 0.025 150);
+  --secondary-foreground: oklch(0.95 0.015 80);
+  --muted: oklch(0.26 0.025 150);
+  --muted-foreground: oklch(0.7 0.02 145);
+  --accent: oklch(0.3 0.04 150);
+  --accent-foreground: oklch(0.95 0.015 80);
+  --blush: oklch(0.4 0.08 25);
+  --blush-foreground: oklch(0.95 0.04 25);
+  --terracotta: oklch(0.7 0.13 45);
+  --terracotta-foreground: oklch(0.18 0.025 150);
+  --gold: oklch(0.78 0.13 75);
+  --gold-foreground: oklch(0.18 0.025 150);
   --destructive: oklch(0.6 0.2 25);
-  --destructive-foreground: oklch(0.95 0.012 90);
+  --destructive-foreground: oklch(0.95 0.015 80);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 12%);
-  --ring: oklch(0.7 0.07 145);
-  --sidebar: oklch(0.22 0.02 145);
-  --sidebar-foreground: oklch(0.95 0.012 90);
-  --sidebar-primary: oklch(0.7 0.07 145);
-  --sidebar-primary-foreground: oklch(0.18 0.015 145);
-  --sidebar-accent: oklch(0.32 0.04 145);
-  --sidebar-accent-foreground: oklch(0.95 0.012 90);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.7 0.07 145);
+  --ring: oklch(0.85 0.04 80);
+  --sidebar: oklch(0.18 0.025 150);
+  --sidebar-foreground: oklch(0.88 0.02 80);
+  --sidebar-primary: oklch(0.7 0.13 45);
+  --sidebar-primary-foreground: oklch(0.18 0.025 150);
+  --sidebar-accent: oklch(0.26 0.035 150);
+  --sidebar-accent-foreground: oklch(0.95 0.015 80);
+  --sidebar-border: oklch(1 0 0 / 8%);
+  --sidebar-ring: oklch(0.7 0.13 45);
 }
 
 @layer base {
@@ -185,14 +212,24 @@
   }
   h1, h2, h3, h4, .font-serif {
     font-family: var(--font-serif);
-    letter-spacing: -0.01em;
+    letter-spacing: -0.02em;
+    font-feature-settings: "ss01", "ss02";
   }
 }
 
-/* Decorative gradient backgrounds */
-@utility bg-gradient-sage {
-  background-image: linear-gradient(135deg, var(--color-primary) 0%, var(--color-forest) 100%);
+/* Editorial gradients */
+@utility bg-gradient-ink {
+  background-image: linear-gradient(140deg, var(--color-ink) 0%, var(--color-primary) 60%, oklch(0.35 0.05 160) 100%);
 }
-@utility bg-gradient-cream {
-  background-image: linear-gradient(180deg, var(--color-background) 0%, var(--color-secondary) 100%);
+@utility bg-gradient-terracotta {
+  background-image: linear-gradient(135deg, var(--color-terracotta) 0%, oklch(0.55 0.14 35) 100%);
+}
+@utility bg-gradient-bone {
+  background-image: linear-gradient(180deg, var(--color-background) 0%, var(--color-bone) 100%);
+}
+
+/* Subtle paper-grain noise utility */
+@utility bg-noise {
+  background-image: radial-gradient(oklch(0.2 0.02 145 / 0.04) 1px, transparent 1px);
+  background-size: 4px 4px;
 }
