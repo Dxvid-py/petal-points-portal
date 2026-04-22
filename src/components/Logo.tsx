@@ -10,10 +10,10 @@ export function Logo({ to = "/", variant = "default" }: LogoProps) {
   return (
     <Link to={to} className="group flex items-center gap-3">
       <span
-        className={`flex h-10 w-10 items-center justify-center rounded-full border transition-transform group-hover:rotate-6 ${
+        className={`flex h-11 w-11 items-center justify-center rounded-full border-2 transition-transform group-hover:rotate-6 ${
           isLight
-            ? "border-sidebar-foreground/20 bg-sidebar-accent text-sidebar-primary"
-            : "border-foreground/15 bg-card text-primary"
+            ? "border-gold/40 bg-black text-gold"
+            : "border-gold/40 bg-black text-gold"
         }`}
       >
         <svg
@@ -21,28 +21,20 @@ export function Logo({ to = "/", variant = "default" }: LogoProps) {
           className="h-5 w-5"
           fill="none"
           stroke="currentColor"
-          strokeWidth="1.5"
+          strokeWidth="1.6"
           strokeLinecap="round"
         >
-          <path d="M12 3c2.5 3 4 6 4 9a4 4 0 0 1-8 0c0-3 1.5-6 4-9z" />
-          <path d="M12 13v8" />
-          <path d="M9 18c1.5 1 4.5 1 6 0" />
+          <path d="M12 2.5c2.8 3.2 4.5 6.4 4.5 9.5a4.5 4.5 0 0 1-9 0c0-3.1 1.7-6.3 4.5-9.5z" />
+          <path d="M12 13v8.5" />
+          <path d="M8.5 18.5c2 1.2 5 1.2 7 0" />
         </svg>
       </span>
       <span className="flex flex-col leading-none">
-        <span
-          className={`font-serif text-[1.05rem] font-semibold tracking-tight ${
-            isLight ? "text-sidebar-foreground" : "text-foreground"
-          }`}
-        >
-          Botanique <em className="italic font-normal">Luxe</em>
+        <span className="font-serif text-[1.05rem] font-semibold tracking-tight text-foreground">
+          Puntos <em className="not-italic font-bold text-shimmer-gold">Deluxe</em>
         </span>
-        <span
-          className={`mt-0.5 text-[9px] uppercase tracking-[0.28em] ${
-            isLight ? "text-sidebar-foreground/50" : "text-muted-foreground"
-          }`}
-        >
-          Atelier · Barranquilla
+        <span className="mt-1 text-[9px] uppercase tracking-[0.32em] text-primary">
+          Floristería · Barranquilla
         </span>
       </span>
     </Link>
