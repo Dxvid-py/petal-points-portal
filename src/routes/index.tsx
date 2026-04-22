@@ -1,210 +1,378 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import { Flower2, Heart, Sparkles, Store, ArrowRight } from "lucide-react";
+import {
+  UserPlus,
+  Coins,
+  Gift,
+  ArrowRight,
+  Sparkles,
+  Flower2,
+  HardHat,
+  SprayCan,
+  Fuel,
+  Play,
+} from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { Button } from "@/components/ui/button";
-import heroImg from "@/assets/hero-flowers.jpg";
-import serviceIglesia from "@/assets/service-iglesia.jpg";
-import serviceEventos from "@/assets/service-eventos.jpg";
-import serviceLocal from "@/assets/service-local.jpg";
+import { AccumulateStepsModal } from "@/components/landing/AccumulateStepsModal";
 
-const services = [
+const fidelityPillars = [
   {
-    icon: Heart,
-    image: serviceIglesia,
-    title: "Decoración de Iglesias",
-    description:
-      "Ambientes ceremoniales con arreglos de altar, pasillos y bancas. Composiciones a medida para bodas y bautizos.",
+    icon: UserPlus,
+    title: "Regístrate",
+    desc: "Crea tu cuenta gratis y empieza a hacer parte del club exclusivo de Floristería Deluxe.",
+    cta: "Crear cuenta",
+    type: "register" as const,
   },
   {
-    icon: Sparkles,
-    image: serviceEventos,
-    title: "Eventos & Banquetes",
-    description:
-      "Centros de mesa, arcos florales e instalaciones inmersivas para eventos corporativos y celebraciones íntimas.",
+    icon: Coins,
+    title: "Acumula",
+    desc: "Acumula puntos cada vez que realices una compra en nuestra tienda, punto físico, sitio web o a través de WhatsApp.",
+    cta: "Ver pasos",
+    type: "accumulate" as const,
   },
   {
-    icon: Store,
-    image: serviceLocal,
-    title: "Venta en Local",
-    description:
-      "Visita nuestro atelier y descubre arreglos frescos del día, plantas de interior y obsequios botánicos.",
+    icon: Gift,
+    title: "Redime",
+    desc: "Puedes redimir tus puntos en cualquiera de los servicios o productos que tenemos exclusivamente para ti.",
+    cta: "Ver catálogo",
+    type: "redeem" as const,
+  },
+];
+
+const redemptionCards = [
+  {
+    icon: Flower2,
+    title: "Flores Premium",
+    desc: "Ramos y arreglos de autor con flores de temporada.",
+    img: "https://images.unsplash.com/photo-1561181286-d3fee7d55364?w=800&auto=format&fit=crop",
+    badge: "Desde 800 pts",
+  },
+  {
+    icon: HardHat,
+    title: "Mano de Obra",
+    desc: "Decoración profesional para tus eventos y celebraciones.",
+    img: "https://images.unsplash.com/photo-1519741497674-611481863552?w=800&auto=format&fit=crop",
+    badge: "Desde 2.500 pts",
+  },
+  {
+    icon: SprayCan,
+    title: "Útiles de Aseo",
+    desc: "Productos para mantener tus arreglos siempre frescos.",
+    img: "https://images.unsplash.com/photo-1583947215259-38e31be8751f?w=800&auto=format&fit=crop",
+    badge: "Desde 600 pts",
+  },
+  {
+    icon: Fuel,
+    title: "Bono de Combustible",
+    desc: "Canjea tus puntos por bonos de combustible Terpel.",
+    img: "https://images.unsplash.com/photo-1545262810-77515befe149?w=800&auto=format&fit=crop",
+    badge: "Desde 3.000 pts",
   },
 ];
 
 export default function LandingPage() {
+  const [stepsOpen, setStepsOpen] = useState(false);
+
+  const scrollTo = (id: string) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <Helmet>
-        <title>Botanique Luxe — Atelier Floral & Club de Puntos</title>
+        <title>Puntos Floristería Deluxe — Club de Fidelización</title>
         <meta
           name="description"
-          content="Floristería premium en Barranquilla. Arreglos de autor, decoración de eventos y un club de puntos exclusivo para nuestros clientes."
+          content="El programa de puntos exclusivo de Floristería Deluxe. Acumula con cada compra y redime flores, servicios, aseo y bonos de combustible."
         />
-        <meta property="og:title" content="Botanique Luxe — Atelier Floral" />
+        <meta property="og:title" content="Puntos Floristería Deluxe" />
         <meta
           property="og:description"
-          content="El atelier de las flores. Únete a nuestro club de puntos."
+          content="Acumula puntos con cada compra y redime experiencias deluxe."
         />
-        <meta property="og:image" content={heroImg} />
-        <meta name="twitter:image" content={heroImg} />
+        <meta name="theme-color" content="#000000" />
       </Helmet>
+
       <SiteHeader />
 
-      {/* Hero */}
+      {/* HERO */}
       <section className="relative overflow-hidden">
-        <div className="mx-auto grid max-w-7xl items-center gap-12 px-6 py-16 md:grid-cols-2 md:py-24 lg:px-10 lg:py-32">
-          <div className="relative z-10">
-            <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-4 py-1.5 text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground backdrop-blur">
-              <Flower2 className="h-3 w-3 text-primary" />
-              Atelier desde 2018
+        <div className="pointer-events-none absolute inset-0">
+          <div className="absolute -left-32 top-10 h-[500px] w-[500px] rounded-full bg-primary/15 blur-3xl" />
+          <div className="absolute -right-32 bottom-10 h-[500px] w-[500px] rounded-full bg-gold/10 blur-3xl" />
+          <div className="absolute inset-0 bg-noise opacity-40" />
+        </div>
+
+        <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-6 py-20 md:grid-cols-2 md:py-28 lg:px-10 lg:py-36">
+          <div className="animate-fade-up">
+            <span className="inline-flex items-center gap-2 rounded-full border border-gold/30 bg-gold/5 px-4 py-1.5 text-xs font-medium uppercase tracking-[0.24em] text-gold backdrop-blur">
+              <Sparkles className="h-3 w-3" />
+              Programa Deluxe
             </span>
-            <h1 className="mt-6 font-serif text-5xl font-semibold leading-[1.05] tracking-tight text-foreground md:text-6xl lg:text-7xl">
-              Donde cada flor
+            <h1 className="mt-6 font-serif text-5xl font-semibold leading-[1.02] tracking-tight text-foreground md:text-6xl lg:text-7xl">
+              Cada flor,
               <br />
-              <em className="font-serif italic text-primary">cuenta una historia.</em>
+              <em className="font-serif italic text-shimmer-gold">cada punto,</em>
+              <br />
+              una experiencia <span className="text-primary">deluxe.</span>
             </h1>
-            <p className="mt-6 max-w-md text-lg text-muted-foreground">
-              Arreglos de autor, decoración de eventos y un club de puntos creado para
-              quienes celebran la belleza efímera de lo natural.
+            <p className="mt-7 max-w-md text-lg text-muted-foreground">
+              Únete al club exclusivo de Floristería Deluxe. Acumula puntos con cada compra y
+              redime flores premium, decoración profesional y bonos especiales.
             </p>
             <div className="mt-10 flex flex-wrap gap-3">
-              <Button asChild size="lg" className="rounded-full px-7">
-                <Link to="/dashboard">
-                  Ingresar al Club de Puntos
+              <Button
+                asChild
+                size="lg"
+                className="rounded-full bg-primary px-7 text-primary-foreground transition-all hover:bg-gold hover:text-gold-foreground hover:shadow-gold"
+              >
+                <Link to="/auth?mode=signup">
+                  Regístrate gratis
                   <ArrowRight className="ml-1 h-4 w-4" />
                 </Link>
               </Button>
               <Button
-                asChild
                 size="lg"
                 variant="outline"
-                className="rounded-full border-foreground/15 px-7"
+                onClick={() => scrollTo("fidelizacion")}
+                className="rounded-full border-gold/40 px-7 text-foreground hover:bg-gold/10 hover:text-gold"
               >
-                <a href="#servicios">Conocer servicios</a>
+                Cómo funciona
               </Button>
             </div>
 
-            <div className="mt-12 flex items-center gap-8 border-t border-border/60 pt-8 text-sm">
+            <div className="mt-14 flex items-center gap-10 border-t border-border/40 pt-8 text-sm">
               <div>
-                <p className="font-serif text-2xl font-semibold text-foreground">+850</p>
-                <p className="text-xs text-muted-foreground">Eventos floreados</p>
+                <p className="font-serif text-3xl font-semibold text-shimmer-gold">+850</p>
+                <p className="mt-1 text-xs uppercase tracking-wider text-muted-foreground">Eventos</p>
               </div>
               <div>
-                <p className="font-serif text-2xl font-semibold text-foreground">12k</p>
-                <p className="text-xs text-muted-foreground">Miembros del club</p>
+                <p className="font-serif text-3xl font-semibold text-shimmer-gold">12k</p>
+                <p className="mt-1 text-xs uppercase tracking-wider text-muted-foreground">Miembros</p>
               </div>
               <div>
-                <p className="font-serif text-2xl font-semibold text-foreground">4.9★</p>
-                <p className="text-xs text-muted-foreground">Calificación</p>
+                <p className="font-serif text-3xl font-semibold text-shimmer-gold">4.9★</p>
+                <p className="mt-1 text-xs uppercase tracking-wider text-muted-foreground">Rating</p>
               </div>
             </div>
           </div>
 
-          <div className="relative">
-            <div className="absolute -inset-4 -z-10 rounded-[2.5rem] bg-primary-soft/60 blur-2xl" />
-            <div className="overflow-hidden rounded-[2rem] shadow-glow">
+          <div className="relative animate-scale-in">
+            <div className="absolute -inset-6 -z-10 rounded-[2.5rem] bg-primary/30 blur-3xl" />
+            <div className="overflow-hidden rounded-[2rem] border border-gold/20 shadow-glow">
               <img
-                src={heroImg}
-                alt="Arreglo floral elegante con peonías y eucalipto"
-                width={1920}
-                height={1280}
+                src="https://images.unsplash.com/photo-1487070183336-b863922373d4?w=1200&auto=format&fit=crop"
+                alt="Arreglo floral premium con rosas rojas"
                 className="h-[520px] w-full object-cover md:h-[640px]"
               />
             </div>
+            {/* Floating gold badge */}
+            <div className="absolute -bottom-5 -left-5 animate-float rounded-2xl border border-gold/40 bg-black/80 p-4 backdrop-blur">
+              <p className="text-[10px] uppercase tracking-widest text-gold">Equivalencia</p>
+              <p className="mt-1 font-serif text-xl font-semibold text-foreground">
+                1 pt <span className="text-muted-foreground">=</span> $1.760
+              </p>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Historia */}
-      <section id="historia" className="bg-secondary/40 py-24">
-        <div className="mx-auto max-w-4xl px-6 text-center lg:px-10">
-          <span className="text-xs uppercase tracking-[0.25em] text-primary">
-            Nuestra Historia
-          </span>
-          <h2 className="mt-4 font-serif text-4xl font-semibold text-foreground md:text-5xl">
-            Un atelier nacido entre <em className="italic">jardines y rituales</em>
-          </h2>
-          <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
-            Botanique Luxe nació en 2018 del encuentro entre dos hermanas floristas que
-            soñaban con un espacio donde cada arreglo fuera una obra única. Trabajamos
-            con productores locales, flores de temporada y técnicas de composición
-            europeas para crear piezas que transforman momentos en recuerdos.
-          </p>
-        </div>
-      </section>
-
-      {/* Servicios */}
-      <section id="servicios" className="py-24">
+      {/* SECCIÓN FIDELIZACIÓN — 3 columnas */}
+      <section id="fidelizacion" className="relative bg-gradient-bone py-24">
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="flex flex-col items-center text-center">
-            <span className="text-xs uppercase tracking-[0.25em] text-primary">
-              Servicios
+          <div className="mx-auto max-w-2xl text-center">
+            <span className="text-xs font-medium uppercase tracking-[0.28em] text-gold">
+              Programa de Fidelización
             </span>
-            <h2 className="mt-4 max-w-2xl font-serif text-4xl font-semibold text-foreground md:text-5xl">
-              Composiciones a la medida de tus momentos
+            <h2 className="mt-4 font-serif text-4xl font-semibold leading-tight text-foreground md:text-5xl">
+              Disfrutar de <em className="text-shimmer-gold">Puntos Deluxe</em>
+              <br />
+              es muy fácil.
             </h2>
           </div>
 
           <div className="mt-16 grid gap-6 md:grid-cols-3">
-            {services.map((service) => (
+            {fidelityPillars.map((p, i) => (
               <article
-                key={service.title}
-                className="group flex flex-col overflow-hidden rounded-3xl border border-border/60 bg-card shadow-soft transition-all hover:-translate-y-1 hover:border-primary/30 hover:shadow-card"
+                key={p.title}
+                className="group relative flex flex-col rounded-3xl border border-gold/15 bg-card/60 p-8 backdrop-blur-sm transition-all hover:-translate-y-2 hover:border-gold/40 hover:shadow-gold animate-fade-up"
+                style={{ animationDelay: `${i * 120}ms` }}
               >
-                <div className="aspect-[4/3] overflow-hidden bg-muted">
-                  <img
-                    src={service.image}
-                    alt={service.title}
-                    loading="lazy"
-                    width={512}
-                    height={384}
-                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
+                <div className="absolute -top-5 left-8 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-terracotta shadow-glow transition-transform group-hover:scale-110 group-hover:rotate-3">
+                  <p.icon className="h-6 w-6 text-primary-foreground" strokeWidth={1.75} />
                 </div>
-                <div className="flex flex-1 flex-col p-7">
-                  <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary-soft text-forest transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
-                    <service.icon className="h-5 w-5" strokeWidth={2} />
-                  </span>
-                  <h3 className="mt-5 font-serif text-2xl font-semibold text-foreground">
-                    {service.title}
-                  </h3>
-                  <p className="mt-3 flex-1 text-sm leading-relaxed text-muted-foreground">
-                    {service.description}
-                  </p>
-                </div>
+                <span className="ml-auto font-serif text-5xl font-bold leading-none text-shimmer-gold opacity-30">
+                  0{i + 1}
+                </span>
+                <h3 className="mt-4 font-serif text-2xl font-semibold text-foreground">
+                  {p.title}
+                </h3>
+                <p className="mt-3 flex-1 text-sm leading-relaxed text-muted-foreground">
+                  {p.desc}
+                </p>
+                {p.type === "register" && (
+                  <Button
+                    asChild
+                    variant="ghost"
+                    className="mt-6 w-fit rounded-full px-0 text-gold hover:bg-transparent hover:text-primary"
+                  >
+                    <Link to="/auth?mode=signup">
+                      {p.cta} <ArrowRight className="ml-1 h-4 w-4" />
+                    </Link>
+                  </Button>
+                )}
+                {p.type === "accumulate" && (
+                  <Button
+                    variant="ghost"
+                    onClick={() => setStepsOpen(true)}
+                    className="mt-6 w-fit rounded-full px-0 text-gold hover:bg-transparent hover:text-primary"
+                  >
+                    {p.cta} <ArrowRight className="ml-1 h-4 w-4" />
+                  </Button>
+                )}
+                {p.type === "redeem" && (
+                  <Button
+                    variant="ghost"
+                    onClick={() => scrollTo("redime")}
+                    className="mt-6 w-fit rounded-full px-0 text-gold hover:bg-transparent hover:text-primary"
+                  >
+                    {p.cta} <ArrowRight className="ml-1 h-4 w-4" />
+                  </Button>
+                )}
               </article>
             ))}
           </div>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="px-6 pb-24 lg:px-10">
-        <div className="relative mx-auto max-w-7xl overflow-hidden rounded-3xl bg-gradient-ink p-12 text-center text-primary-foreground md:p-20">
-          <div className="pointer-events-none absolute -left-20 -top-20 h-64 w-64 rounded-full bg-primary-foreground/10 blur-3xl" />
-          <div className="pointer-events-none absolute -right-16 -bottom-16 h-72 w-72 rounded-full bg-terracotta/30 blur-3xl" />
+      {/* VIDEO ESTILO REEL */}
+      <section id="video" className="relative py-24">
+        <div className="mx-auto max-w-7xl px-6 lg:px-10">
+          <div className="mx-auto max-w-2xl text-center">
+            <span className="text-xs font-medium uppercase tracking-[0.28em] text-gold">
+              En Vivo · Deluxe
+            </span>
+            <h2 className="mt-4 font-serif text-4xl font-semibold text-foreground md:text-5xl">
+              Vive la magia <em className="text-shimmer-gold">Deluxe</em>
+            </h2>
+            <p className="mt-4 text-muted-foreground">
+              Descubre nuestros últimos arreglos y momentos especiales en formato Reel.
+            </p>
+          </div>
+
+          <div className="mt-14 flex justify-center">
+            <div className="relative">
+              {/* Marco dorado */}
+              <div className="absolute -inset-3 rounded-[2.5rem] bg-gradient-gold opacity-60 blur-xl" />
+              <div className="relative aspect-[9/16] w-[320px] overflow-hidden rounded-[2rem] border-2 border-gold/40 bg-black shadow-glow md:w-[380px]">
+                <iframe
+                  className="absolute inset-0 h-full w-full"
+                  src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=0&mute=1&controls=1&rel=0"
+                  title="Floristería Deluxe Reel"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+                {/* Decorative play overlay (visual only) */}
+                <div className="pointer-events-none absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full border border-gold/40 bg-black/60 backdrop-blur">
+                  <Play className="h-4 w-4 text-gold" fill="currentColor" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <p className="mt-6 text-center text-xs text-muted-foreground">
+            Próximamente podrás administrar este video desde el panel de admin.
+          </p>
+        </div>
+      </section>
+
+      {/* CATÁLOGO REDIME */}
+      <section id="redime" className="relative bg-gradient-bone py-24">
+        <div className="mx-auto max-w-7xl px-6 lg:px-10">
+          <div className="mx-auto max-w-2xl text-center">
+            <span className="text-xs font-medium uppercase tracking-[0.28em] text-gold">
+              Catálogo de Redención
+            </span>
+            <h2 className="mt-4 font-serif text-4xl font-semibold text-foreground md:text-5xl">
+              Redime tus puntos en <em className="text-shimmer-gold">experiencias únicas</em>
+            </h2>
+            <p className="mt-4 text-muted-foreground">
+              Convierte tus puntos en flores premium, servicios profesionales o bonos.
+            </p>
+          </div>
+
+          <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {redemptionCards.map((card, i) => (
+              <article
+                key={card.title}
+                className="group relative overflow-hidden rounded-3xl border border-gold/15 bg-card transition-all hover:-translate-y-2 hover:border-gold/50 hover:shadow-gold animate-fade-up"
+                style={{ animationDelay: `${i * 100}ms` }}
+              >
+                <div className="aspect-[4/5] overflow-hidden">
+                  <img
+                    src={card.img}
+                    alt={card.title}
+                    loading="lazy"
+                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
+                </div>
+                <div className="absolute right-3 top-3 rounded-full border border-gold/40 bg-black/70 px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-gold backdrop-blur">
+                  {card.badge}
+                </div>
+                <div className="absolute bottom-0 left-0 right-0 p-5">
+                  <div className="mb-2 flex h-9 w-9 items-center justify-center rounded-xl border border-gold/30 bg-black/60 text-gold backdrop-blur">
+                    <card.icon className="h-4 w-4" strokeWidth={1.75} />
+                  </div>
+                  <h3 className="font-serif text-xl font-semibold text-foreground">
+                    {card.title}
+                  </h3>
+                  <p className="mt-1 text-xs text-muted-foreground">{card.desc}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+
+          <div className="mt-12 text-center">
+            <Button
+              asChild
+              size="lg"
+              className="rounded-full bg-primary px-8 text-primary-foreground hover:bg-gold hover:text-gold-foreground"
+            >
+              <Link to="/dashboard/recompensas">
+                Ver catálogo completo <ArrowRight className="ml-1 h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA FINAL */}
+      <section id="galeria" className="px-6 pb-24 lg:px-10">
+        <div className="relative mx-auto max-w-7xl overflow-hidden rounded-3xl border border-gold/30 bg-gradient-ink p-12 text-center md:p-20">
+          <div className="pointer-events-none absolute -left-20 -top-20 h-64 w-64 rounded-full bg-primary/30 blur-3xl" />
+          <div className="pointer-events-none absolute -right-16 -bottom-16 h-72 w-72 rounded-full bg-gold/20 blur-3xl" />
 
           <div className="relative">
-            <span className="inline-flex items-center gap-2 rounded-full border border-primary-foreground/25 bg-primary-foreground/10 px-4 py-1.5 text-[10px] font-medium uppercase tracking-[0.24em] text-primary-foreground/90 backdrop-blur">
+            <span className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-black/40 px-4 py-1.5 text-[10px] font-medium uppercase tracking-[0.28em] text-gold backdrop-blur">
               <Sparkles className="h-3 w-3" />
-              Club de Puntos
+              Únete hoy
             </span>
-            <h2 className="mx-auto mt-6 max-w-2xl font-serif text-4xl font-semibold leading-tight text-primary-foreground md:text-5xl">
-              Únete al club y celebra <em className="italic">con flores.</em>
+            <h2 className="mx-auto mt-6 max-w-2xl font-serif text-4xl font-semibold leading-tight text-foreground md:text-5xl">
+              Empieza a coleccionar <em className="text-shimmer-gold">momentos deluxe.</em>
             </h2>
-            <p className="mx-auto mt-5 max-w-xl text-base text-primary-foreground/85 md:text-lg">
-              Cada compra te acerca a recompensas únicas: arreglos sorpresa, talleres
-              exclusivos y envíos cortesía.
+            <p className="mx-auto mt-5 max-w-xl text-base text-muted-foreground md:text-lg">
+              Regístrate gratis y obtén acceso inmediato al programa de fidelización más exclusivo de Barranquilla.
             </p>
             <Button
               asChild
               size="lg"
-              className="mt-9 rounded-full bg-primary-foreground px-8 text-primary hover:bg-primary-foreground/90"
+              className="mt-9 rounded-full bg-gold px-8 text-gold-foreground hover:bg-primary hover:text-primary-foreground"
             >
-              <Link to="/dashboard">
-                Acceder a mi cuenta
+              <Link to="/auth?mode=signup">
+                Crear mi cuenta Deluxe
                 <ArrowRight className="ml-1 h-4 w-4" />
               </Link>
             </Button>
@@ -213,6 +381,8 @@ export default function LandingPage() {
       </section>
 
       <SiteFooter />
+
+      <AccumulateStepsModal open={stepsOpen} onOpenChange={setStepsOpen} />
     </div>
   );
 }
