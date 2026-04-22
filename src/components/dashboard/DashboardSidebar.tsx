@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
   User,
@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { Avatar } from "./Avatar";
+import { useAuth } from "@/contexts/AuthContext";
 
 type NavItem = {
   to: string;
@@ -27,6 +28,15 @@ const navItems: NavItem[] = [
 
 export function DashboardSidebar() {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { profile, signOut } = useAuth();
+  const displayName = profile?.full_name ?? "Cliente Deluxe";
+  const balance = profile?.points_balance ?? 0;
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/");
+  };
 
   return (
     <aside className="hidden w-72 shrink-0 flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground lg:flex">
@@ -36,16 +46,16 @@ export function DashboardSidebar() {
 
       <div className="mx-6 mb-6 rounded-2xl border border-sidebar-border bg-sidebar-accent/40 p-4">
         <div className="flex items-center gap-3">
-          <Avatar name="Angie Restrepo" size="md" ring />
+          <Avatar name={displayName} size="md" ring />
           <div className="min-w-0 leading-tight">
-            <p className="truncate text-sm font-medium text-sidebar-foreground">Angie Restrepo</p>
-            <p className="text-[10px] uppercase tracking-[0.22em] text-gold">✦ Nivel Oro</p>
+            <p className="truncate text-sm font-medium text-sidebar-foreground">{displayName}</p>
+            <p className="text-[10px] uppercase tracking-[0.22em] text-gold">✦ Club Deluxe</p>
           </div>
         </div>
         <div className="mt-3 flex items-baseline justify-between border-t border-sidebar-border/60 pt-3">
           <span className="text-[10px] uppercase tracking-[0.22em] text-sidebar-foreground/50">Balance</span>
-          <span className="font-serif text-base font-semibold text-sidebar-foreground">
-            1.250 <span className="text-xs font-normal text-sidebar-foreground/60">pts</span>
+          <span className="font-serif text-base font-semibold text-shimmer-gold">
+            {balance.toLocaleString("es-CO")} <span className="text-xs font-normal text-sidebar-foreground/60">pts</span>
           </span>
         </div>
       </div>
@@ -92,7 +102,10 @@ export function DashboardSidebar() {
             Reserva una consulta floral con nuestro atelier.
           </p>
         </div>
-        <button className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm text-sidebar-foreground/70 transition-colors hover:bg-sidebar-accent/40 hover:text-sidebar-foreground">
+        <button
+          onClick={handleSignOut}
+          className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm text-sidebar-foreground/70 transition-colors hover:bg-sidebar-accent/40 hover:text-sidebar-foreground"
+        >
           <LogOut className="h-4 w-4" strokeWidth={1.75} />
           Cerrar sesión
         </button>
