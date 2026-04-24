@@ -3,13 +3,13 @@ import { Link } from "react-router-dom";
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-border/40 bg-black">
+    <footer className="border-t border-border/60 bg-bone">
       <div className="mx-auto grid max-w-7xl gap-10 px-6 py-14 md:grid-cols-3 lg:px-10">
         <div>
           <div className="flex items-center gap-2">
-            <Flower2 className="h-5 w-5 text-gold" />
+            <Flower2 className="h-5 w-5 text-primary" />
             <span className="font-serif text-lg font-semibold text-foreground">
-              Puntos <em className="not-italic text-gold">Deluxe</em>
+              Puntos <em className="not-italic text-primary">Deluxe</em>
             </span>
           </div>
           <p className="mt-4 max-w-xs text-sm text-muted-foreground">
