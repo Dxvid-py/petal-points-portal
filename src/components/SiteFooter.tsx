@@ -18,7 +18,7 @@ export function SiteFooter() {
           </p>
         </div>
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gold">
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">
             Navegación
           </p>
           <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
@@ -29,7 +29,7 @@ export function SiteFooter() {
           </ul>
         </div>
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gold">
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">
             Contáctanos
           </p>
           <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
@@ -39,7 +39,7 @@ export function SiteFooter() {
           </ul>
         </div>
       </div>
-      <div className="border-t border-border/40 px-6 py-5 text-center">
+      <div className="border-t border-border/60 px-6 py-5 text-center">
         <p className="text-xs text-muted-foreground">
           © 2024 Puntos Floristería Deluxe · Todos los derechos reservados
         </p>
