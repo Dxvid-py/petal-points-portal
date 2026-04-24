@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Logo } from "@/components/Logo";
-import { supabase } from "@/lib/supabase";
+import { isUsingFallbackSupabaseConfig, supabase } from "@/lib/supabase";
 import { ArrowLeft, Loader2 } from "lucide-react";
 
 export default function AuthPage() {
@@ -28,6 +28,14 @@ export default function AuthPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (isUsingFallbackSupabaseConfig && window.location.hostname !== "localhost") {
+      toast.error(
+        "La app todavía no está conectada a tu Supabase externo. Configura VITE_SUPABASE_URL y VITE_SUPABASE_ANON_KEY en Vercel antes de registrar usuarios.",
+      );
+      return;
+    }
+
     setLoading(true);
     try {
       if (mode === "signup") {
