@@ -4,9 +4,9 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Puntos Floristería Deluxe — Negro / Rojo pasión / Dorado
- * Inspirado en floristeriadeluxe.com — lujo editorial, fondo oscuro
- * Typography: Playfair Display (serif lujo) + Inter
+/* Puntos Floristería Deluxe — Tema CLARO Rosa / Blanco
+ * Inspirado en floristeriadeluxe.com — femenino, elegante, fresco
+ * Typography: Playfair Display (serif) + Inter
  */
 
 @font-face {
@@ -26,6 +26,14 @@
     format("woff2");
 }
 @font-face {
+  font-family: "Dancing Script";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("https://fonts.gstatic.com/s/dancingscript/v25/If2cXTr6YS-zF4S-kcSWSVi_sxjsohD9F50Ruu7BMSo3Sup6.woff2")
+    format("woff2");
+}
+@font-face {
   font-family: "Inter";
   font-style: normal;
   font-weight: 100 900;
@@ -36,6 +44,7 @@
 
 @theme inline {
   --font-serif: "Playfair Display", Georgia, serif;
+  --font-script: "Dancing Script", cursive;
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
 
   --radius-sm: calc(var(--radius) - 6px);
@@ -85,80 +94,80 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  --shadow-soft: 0 1px 2px oklch(0 0 0 / 0.4), 0 8px 24px oklch(0 0 0 / 0.3);
-  --shadow-card: 0 2px 4px oklch(0 0 0 / 0.5), 0 16px 40px oklch(0 0 0 / 0.4);
-  --shadow-glow: 0 30px 80px -20px oklch(0.55 0.24 25 / 0.55);
-  --shadow-gold: 0 20px 60px -20px oklch(0.78 0.16 80 / 0.4);
-  --shadow-ink: 0 24px 60px -24px oklch(0 0 0 / 0.7);
+  --shadow-soft: 0 1px 2px oklch(0.7 0.05 350 / 0.08), 0 8px 24px oklch(0.7 0.05 350 / 0.06);
+  --shadow-card: 0 2px 8px oklch(0.7 0.05 350 / 0.08), 0 16px 40px oklch(0.7 0.05 350 / 0.10);
+  --shadow-glow: 0 30px 80px -20px oklch(0.78 0.13 350 / 0.45);
+  --shadow-pink: 0 20px 60px -20px oklch(0.78 0.13 350 / 0.35);
+  --shadow-ink: 0 24px 60px -24px oklch(0.4 0.05 350 / 0.3);
 }
 
 :root {
   --radius: 1rem;
 
-  /* Fondo NEGRO sólido */
-  --background: oklch(0 0 0);
-  --bone: oklch(0.12 0.01 20);
-  --foreground: oklch(0.98 0 0);
+  /* Fondo BLANCO con rosa muy suave */
+  --background: oklch(0.995 0.005 340);
+  --bone: oklch(0.985 0.012 340);
+  --foreground: oklch(0.28 0.06 350);
 
-  --card: oklch(0.08 0.01 20);
-  --card-foreground: oklch(0.98 0 0);
-  --popover: oklch(0.08 0.01 20);
-  --popover-foreground: oklch(0.98 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.28 0.06 350);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.28 0.06 350);
 
-  /* ROJO PASIÓN #E31D2D */
-  --primary: oklch(0.58 0.235 25);
+  /* ROSA principal — vibrante pero femenino */
+  --primary: oklch(0.72 0.16 350);
   --primary-foreground: oklch(0.99 0 0);
-  --primary-soft: oklch(0.22 0.1 25);
+  --primary-soft: oklch(0.96 0.025 340);
 
-  --ink: oklch(0.05 0 0);
-  --ink-foreground: oklch(0.98 0 0);
+  --ink: oklch(0.32 0.08 350);
+  --ink-foreground: oklch(0.99 0 0);
 
-  --forest: oklch(0.58 0.235 25);
+  --forest: oklch(0.72 0.16 350);
   --forest-foreground: oklch(0.99 0 0);
 
-  --secondary: oklch(0.14 0.012 25);
-  --secondary-foreground: oklch(0.95 0 0);
+  --secondary: oklch(0.97 0.015 340);
+  --secondary-foreground: oklch(0.32 0.08 350);
 
-  --muted: oklch(0.14 0.012 25);
-  --muted-foreground: oklch(0.65 0.02 30);
+  --muted: oklch(0.96 0.012 340);
+  --muted-foreground: oklch(0.5 0.04 340);
 
-  --accent: oklch(0.18 0.05 25);
-  --accent-foreground: oklch(0.98 0 0);
+  --accent: oklch(0.94 0.04 340);
+  --accent-foreground: oklch(0.32 0.08 350);
 
-  /* Blush oscuro para tarjetas */
-  --blush: oklch(0.18 0.06 20);
-  --blush-foreground: oklch(0.95 0.02 30);
+  /* Blush rosa pastel */
+  --blush: oklch(0.93 0.05 350);
+  --blush-foreground: oklch(0.32 0.08 350);
 
-  /* Terracotta = rojo más cálido */
-  --terracotta: oklch(0.62 0.22 30);
+  /* Magenta más profundo para acentos */
+  --terracotta: oklch(0.6 0.2 350);
   --terracotta-foreground: oklch(0.99 0 0);
 
-  /* DORADO #FFD700 — acentos premium */
-  --gold: oklch(0.85 0.16 88);
-  --gold-foreground: oklch(0.15 0.02 60);
+  /* Acento "gold" reinterpretado como rosa intenso para destacar números */
+  --gold: oklch(0.65 0.22 355);
+  --gold-foreground: oklch(0.99 0 0);
 
-  --destructive: oklch(0.6 0.24 25);
+  --destructive: oklch(0.6 0.22 25);
   --destructive-foreground: oklch(0.99 0 0);
 
-  --border: oklch(1 0 0 / 12%);
-  --input: oklch(1 0 0 / 8%);
-  --ring: oklch(0.58 0.235 25);
+  --border: oklch(0.85 0.04 340);
+  --input: oklch(0.95 0.02 340);
+  --ring: oklch(0.72 0.16 350);
 
-  /* Sidebar muy oscuro con acentos rojos */
-  --sidebar: oklch(0.04 0.005 20);
-  --sidebar-foreground: oklch(0.95 0.01 30);
-  --sidebar-primary: oklch(0.85 0.16 88);
-  --sidebar-primary-foreground: oklch(0.1 0 0);
-  --sidebar-accent: oklch(0.14 0.04 25);
-  --sidebar-accent-foreground: oklch(0.99 0 0);
-  --sidebar-border: oklch(1 0 0 / 8%);
-  --sidebar-ring: oklch(0.58 0.235 25);
+  /* Sidebar muy claro con acentos rosa */
+  --sidebar: oklch(0.99 0.008 340);
+  --sidebar-foreground: oklch(0.32 0.08 350);
+  --sidebar-primary: oklch(0.65 0.22 355);
+  --sidebar-primary-foreground: oklch(0.99 0 0);
+  --sidebar-accent: oklch(0.95 0.03 345);
+  --sidebar-accent-foreground: oklch(0.32 0.08 350);
+  --sidebar-border: oklch(0.88 0.03 340);
+  --sidebar-ring: oklch(0.72 0.16 350);
 }
 
 .dark {
-  /* Mismos valores — el tema base ya es oscuro */
-  --background: oklch(0 0 0);
-  --foreground: oklch(0.98 0 0);
+  /* Mantenemos tema claro siempre — el sistema visual es claro por diseño */
+  --background: oklch(0.995 0.005 340);
+  --foreground: oklch(0.28 0.06 350);
 }
 
 @layer base {
@@ -178,37 +187,43 @@
     font-family: var(--font-serif);
     letter-spacing: -0.015em;
   }
+  .font-script {
+    font-family: var(--font-script);
+  }
 }
 
-/* Gradientes Deluxe */
+/* Gradientes Deluxe — Rosa */
 @utility bg-gradient-ink {
-  background-image: linear-gradient(140deg, oklch(0.05 0 0) 0%, oklch(0.18 0.08 25) 60%, oklch(0.32 0.18 25) 100%);
+  background-image: linear-gradient(140deg, oklch(0.99 0.01 340) 0%, oklch(0.95 0.04 345) 60%, oklch(0.88 0.08 350) 100%);
 }
 @utility bg-gradient-terracotta {
-  background-image: linear-gradient(135deg, var(--color-primary) 0%, oklch(0.42 0.2 22) 100%);
+  background-image: linear-gradient(135deg, var(--color-primary) 0%, oklch(0.6 0.2 355) 100%);
 }
 @utility bg-gradient-bone {
-  background-image: linear-gradient(180deg, oklch(0 0 0) 0%, oklch(0.06 0.01 20) 100%);
+  background-image: linear-gradient(180deg, oklch(1 0 0) 0%, oklch(0.985 0.015 345) 100%);
 }
 @utility bg-gradient-gold {
-  background-image: linear-gradient(135deg, oklch(0.85 0.16 88) 0%, oklch(0.7 0.18 70) 100%);
+  background-image: linear-gradient(135deg, oklch(0.78 0.18 355) 0%, oklch(0.68 0.22 350) 100%);
+}
+@utility bg-gradient-hero {
+  background-image: linear-gradient(120deg, oklch(0.99 0.008 340) 0%, oklch(0.94 0.05 345) 50%, oklch(0.88 0.09 350) 100%);
 }
 
-/* Glassmorphism para tarjetas */
+/* Glassmorphism para tarjetas claras */
 @utility glass-card {
-  background-color: oklch(1 0 0 / 4%);
+  background-color: oklch(1 0 0 / 70%);
   backdrop-filter: blur(12px);
-  border: 1px solid oklch(0.85 0.16 88 / 0.18);
+  border: 1px solid oklch(0.72 0.16 350 / 0.18);
 }
-@utility glass-card-red {
-  background-color: oklch(0.58 0.235 25 / 6%);
+@utility glass-card-pink {
+  background-color: oklch(0.93 0.05 350 / 60%);
   backdrop-filter: blur(12px);
-  border: 1px solid oklch(0.58 0.235 25 / 0.25);
+  border: 1px solid oklch(0.72 0.16 350 / 0.25);
 }
 
 /* Subtle paper-grain noise utility */
 @utility bg-noise {
-  background-image: radial-gradient(oklch(1 0 0 / 0.03) 1px, transparent 1px);
+  background-image: radial-gradient(oklch(0.32 0.08 350 / 0.03) 1px, transparent 1px);
   background-size: 4px 4px;
 }
 
@@ -247,7 +262,7 @@
   animation: float 4s ease-in-out infinite;
 }
 @utility text-shimmer-gold {
-  background: linear-gradient(90deg, oklch(0.85 0.16 88) 0%, oklch(0.95 0.1 88) 50%, oklch(0.85 0.16 88) 100%);
+  background: linear-gradient(90deg, oklch(0.7 0.2 355) 0%, oklch(0.6 0.22 350) 50%, oklch(0.7 0.2 355) 100%);
   background-size: 200% 100%;
   -webkit-background-clip: text;
   background-clip: text;
