@@ -93,7 +93,7 @@ export default function LandingPage() {
           property="og:description"
           content="Acumula puntos con cada compra y redime experiencias deluxe."
         />
-        <meta name="theme-color" content="#000000" />
+        <meta name="theme-color" content="#F4B6CD" />
       </Helmet>
 
       <SiteHeader />
@@ -161,17 +161,17 @@ export default function LandingPage() {
           </div>
 
           <div className="relative animate-scale-in">
-            <div className="absolute -inset-6 -z-10 rounded-[2.5rem] bg-primary/30 blur-3xl" />
-            <div className="overflow-hidden rounded-[2rem] border border-gold/20 shadow-glow">
+            <div className="absolute -inset-6 -z-10 rounded-[2.5rem] bg-primary/20 blur-3xl" />
+            <div className="overflow-hidden rounded-[2rem] border border-primary/20 shadow-glow">
               <img
                 src="https://images.unsplash.com/photo-1487070183336-b863922373d4?w=1200&auto=format&fit=crop"
-                alt="Arreglo floral premium con rosas rojas"
+                alt="Arreglo floral premium con rosas"
                 className="h-[520px] w-full object-cover md:h-[640px]"
               />
             </div>
-            {/* Floating gold badge */}
-            <div className="absolute -bottom-5 -left-5 animate-float rounded-2xl border border-gold/40 bg-black/80 p-4 backdrop-blur">
-              <p className="text-[10px] uppercase tracking-widest text-gold">Equivalencia</p>
+            {/* Floating pink badge */}
+            <div className="absolute -bottom-5 -left-5 animate-float rounded-2xl border border-primary/30 bg-white/90 p-4 shadow-pink backdrop-blur">
+              <p className="text-[10px] uppercase tracking-widest text-primary">Equivalencia</p>
               <p className="mt-1 font-serif text-xl font-semibold text-foreground">
                 1 pt <span className="text-muted-foreground">=</span> $1.760
               </p>
@@ -265,9 +265,9 @@ export default function LandingPage() {
 
           <div className="mt-14 flex justify-center">
             <div className="relative">
-              {/* Marco dorado */}
-              <div className="absolute -inset-3 rounded-[2.5rem] bg-gradient-gold opacity-60 blur-xl" />
-              <div className="relative aspect-[9/16] w-[320px] overflow-hidden rounded-[2rem] border-2 border-gold/40 bg-black shadow-glow md:w-[380px]">
+              {/* Marco rosa */}
+              <div className="absolute -inset-3 rounded-[2.5rem] bg-gradient-gold opacity-50 blur-xl" />
+              <div className="relative aspect-[9/16] w-[320px] overflow-hidden rounded-[2rem] border-2 border-primary/30 bg-white shadow-glow md:w-[380px]">
                 <iframe
                   className="absolute inset-0 h-full w-full"
                   src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=0&mute=1&controls=1&rel=0"
@@ -276,8 +276,8 @@ export default function LandingPage() {
                   allowFullScreen
                 />
                 {/* Decorative play overlay (visual only) */}
-                <div className="pointer-events-none absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full border border-gold/40 bg-black/60 backdrop-blur">
-                  <Play className="h-4 w-4 text-gold" fill="currentColor" />
+                <div className="pointer-events-none absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full border border-primary/30 bg-white/80 backdrop-blur">
+                  <Play className="h-4 w-4 text-primary" fill="currentColor" />
                 </div>
               </div>
             </div>
@@ -307,7 +307,7 @@ export default function LandingPage() {
             {redemptionCards.map((card, i) => (
               <article
                 key={card.title}
-                className="group relative overflow-hidden rounded-3xl border border-gold/15 bg-card transition-all hover:-translate-y-2 hover:border-gold/50 hover:shadow-gold animate-fade-up"
+                className="group relative overflow-hidden rounded-3xl border border-primary/15 bg-card transition-all hover:-translate-y-2 hover:border-primary/40 hover:shadow-pink animate-fade-up"
                 style={{ animationDelay: `${i * 100}ms` }}
               >
                 <div className="aspect-[4/5] overflow-hidden">
@@ -317,19 +317,19 @@ export default function LandingPage() {
                     loading="lazy"
                     className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-foreground/85 via-foreground/30 to-transparent" />
                 </div>
-                <div className="absolute right-3 top-3 rounded-full border border-gold/40 bg-black/70 px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-gold backdrop-blur">
+                <div className="absolute right-3 top-3 rounded-full border border-primary/30 bg-white/90 px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-primary backdrop-blur">
                   {card.badge}
                 </div>
-                <div className="absolute bottom-0 left-0 right-0 p-5">
-                  <div className="mb-2 flex h-9 w-9 items-center justify-center rounded-xl border border-gold/30 bg-black/60 text-gold backdrop-blur">
+                <div className="absolute bottom-0 left-0 right-0 p-5 text-white">
+                  <div className="mb-2 flex h-9 w-9 items-center justify-center rounded-xl border border-white/40 bg-white/15 text-white backdrop-blur">
                     <card.icon className="h-4 w-4" strokeWidth={1.75} />
                   </div>
-                  <h3 className="font-serif text-xl font-semibold text-foreground">
+                  <h3 className="font-serif text-xl font-semibold text-white">
                     {card.title}
                   </h3>
-                  <p className="mt-1 text-xs text-muted-foreground">{card.desc}</p>
+                  <p className="mt-1 text-xs text-white/85">{card.desc}</p>
                 </div>
               </article>
             ))}
@@ -351,12 +351,12 @@ export default function LandingPage() {
 
       {/* CTA FINAL */}
       <section id="galeria" className="px-6 pb-24 lg:px-10">
-        <div className="relative mx-auto max-w-7xl overflow-hidden rounded-3xl border border-gold/30 bg-gradient-ink p-12 text-center md:p-20">
+        <div className="relative mx-auto max-w-7xl overflow-hidden rounded-3xl border border-primary/20 bg-gradient-hero p-12 text-center md:p-20">
           <div className="pointer-events-none absolute -left-20 -top-20 h-64 w-64 rounded-full bg-primary/30 blur-3xl" />
-          <div className="pointer-events-none absolute -right-16 -bottom-16 h-72 w-72 rounded-full bg-gold/20 blur-3xl" />
+          <div className="pointer-events-none absolute -right-16 -bottom-16 h-72 w-72 rounded-full bg-blush/60 blur-3xl" />
 
           <div className="relative">
-            <span className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-black/40 px-4 py-1.5 text-[10px] font-medium uppercase tracking-[0.28em] text-gold backdrop-blur">
+            <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-white/70 px-4 py-1.5 text-[10px] font-medium uppercase tracking-[0.28em] text-primary backdrop-blur">
               <Sparkles className="h-3 w-3" />
               Únete hoy
             </span>
@@ -369,7 +369,7 @@ export default function LandingPage() {
             <Button
               asChild
               size="lg"
-              className="mt-9 rounded-full bg-gold px-8 text-gold-foreground hover:bg-primary hover:text-primary-foreground"
+              className="mt-9 rounded-full bg-primary px-8 text-primary-foreground hover:bg-foreground hover:text-background"
             >
               <Link to="/auth?mode=signup">
                 Crear mi cuenta Deluxe

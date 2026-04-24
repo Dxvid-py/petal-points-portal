@@ -3,13 +3,13 @@ import { Link } from "react-router-dom";
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-border/40 bg-black">
+    <footer className="border-t border-border/60 bg-bone">
       <div className="mx-auto grid max-w-7xl gap-10 px-6 py-14 md:grid-cols-3 lg:px-10">
         <div>
           <div className="flex items-center gap-2">
-            <Flower2 className="h-5 w-5 text-gold" />
+            <Flower2 className="h-5 w-5 text-primary" />
             <span className="font-serif text-lg font-semibold text-foreground">
-              Puntos <em className="not-italic text-gold">Deluxe</em>
+              Puntos <em className="not-italic text-primary">Deluxe</em>
             </span>
           </div>
           <p className="mt-4 max-w-xs text-sm text-muted-foreground">
@@ -18,7 +18,7 @@ export function SiteFooter() {
           </p>
         </div>
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gold">
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">
             Navegación
           </p>
           <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
@@ -29,7 +29,7 @@ export function SiteFooter() {
           </ul>
         </div>
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gold">
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary">
             Contáctanos
           </p>
           <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
@@ -39,7 +39,7 @@ export function SiteFooter() {
           </ul>
         </div>
       </div>
-      <div className="border-t border-border/40 px-6 py-5 text-center">
+      <div className="border-t border-border/60 px-6 py-5 text-center">
         <p className="text-xs text-muted-foreground">
           © 2024 Puntos Floristería Deluxe · Todos los derechos reservados
         </p>
