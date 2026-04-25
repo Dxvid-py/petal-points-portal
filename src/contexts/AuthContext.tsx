@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import { createContext, useContext, useEffect, useState, ReactNode, useCallback } from "react";
 import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/lib/supabase";
 
@@ -7,11 +7,12 @@ export type AppRole = "admin" | "asesora" | "cliente";
 export interface Profile {
   id: string;
   full_name: string;
-  nit: string | null;
+  nit_id: string | null;
   phone: string | null;
   email: string | null;
-  parish_code: string | null;
+  parroquia_code: string | null;
   points_balance: number;
+  created_at?: string;
 }
 
 interface AuthContextValue {
@@ -22,6 +23,7 @@ interface AuthContextValue {
   loading: boolean;
   isAdmin: boolean;
   isAsesora: boolean;
+  isCliente: boolean;
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
 }
@@ -35,22 +37,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [roles, setRoles] = useState<AppRole[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const loadProfileAndRoles = async (uid: string) => {
+  const loadProfileAndRoles = useCallback(async (uid: string) => {
     const [{ data: prof }, { data: rolesData }] = await Promise.all([
       supabase.from("profiles").select("*").eq("id", uid).maybeSingle(),
       supabase.from("user_roles").select("role").eq("user_id", uid),
     ]);
     setProfile((prof as Profile) ?? null);
     setRoles(((rolesData ?? []) as { role: AppRole }[]).map((r) => r.role));
-  };
+  }, []);
 
   useEffect(() => {
-    // Setup listener FIRST
     const { data: subscription } = supabase.auth.onAuthStateChange((_event, sess) => {
       setSession(sess);
       setUser(sess?.user ?? null);
       if (sess?.user) {
-        // defer to avoid deadlocks
         setTimeout(() => loadProfileAndRoles(sess.user.id), 0);
       } else {
         setProfile(null);
@@ -58,7 +58,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     });
 
-    // THEN check existing session
     supabase.auth.getSession().then(({ data: { session: s } }) => {
       setSession(s);
       setUser(s?.user ?? null);
@@ -70,7 +69,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
 
     return () => subscription.subscription.unsubscribe();
-  }, []);
+  }, [loadProfileAndRoles]);
 
   const signOut = async () => {
     await supabase.auth.signOut();
@@ -92,6 +91,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         loading,
         isAdmin: roles.includes("admin"),
         isAsesora: roles.includes("asesora"),
+        isCliente: roles.includes("cliente"),
         signOut,
         refreshProfile,
       }}

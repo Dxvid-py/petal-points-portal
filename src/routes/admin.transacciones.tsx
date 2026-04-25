@@ -1,81 +1,82 @@
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { Search, Package, Loader2, TrendingUp, Gift } from "lucide-react";
+import { Search, Loader2, History, TrendingUp, Gift } from "lucide-react";
 import { PageHeader } from "@/components/dashboard/PageHeader";
 import { Input } from "@/components/ui/input";
-import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/lib/supabase";
-import type { PointsTransaction } from "@/lib/types";
 import { formatDateTime, formatPoints } from "@/lib/format";
 
-export default function PurchasesPage() {
-  const { user } = useAuth();
+interface TxRow {
+  id: string;
+  amount: number;
+  type: string;
+  reason: string | null;
+  created_at: string;
+  profile_id: string;
+  profiles: { full_name: string | null; nit_id: string | null; email: string | null } | null;
+}
+
+export default function AdminTransaccionesPage() {
+  const [rows, setRows] = useState<TxRow[]>([]);
+  const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<"all" | "in" | "out">("all");
-  const [txs, setTxs] = useState<PointsTransaction[]>([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!user) return;
     supabase
       .from("points_transactions")
-      .select("*")
-      .eq("profile_id", user.id)
+      .select("id, amount, type, reason, created_at, profile_id, profiles(full_name, nit_id, email)")
       .order("created_at", { ascending: false })
+      .limit(200)
       .then(({ data }) => {
-        setTxs((data ?? []) as PointsTransaction[]);
+        setRows((data ?? []) as unknown as TxRow[]);
         setLoading(false);
       });
-  }, [user]);
+  }, []);
 
-  const filtered = txs.filter((t) => {
+  const filtered = rows.filter((r) => {
+    const q = query.toLowerCase();
     const matchesQ =
-      query === "" ||
-      (t.reason ?? "").toLowerCase().includes(query.toLowerCase()) ||
-      t.type.toLowerCase().includes(query.toLowerCase());
+      !q ||
+      (r.profiles?.full_name ?? "").toLowerCase().includes(q) ||
+      (r.profiles?.nit_id ?? "").toLowerCase().includes(q) ||
+      (r.reason ?? "").toLowerCase().includes(q);
     const matchesF =
-      filter === "all" || (filter === "in" ? t.amount > 0 : t.amount < 0);
+      filter === "all" || (filter === "in" ? r.amount > 0 : r.amount < 0);
     return matchesQ && matchesF;
   });
 
-  const totalIn = txs.filter((t) => t.amount > 0).reduce((s, t) => s + t.amount, 0);
-  const totalOut = Math.abs(txs.filter((t) => t.amount < 0).reduce((s, t) => s + t.amount, 0));
+  const totalIn = rows.filter((r) => r.amount > 0).reduce((s, r) => s + r.amount, 0);
+  const totalOut = Math.abs(rows.filter((r) => r.amount < 0).reduce((s, r) => s + r.amount, 0));
 
   return (
     <div className="flex flex-col gap-10">
       <Helmet>
-        <title>Mis movimientos — Puntos Deluxe</title>
+        <title>Transacciones — Admin Deluxe</title>
       </Helmet>
       <PageHeader
-        eyebrow="Mis movimientos"
+        eyebrow="Transacciones"
         title={
           <>
-            Tu historial <em className="italic">de puntos.</em>
+            Todos los <em className="italic">movimientos.</em>
           </>
         }
-        description="Cada compra que has registrado y cada recompensa que has canjeado."
+        description="Historial completo de cargas y canjes del programa."
+        showAvatar={false}
       />
 
       <section className="grid gap-4 sm:grid-cols-3">
         <article className="rounded-3xl border border-border bg-card p-6 shadow-soft">
-          <p className="text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
-            Puntos ganados
-          </p>
-          <p className="mt-2 font-serif text-3xl font-semibold text-forest">
-            +{formatPoints(totalIn)}
-          </p>
+          <p className="text-[10px] uppercase tracking-[0.24em] text-muted-foreground">Emitidos</p>
+          <p className="mt-2 font-serif text-3xl font-semibold text-forest">+{formatPoints(totalIn)}</p>
         </article>
         <article className="rounded-3xl border border-border bg-card p-6 shadow-soft">
           <p className="text-[10px] uppercase tracking-[0.24em] text-muted-foreground">Canjeados</p>
-          <p className="mt-2 font-serif text-3xl font-semibold text-terracotta">
-            {formatPoints(totalOut)}
-          </p>
+          <p className="mt-2 font-serif text-3xl font-semibold text-terracotta">{formatPoints(totalOut)}</p>
         </article>
         <article className="rounded-3xl bg-gradient-ink p-6 text-primary-foreground shadow-ink">
-          <p className="text-[10px] uppercase tracking-[0.24em] text-primary-foreground/60">
-            Movimientos
-          </p>
-          <p className="mt-2 font-serif text-3xl font-semibold">{txs.length}</p>
+          <p className="text-[10px] uppercase tracking-[0.24em] text-primary-foreground/60">Total movimientos</p>
+          <p className="mt-2 font-serif text-3xl font-semibold">{rows.length}</p>
         </article>
       </section>
 
@@ -83,18 +84,18 @@ export default function PurchasesPage() {
         <div className="relative max-w-sm flex-1">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
-            placeholder="Buscar por motivo o tipo"
+            placeholder="Buscar cliente, NIT o motivo"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             className="rounded-full pl-9"
           />
         </div>
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap gap-2">
           {(
             [
               { k: "all", label: "Todos" },
-              { k: "in", label: "Ganados" },
-              { k: "out", label: "Canjeados" },
+              { k: "in", label: "Cargas" },
+              { k: "out", label: "Canjes" },
             ] as const
           ).map((s) => (
             <button
@@ -114,16 +115,13 @@ export default function PurchasesPage() {
 
       <section className="overflow-hidden rounded-3xl border border-border bg-card shadow-soft">
         {loading ? (
-          <div className="flex items-center justify-center py-16">
+          <div className="flex justify-center py-16">
             <Loader2 className="h-5 w-5 animate-spin text-primary" />
           </div>
         ) : filtered.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 text-center">
-            <Package className="h-8 w-8 text-muted-foreground" />
-            <p className="mt-3 font-serif text-lg text-foreground">Sin movimientos aún</p>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Cuando hagas una compra, tu asesora cargará los puntos aquí.
-            </p>
+            <History className="h-8 w-8 text-muted-foreground" />
+            <p className="mt-3 font-serif text-lg text-foreground">Sin transacciones</p>
           </div>
         ) : (
           <ul className="divide-y divide-border">
@@ -131,7 +129,7 @@ export default function PurchasesPage() {
               const positive = tx.amount > 0;
               const Icon = positive ? TrendingUp : Gift;
               return (
-                <li key={tx.id} className="flex items-center gap-4 px-6 py-5">
+                <li key={tx.id} className="flex items-center gap-4 px-6 py-4">
                   <span
                     className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${
                       positive ? "bg-primary-soft text-forest" : "bg-blush text-blush-foreground"
@@ -141,19 +139,22 @@ export default function PurchasesPage() {
                   </span>
                   <div className="min-w-0 flex-1">
                     <p className="text-sm font-medium text-foreground">
-                      {tx.reason ?? (positive ? "Carga de puntos" : "Canje de recompensa")}
+                      {tx.profiles?.full_name ?? "Cliente"}{" "}
+                      <span className="ml-1 font-mono text-[11px] text-muted-foreground">
+                        {tx.profiles?.nit_id ?? "—"}
+                      </span>
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      {formatDateTime(tx.created_at)} · {tx.type}
+                      {tx.reason ?? tx.type} · {formatDateTime(tx.created_at)}
                     </p>
                   </div>
                   <span
-                    className={`font-serif text-lg font-semibold ${
+                    className={`font-serif text-base font-semibold ${
                       positive ? "text-forest" : "text-terracotta"
                     }`}
                   >
                     {positive ? "+" : ""}
-                    {tx.amount} pts
+                    {tx.amount}
                   </span>
                 </li>
               );

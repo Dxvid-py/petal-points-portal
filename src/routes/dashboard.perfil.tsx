@@ -1,25 +1,58 @@
+import { useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { Mail, Phone, MapPin, Calendar, Bell, Shield, Sparkles } from "lucide-react";
+import { Mail, Phone, MapPin, IdCard, Sparkles, Loader2 } from "lucide-react";
 import { PageHeader } from "@/components/dashboard/PageHeader";
 import { Avatar } from "@/components/dashboard/Avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-
-const tiers = [
-  { name: "Pétalo", points: 0, color: "bg-secondary" },
-  { name: "Jardín", points: 500, color: "bg-blush" },
-  { name: "Oro", points: 1000, color: "bg-gold/40", current: true },
-  { name: "Platino", points: 2500, color: "bg-primary-soft" },
-];
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/lib/supabase";
+import { toast } from "sonner";
+import { formatPoints } from "@/lib/format";
 
 export default function ProfilePage() {
+  const { profile, user, refreshProfile, roles } = useAuth();
+  const [saving, setSaving] = useState(false);
+  const [fullName, setFullName] = useState(profile?.full_name ?? "");
+  const [phone, setPhone] = useState(profile?.phone ?? "");
+  const [parroquiaCode, setParroquiaCode] = useState(profile?.parroquia_code ?? "");
+
+  // Sincroniza si profile llega después
+  if (profile && fullName === "" && profile.full_name) {
+    setFullName(profile.full_name);
+    setPhone(profile.phone ?? "");
+    setParroquiaCode(profile.parroquia_code ?? "");
+  }
+
+  const handleSave = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!user) return;
+    setSaving(true);
+    const { error } = await supabase
+      .from("profiles")
+      .update({
+        full_name: fullName,
+        phone: phone || null,
+        parroquia_code: parroquiaCode || null,
+      })
+      .eq("id", user.id);
+    setSaving(false);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    toast.success("Perfil actualizado");
+    refreshProfile();
+  };
+
+  const balance = profile?.points_balance ?? 0;
+  const displayName = profile?.full_name ?? "Cliente Deluxe";
+
   return (
     <div className="flex flex-col gap-10">
       <Helmet>
-        <title>Mi Perfil — Botanique Luxe</title>
-        <meta name="description" content="Datos personales, preferencias y nivel del Club Botanique Luxe." />
+        <title>Mi Perfil — Puntos Deluxe</title>
       </Helmet>
       <PageHeader
         eyebrow="Mi perfil"
@@ -28,7 +61,7 @@ export default function ProfilePage() {
             Tus datos, <em className="italic">tu estilo.</em>
           </>
         }
-        description="Mantén tu información actualizada para recibir las mejores experiencias florales."
+        description="Mantén tu información actualizada para que la asesora pueda cargar tus puntos al instante."
         showAvatar={false}
       />
 
@@ -37,170 +70,122 @@ export default function ProfilePage() {
           <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-soft">
             <div className="bg-gradient-ink h-28" />
             <div className="-mt-12 flex flex-col items-center px-6 pb-6 text-center">
-              <Avatar name="Angie Restrepo" size="xl" ring />
-              <h2 className="mt-4 font-serif text-2xl font-semibold text-foreground">Angie Restrepo</h2>
-              <p className="mt-1 text-xs uppercase tracking-[0.22em] text-gold-foreground">
-                ✦ Nivel Oro · 1.250 pts
+              <Avatar name={displayName} size="xl" ring />
+              <h2 className="mt-4 font-serif text-2xl font-semibold text-foreground">
+                {displayName}
+              </h2>
+              <p className="mt-1 inline-flex items-center gap-1 text-xs uppercase tracking-[0.22em] text-gold-foreground">
+                <Sparkles className="h-3 w-3" /> Club Deluxe
               </p>
-              <p className="mt-3 max-w-[24ch] text-xs text-muted-foreground">
-                "Las flores son la sonrisa de la tierra."
+              <p className="mt-3 font-serif text-3xl font-semibold text-shimmer-gold">
+                {formatPoints(balance)} <span className="text-sm font-normal text-muted-foreground">pts</span>
               </p>
 
-              <div className="mt-6 grid w-full grid-cols-3 gap-2 border-t border-border pt-4 text-center">
+              <div className="mt-5 grid w-full grid-cols-2 gap-2 border-t border-border pt-4 text-center">
                 <div>
-                  <p className="font-serif text-xl font-semibold text-foreground">14</p>
-                  <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">Compras</p>
+                  <p className="font-serif text-base font-semibold text-foreground">
+                    {profile?.nit_id ?? "—"}
+                  </p>
+                  <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                    NIT / Cédula
+                  </p>
                 </div>
-                <div className="border-x border-border">
-                  <p className="font-serif text-xl font-semibold text-foreground">7</p>
-                  <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">Canjes</p>
-                </div>
-                <div>
-                  <p className="font-serif text-xl font-semibold text-foreground">22m</p>
-                  <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">Antigüedad</p>
+                <div className="border-l border-border">
+                  <p className="font-serif text-base font-semibold text-foreground">
+                    {profile?.parroquia_code ?? "—"}
+                  </p>
+                  <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                    Parroquia
+                  </p>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="mt-6 rounded-3xl border border-border bg-card p-6 shadow-soft">
-            <p className="text-[10px] uppercase tracking-[0.24em] text-terracotta">Niveles del club</p>
-            <h3 className="mt-1 font-serif text-xl font-semibold text-foreground">Tu camino</h3>
-            <ol className="mt-5 space-y-4">
-              {tiers.map((t) => (
-                <li key={t.name} className="flex items-center gap-3">
+          {roles.length > 0 && (
+            <div className="mt-6 rounded-3xl border border-gold/30 bg-gold/5 p-5">
+              <p className="text-[10px] uppercase tracking-[0.24em] text-gold">Tus roles</p>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {roles.map((r) => (
                   <span
-                    className={`flex h-9 w-9 items-center justify-center rounded-full ${t.color} font-serif text-sm font-semibold text-foreground`}
+                    key={r}
+                    className="rounded-full bg-card px-3 py-1 text-xs font-medium capitalize text-foreground"
                   >
-                    {t.current ? <Sparkles className="h-4 w-4" /> : t.name[0]}
+                    {r}
                   </span>
-                  <div className="flex-1">
-                    <p
-                      className={`text-sm ${t.current ? "font-semibold text-foreground" : "text-muted-foreground"}`}
-                    >
-                      Nivel {t.name}
-                    </p>
-                    <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                      {t.points.toLocaleString()} pts
-                    </p>
-                  </div>
-                  {t.current && (
-                    <span className="rounded-full bg-gold/20 px-2 py-0.5 text-[10px] font-medium uppercase tracking-[0.18em] text-gold-foreground">
-                      Actual
-                    </span>
-                  )}
-                </li>
-              ))}
-            </ol>
-          </div>
+                ))}
+              </div>
+            </div>
+          )}
         </section>
 
         <section className="space-y-6 lg:col-span-2">
-          <form className="space-y-6 rounded-3xl border border-border bg-card p-7 shadow-soft">
+          <form onSubmit={handleSave} className="space-y-6 rounded-3xl border border-border bg-card p-7 shadow-soft">
             <div>
-              <h3 className="font-serif text-2xl font-semibold text-foreground">Información personal</h3>
+              <h3 className="font-serif text-2xl font-semibold text-foreground">
+                Información personal
+              </h3>
               <p className="mt-1 text-sm text-muted-foreground">
-                Estos datos son privados y solo se usan para personalizar tu experiencia.
+                Estos datos se usan para identificarte cuando compras en tienda física.
               </p>
             </div>
 
             <div className="grid gap-5 md:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="firstName">Nombre</Label>
-                <Input id="firstName" defaultValue="Angie María" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="lastName">Apellidos</Label>
-                <Input id="lastName" defaultValue="Restrepo Vélez" />
+                <Label htmlFor="fullName">Nombre completo</Label>
+                <Input
+                  id="fullName"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  required
+                />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="email">
-                  <Mail className="mr-1.5 inline h-3 w-3" />
-                  Correo
+                  <Mail className="mr-1.5 inline h-3 w-3" /> Correo
                 </Label>
-                <Input id="email" type="email" defaultValue="angie.restrepo@correo.co" />
+                <Input id="email" type="email" value={profile?.email ?? ""} disabled />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="nit">
+                  <IdCard className="mr-1.5 inline h-3 w-3" /> NIT / Cédula
+                </Label>
+                <Input id="nit" value={profile?.nit_id ?? ""} disabled />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="phone">
-                  <Phone className="mr-1.5 inline h-3 w-3" />
-                  Teléfono
+                  <Phone className="mr-1.5 inline h-3 w-3" /> Teléfono
                 </Label>
-                <Input id="phone" defaultValue="+57 310 555 0188" />
+                <Input
+                  id="phone"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="+57 300 000 0000"
+                />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="birthday">
-                  <Calendar className="mr-1.5 inline h-3 w-3" />
-                  Cumpleaños
+              <div className="space-y-2 md:col-span-2">
+                <Label htmlFor="parroquia">
+                  <MapPin className="mr-1.5 inline h-3 w-3" /> Código de Parroquia
                 </Label>
-                <Input id="birthday" type="date" defaultValue="1992-04-18" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="address">
-                  <MapPin className="mr-1.5 inline h-3 w-3" />
-                  Ciudad
-                </Label>
-                <Input id="address" defaultValue="Barranquilla, Colombia" />
+                <Input
+                  id="parroquia"
+                  value={parroquiaCode}
+                  onChange={(e) => setParroquiaCode(e.target.value)}
+                  placeholder="PARR-001"
+                />
               </div>
             </div>
 
             <div className="flex items-center justify-end gap-3 border-t border-border pt-5">
-              <Button variant="ghost" type="button">
-                Cancelar
-              </Button>
-              <Button type="submit" className="rounded-full bg-ink px-6 text-ink-foreground hover:bg-ink/90">
-                Guardar cambios
+              <Button
+                type="submit"
+                disabled={saving}
+                className="rounded-full bg-primary px-6 text-primary-foreground hover:bg-gold hover:text-gold-foreground"
+              >
+                {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : "Guardar cambios"}
               </Button>
             </div>
           </form>
-
-          <div className="rounded-3xl border border-border bg-card p-7 shadow-soft">
-            <div className="flex items-start gap-3">
-              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-blush text-blush-foreground">
-                <Bell className="h-4 w-4" strokeWidth={1.75} />
-              </span>
-              <div>
-                <h3 className="font-serif text-2xl font-semibold text-foreground">Preferencias</h3>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  Decide cómo y cuándo quieres saber de nosotros.
-                </p>
-              </div>
-            </div>
-
-            <div className="mt-6 space-y-4">
-              {[
-                { label: "Novedades del atelier", desc: "Lanzamientos de colecciones y flores de temporada.", on: true },
-                { label: "Recompensas por vencer", desc: "Avísame 7 días antes de que expire una recompensa.", on: true },
-                { label: "Invitaciones a talleres", desc: "Acceso anticipado a nuestros talleres botánicos.", on: false },
-                { label: "Recordatorio de cumpleaños", desc: "Quiero un detalle floral en mi día especial.", on: true },
-              ].map((p) => (
-                <div
-                  key={p.label}
-                  className="flex items-center justify-between gap-4 rounded-2xl bg-secondary/60 px-4 py-3"
-                >
-                  <div>
-                    <p className="text-sm font-medium text-foreground">{p.label}</p>
-                    <p className="text-xs text-muted-foreground">{p.desc}</p>
-                  </div>
-                  <Switch defaultChecked={p.on} />
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between rounded-3xl border border-border bg-card p-6 shadow-soft">
-            <div className="flex items-center gap-4">
-              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-soft text-forest">
-                <Shield className="h-4 w-4" strokeWidth={1.75} />
-              </span>
-              <div>
-                <p className="font-serif text-base font-semibold text-foreground">Seguridad de la cuenta</p>
-                <p className="text-xs text-muted-foreground">Última sesión: hoy · Barranquilla</p>
-              </div>
-            </div>
-            <Button variant="outline" className="rounded-full">
-              Cambiar contraseña
-            </Button>
-          </div>
         </section>
       </div>
     </div>

@@ -9,6 +9,14 @@ import ProfilePage from "./routes/dashboard.perfil";
 import RewardsPage from "./routes/dashboard.recompensas";
 import PurchasesPage from "./routes/dashboard.compras";
 import SupportPage from "./routes/dashboard.soporte";
+import AdminLayout from "./routes/admin";
+import AdminHome from "./routes/admin.index";
+import AdminClientes from "./routes/admin.clientes";
+import AdminRecompensas from "./routes/admin.recompensas";
+import AdminGaleria from "./routes/admin.galeria";
+import AdminTransacciones from "./routes/admin.transacciones";
+import AdminRoles from "./routes/admin.roles";
+import AsesoraPage from "./routes/asesora";
 
 function NotFound() {
   return (
@@ -18,9 +26,6 @@ function NotFound() {
         <h2 className="mt-4 font-serif text-xl font-semibold text-foreground">
           Página no encontrada
         </h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          La página que buscas no existe o fue movida.
-        </p>
         <div className="mt-6">
           <Link
             to="/"
@@ -47,9 +52,18 @@ export default function App() {
           <Route path="compras" element={<PurchasesPage />} />
           <Route path="soporte" element={<SupportPage />} />
         </Route>
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<AdminHome />} />
+          <Route path="clientes" element={<AdminClientes />} />
+          <Route path="recompensas" element={<AdminRecompensas />} />
+          <Route path="galeria" element={<AdminGaleria />} />
+          <Route path="transacciones" element={<AdminTransacciones />} />
+          <Route path="roles" element={<AdminRoles />} />
+        </Route>
+        <Route path="/asesora" element={<AsesoraPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
-      <Toaster position="top-right" theme="dark" />
+      <Toaster position="top-right" />
     </AuthProvider>
   );
 }

@@ -51,14 +51,14 @@ export default function AuthPage() {
             emailRedirectTo: window.location.origin,
             data: {
               full_name: fullName,
-              nit,
-              phone,
+              nit: nit,
+              phone: phone || null,
               parish_code: parishCode || null,
             },
           },
         });
         if (error) throw error;
-        toast.success("¡Cuenta creada! Revisa tu correo para confirmar.");
+        toast.success("¡Cuenta creada! Bienvenido al Club Deluxe.");
         navigate("/dashboard");
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
