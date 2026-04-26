@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import {
@@ -7,16 +7,16 @@ import {
   Gift,
   ArrowRight,
   Sparkles,
-  Flower2,
-  HardHat,
-  SprayCan,
-  Fuel,
   Play,
 } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { Button } from "@/components/ui/button";
 import { AccumulateStepsModal } from "@/components/landing/AccumulateStepsModal";
+import { supabase } from "@/lib/supabase";
+import { fetchSiteContent, getText, getUrl, type SiteContentMap } from "@/lib/site-content";
+import { SITE_KEYS, type Reward, type GalleryItem } from "@/lib/types";
+import { formatPoints } from "@/lib/format";
 
 const fidelityPillars = [
   {
@@ -75,6 +75,30 @@ const redemptionCards = [
 
 export default function LandingPage() {
   const [stepsOpen, setStepsOpen] = useState(false);
+  const [content, setContent] = useState<SiteContentMap>({});
+  const [rewards, setRewards] = useState<Reward[]>([]);
+  const [gallery, setGallery] = useState<GalleryItem[]>([]);
+
+  useEffect(() => {
+    Promise.all([
+      fetchSiteContent(),
+      supabase.from("rewards").select("*").eq("active", true).order("points_cost").limit(4),
+      supabase.from("gallery_items").select("*").order("created_at", { ascending: false }).limit(8),
+    ]).then(([map, rwRes, gRes]) => {
+      setContent(map);
+      setRewards((rwRes.data ?? []) as Reward[]);
+      setGallery((gRes.data ?? []) as GalleryItem[]);
+    });
+  }, []);
+
+  const heroVideoUrl = getUrl(content, SITE_KEYS.heroVideoUrl);
+  const heroTitle = getText(content, SITE_KEYS.heroTitle, "Floristería Deluxe");
+  const heroSubtitle = getText(
+    content,
+    SITE_KEYS.heroSubtitle,
+    "Únete al club exclusivo de Floristería Deluxe. Acumula puntos con cada compra y redime experiencias únicas.",
+  );
+  const heroCta = getText(content, SITE_KEYS.heroCta, "Regístrate gratis");
 
   const scrollTo = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
