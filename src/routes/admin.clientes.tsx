@@ -109,7 +109,50 @@ export default function AdminClientesPage() {
     load();
   };
 
-  return (
+  const handleCreateAccount = async () => {
+    if (!newDisplayName.trim() || !newEmail.trim() || !newPin.trim()) {
+      toast.error("Nombre, correo y PIN son obligatorios");
+      return;
+    }
+    if (newPin.length < 4 || newPin.length > 6 || !/^\d+$/.test(newPin)) {
+      toast.error("El PIN debe ser 4 a 6 dígitos");
+      return;
+    }
+    setCreating(true);
+    const { error } = await supabase.auth.signUp({
+      email: newEmail.trim(),
+      password: newPin.trim(),
+      options: {
+        data: {
+          full_name: newDisplayName.trim(),
+          display_name: newDisplayName.trim(),
+          account_type: newAccountType,
+          nit: newNit.trim() || null,
+          phone: newPhone.trim() || null,
+        },
+      },
+    });
+    setCreating(false);
+    if (error) {
+      if (error.message.toLowerCase().includes("already") || error.message.toLowerCase().includes("registered")) {
+        toast.error("Ese correo ya está registrado.");
+      } else if (error.message.toLowerCase().includes("duplicate") || error.message.includes("23505")) {
+        toast.error("Ese nombre ya está en uso. Usa una variación.");
+      } else {
+        toast.error(error.message);
+      }
+      return;
+    }
+    toast.success(`Cuenta creada: ${newDisplayName.trim()}`);
+    setNewDisplayName("");
+    setNewEmail("");
+    setNewNit("");
+    setNewPhone("");
+    setNewPin("");
+    setNewAccountType("parroquia");
+    setCreateOpen(false);
+    load();
+  };
     <div className="flex flex-col gap-10">
       <Helmet>
         <title>Clientes — Admin Deluxe</title>
@@ -125,14 +168,22 @@ export default function AdminClientesPage() {
         showAvatar={false}
       />
 
-      <div className="relative max-w-md">
-        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-        <Input
-          placeholder="Buscar por nombre, NIT, correo o parroquia"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          className="rounded-full pl-9"
-        />
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="relative max-w-md flex-1">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            placeholder="Buscar por nombre, NIT, correo o parroquia"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            className="rounded-full pl-9"
+          />
+        </div>
+        <Button
+          onClick={() => setCreateOpen(true)}
+          className="rounded-full bg-primary text-primary-foreground hover:bg-gold hover:text-gold-foreground"
+        >
+          <UserPlus className="h-4 w-4" /> Crear cuenta
+        </Button>
       </div>
 
       <section className="overflow-hidden rounded-3xl border border-border bg-card shadow-soft">
