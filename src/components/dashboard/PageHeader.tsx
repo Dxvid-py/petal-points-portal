@@ -16,7 +16,7 @@ export function PageHeader({
   showAvatar = true,
 }: PageHeaderProps) {
   const { profile } = useAuth();
-  const displayName = profile?.full_name ?? "Cliente Deluxe";
+  const displayName = profile?.display_name ?? profile?.full_name ?? "Cliente Deluxe";
   const since = profile?.created_at ? `Miembro desde ${formatDate(profile.created_at)}` : "Club Deluxe";
 
   return (
@@ -32,7 +32,7 @@ export function PageHeader({
       </div>
       {showAvatar && (
         <div className="flex items-center gap-3 self-start rounded-full border border-border bg-card px-3 py-2 md:self-auto">
-          <Avatar name={displayName} size="sm" />
+          <Avatar name={displayName} url={profile?.avatar_url} size="sm" />
           <div className="pr-3 leading-tight">
             <p className="text-xs font-medium text-foreground">{displayName}</p>
             <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">{since}</p>

@@ -2,9 +2,14 @@ import type { AppRole } from "@/contexts/AuthContext";
 
 export type { AppRole };
 
+export type AccountType = "parroquia" | "persona";
+
 export interface ProfileRow {
   id: string;
   full_name: string;
+  display_name: string | null;
+  account_type: AccountType;
+  avatar_url: string | null;
   nit_id: string | null;
   phone: string | null;
   email: string | null;
@@ -45,3 +50,19 @@ export interface UserRoleRow {
   role: AppRole;
   created_at?: string;
 }
+
+export interface SiteContentRow {
+  key: string;
+  value_text: string | null;
+  value_url: string | null;
+  updated_at: string;
+}
+
+/** Claves conocidas en site_content para evitar typos */
+export const SITE_KEYS = {
+  heroTitle: "hero_title",
+  heroSubtitle: "hero_subtitle",
+  heroCta: "hero_cta",
+  heroVideoUrl: "hero_video_url",
+  heroPosterUrl: "hero_poster_url",
+} as const;

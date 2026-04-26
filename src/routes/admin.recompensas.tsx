@@ -17,6 +17,7 @@ import {
 import { supabase } from "@/lib/supabase";
 import type { Reward } from "@/lib/types";
 import { formatPoints } from "@/lib/format";
+import { ImageUploader } from "@/components/ImageUploader";
 import { toast } from "sonner";
 
 const empty: Omit<Reward, "id"> = {
@@ -256,14 +257,16 @@ export default function AdminRecompensasPage() {
               </div>
             </div>
             <div>
-              <Label htmlFor="img">URL de imagen</Label>
-              <Input
-                id="img"
-                value={form.image_url ?? ""}
-                onChange={(e) => setForm({ ...form, image_url: e.target.value })}
-                placeholder="https://..."
-                className="mt-1.5"
-              />
+              <Label>Imagen de la recompensa</Label>
+              <div className="mt-1.5">
+                <ImageUploader
+                  bucket="rewards-images"
+                  value={form.image_url}
+                  onChange={(url) => setForm({ ...form, image_url: url })}
+                  aspect="wide"
+                  maxSizeMB={3}
+                />
+              </div>
             </div>
             <div className="flex items-center justify-between rounded-2xl bg-secondary/40 px-4 py-3">
               <div>

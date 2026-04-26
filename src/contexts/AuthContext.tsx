@@ -3,10 +3,14 @@ import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/lib/supabase";
 
 export type AppRole = "admin" | "asesora" | "cliente";
+export type AccountType = "parroquia" | "persona";
 
 export interface Profile {
   id: string;
   full_name: string;
+  display_name: string | null;
+  account_type: AccountType;
+  avatar_url: string | null;
   nit_id: string | null;
   phone: string | null;
   email: string | null;

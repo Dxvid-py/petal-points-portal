@@ -8,6 +8,7 @@ import {
   ShieldCheck,
   LogOut,
   ArrowLeft,
+  Megaphone,
 } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { Avatar } from "@/components/dashboard/Avatar";
@@ -18,6 +19,7 @@ const adminNav = [
   { to: "/admin", label: "Resumen", icon: LayoutDashboard, exact: true },
   { to: "/admin/clientes", label: "Clientes", icon: Users },
   { to: "/admin/recompensas", label: "Recompensas", icon: Gift },
+  { to: "/admin/contenido", label: "Contenido home", icon: Megaphone },
   { to: "/admin/galeria", label: "Galería", icon: ImageIcon },
   { to: "/admin/transacciones", label: "Transacciones", icon: History },
   { to: "/admin/roles", label: "Roles del equipo", icon: ShieldCheck },
@@ -27,7 +29,7 @@ export default function AdminLayout() {
   const location = useLocation();
   const navigate = useNavigate();
   const { profile, signOut } = useAuth();
-  const displayName = profile?.full_name ?? "Admin";
+  const displayName = profile?.display_name ?? profile?.full_name ?? "Admin";
 
   const handleSignOut = async () => {
     await signOut();
@@ -45,7 +47,7 @@ export default function AdminLayout() {
 
           <div className="mx-6 mb-6 rounded-2xl border border-sidebar-border bg-sidebar-accent/40 p-4">
             <div className="flex items-center gap-3">
-              <Avatar name={displayName} size="md" ring />
+              <Avatar name={displayName} url={profile?.avatar_url} size="md" ring />
               <div className="min-w-0 leading-tight">
                 <p className="truncate text-sm font-medium text-sidebar-foreground">
                   {displayName}

@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { Search, Loader2, User as UserIcon, Plus } from "lucide-react";
+import { Search, Loader2, User as UserIcon, Plus, UserPlus, Church, User } from "lucide-react";
 import { PageHeader } from "@/components/dashboard/PageHeader";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase";
-import type { ProfileRow, AppRole } from "@/lib/types";
+import type { ProfileRow, AppRole, AccountType } from "@/lib/types";
 import { formatPoints, formatDate, formatCOP } from "@/lib/format";
 import { POINTS_PER_COP } from "@/lib/supabase";
 import {
@@ -13,7 +13,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
@@ -27,11 +26,21 @@ export default function AdminClientesPage() {
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState<Row | null>(null);
+  const [createOpen, setCreateOpen] = useState(false);
 
   // Form para añadir puntos manualmente
   const [amountCop, setAmountCop] = useState("");
   const [reason, setReason] = useState("");
   const [adjusting, setAdjusting] = useState(false);
+
+  // Form crear cuenta
+  const [newAccountType, setNewAccountType] = useState<AccountType>("parroquia");
+  const [newDisplayName, setNewDisplayName] = useState("");
+  const [newEmail, setNewEmail] = useState("");
+  const [newNit, setNewNit] = useState("");
+  const [newPhone, setNewPhone] = useState("");
+  const [newPin, setNewPin] = useState("");
+  const [creating, setCreating] = useState(false);
 
   const load = async () => {
     setLoading(true);
@@ -100,6 +109,51 @@ export default function AdminClientesPage() {
     load();
   };
 
+  const handleCreateAccount = async () => {
+    if (!newDisplayName.trim() || !newEmail.trim() || !newPin.trim()) {
+      toast.error("Nombre, correo y PIN son obligatorios");
+      return;
+    }
+    if (newPin.length < 4 || newPin.length > 6 || !/^\d+$/.test(newPin)) {
+      toast.error("El PIN debe ser 4 a 6 dígitos");
+      return;
+    }
+    setCreating(true);
+    const { error } = await supabase.auth.signUp({
+      email: newEmail.trim(),
+      password: newPin.trim(),
+      options: {
+        data: {
+          full_name: newDisplayName.trim(),
+          display_name: newDisplayName.trim(),
+          account_type: newAccountType,
+          nit: newNit.trim() || null,
+          phone: newPhone.trim() || null,
+        },
+      },
+    });
+    setCreating(false);
+    if (error) {
+      if (error.message.toLowerCase().includes("already") || error.message.toLowerCase().includes("registered")) {
+        toast.error("Ese correo ya está registrado.");
+      } else if (error.message.toLowerCase().includes("duplicate") || error.message.includes("23505")) {
+        toast.error("Ese nombre ya está en uso. Usa una variación.");
+      } else {
+        toast.error(error.message);
+      }
+      return;
+    }
+    toast.success(`Cuenta creada: ${newDisplayName.trim()}`);
+    setNewDisplayName("");
+    setNewEmail("");
+    setNewNit("");
+    setNewPhone("");
+    setNewPin("");
+    setNewAccountType("parroquia");
+    setCreateOpen(false);
+    load();
+  };
+
   return (
     <div className="flex flex-col gap-10">
       <Helmet>
@@ -116,14 +170,22 @@ export default function AdminClientesPage() {
         showAvatar={false}
       />
 
-      <div className="relative max-w-md">
-        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-        <Input
-          placeholder="Buscar por nombre, NIT, correo o parroquia"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          className="rounded-full pl-9"
-        />
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="relative max-w-md flex-1">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            placeholder="Buscar por nombre, NIT, correo o parroquia"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            className="rounded-full pl-9"
+          />
+        </div>
+        <Button
+          onClick={() => setCreateOpen(true)}
+          className="rounded-full bg-primary text-primary-foreground hover:bg-gold hover:text-gold-foreground"
+        >
+          <UserPlus className="h-4 w-4" /> Crear cuenta
+        </Button>
       </div>
 
       <section className="overflow-hidden rounded-3xl border border-border bg-card shadow-soft">
@@ -301,6 +363,98 @@ export default function AdminClientesPage() {
               className="w-full rounded-full bg-primary text-primary-foreground hover:bg-gold hover:text-gold-foreground"
             >
               {adjusting ? <Loader2 className="h-4 w-4 animate-spin" /> : "Cargar puntos"}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Dialog crear cuenta manualmente */}
+      <Dialog open={createOpen} onOpenChange={setCreateOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="font-serif">Crear nueva cuenta</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label>Tipo de cuenta</Label>
+              <div className="mt-2 grid grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  onClick={() => setNewAccountType("parroquia")}
+                  className={`flex flex-col items-center gap-1 rounded-2xl border p-3 text-xs transition-all ${
+                    newAccountType === "parroquia"
+                      ? "border-primary bg-primary/10 text-foreground"
+                      : "border-border bg-secondary/40 text-muted-foreground"
+                  }`}
+                >
+                  <Church className="h-5 w-5" /> Parroquia
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setNewAccountType("persona")}
+                  className={`flex flex-col items-center gap-1 rounded-2xl border p-3 text-xs transition-all ${
+                    newAccountType === "persona"
+                      ? "border-primary bg-primary/10 text-foreground"
+                      : "border-border bg-secondary/40 text-muted-foreground"
+                  }`}
+                >
+                  <User className="h-5 w-5" /> Persona
+                </button>
+              </div>
+            </div>
+            <div>
+              <Label htmlFor="newName">Nombre de la cuenta *</Label>
+              <Input
+                id="newName"
+                value={newDisplayName}
+                onChange={(e) => setNewDisplayName(e.target.value)}
+                placeholder={newAccountType === "parroquia" ? "Parroquia San José" : "María López"}
+                className="mt-1.5"
+              />
+            </div>
+            <div>
+              <Label htmlFor="newEmail">Correo *</Label>
+              <Input
+                id="newEmail"
+                type="email"
+                value={newEmail}
+                onChange={(e) => setNewEmail(e.target.value)}
+                placeholder="contacto@correo.com"
+                className="mt-1.5"
+              />
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div>
+                <Label htmlFor="newNit">NIT / Cédula</Label>
+                <Input id="newNit" value={newNit} onChange={(e) => setNewNit(e.target.value)} className="mt-1.5" />
+              </div>
+              <div>
+                <Label htmlFor="newPhone">Teléfono</Label>
+                <Input id="newPhone" value={newPhone} onChange={(e) => setNewPhone(e.target.value)} className="mt-1.5" />
+              </div>
+            </div>
+            <div>
+              <Label htmlFor="newPin">PIN (4-6 dígitos) *</Label>
+              <Input
+                id="newPin"
+                type="text"
+                inputMode="numeric"
+                maxLength={6}
+                value={newPin}
+                onChange={(e) => setNewPin(e.target.value.replace(/\D/g, ""))}
+                placeholder="••••"
+                className="mt-1.5 text-center tracking-[0.4em]"
+              />
+              <p className="mt-1 text-[11px] text-muted-foreground">
+                Comparte este PIN con el cliente para que pueda iniciar sesión.
+              </p>
+            </div>
+            <Button
+              onClick={handleCreateAccount}
+              disabled={creating}
+              className="w-full rounded-full bg-primary text-primary-foreground hover:bg-gold hover:text-gold-foreground"
+            >
+              {creating ? <Loader2 className="h-4 w-4 animate-spin" /> : "Crear cuenta"}
             </Button>
           </div>
         </DialogContent>

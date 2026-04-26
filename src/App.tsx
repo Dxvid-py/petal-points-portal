@@ -3,6 +3,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/contexts/AuthContext";
 import LandingPage from "./routes/index";
 import AuthPage from "./routes/auth";
+import StaffLoginPage from "./routes/staff-login";
 import DashboardLayout from "./routes/dashboard";
 import DashboardHome from "./routes/dashboard.index";
 import ProfilePage from "./routes/dashboard.perfil";
@@ -14,6 +15,7 @@ import AdminHome from "./routes/admin.index";
 import AdminClientes from "./routes/admin.clientes";
 import AdminRecompensas from "./routes/admin.recompensas";
 import AdminGaleria from "./routes/admin.galeria";
+import AdminContenido from "./routes/admin.contenido";
 import AdminTransacciones from "./routes/admin.transacciones";
 import AdminRoles from "./routes/admin.roles";
 import AsesoraPage from "./routes/asesora";
@@ -45,6 +47,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/auth" element={<AuthPage />} />
+        <Route path="/staff-login" element={<StaffLoginPage />} />
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={<DashboardHome />} />
           <Route path="perfil" element={<ProfilePage />} />
@@ -57,6 +60,7 @@ export default function App() {
           <Route path="clientes" element={<AdminClientes />} />
           <Route path="recompensas" element={<AdminRecompensas />} />
           <Route path="galeria" element={<AdminGaleria />} />
+          <Route path="contenido" element={<AdminContenido />} />
           <Route path="transacciones" element={<AdminTransacciones />} />
           <Route path="roles" element={<AdminRoles />} />
         </Route>

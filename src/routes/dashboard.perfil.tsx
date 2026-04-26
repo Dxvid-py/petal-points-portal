@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { Mail, Phone, MapPin, IdCard, Sparkles, Loader2 } from "lucide-react";
+import { Mail, Phone, IdCard, Sparkles, Loader2, Camera, Trash2 } from "lucide-react";
 import { PageHeader } from "@/components/dashboard/PageHeader";
 import { Avatar } from "@/components/dashboard/Avatar";
 import { Button } from "@/components/ui/button";
@@ -14,16 +14,16 @@ import { formatPoints } from "@/lib/format";
 export default function ProfilePage() {
   const { profile, user, refreshProfile, roles } = useAuth();
   const [saving, setSaving] = useState(false);
-  const [fullName, setFullName] = useState(profile?.full_name ?? "");
-  const [phone, setPhone] = useState(profile?.phone ?? "");
-  const [parroquiaCode, setParroquiaCode] = useState(profile?.parroquia_code ?? "");
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
+  const [displayName, setDisplayName] = useState("");
+  const [phone, setPhone] = useState("");
 
-  // Sincroniza si profile llega después
-  if (profile && fullName === "" && profile.full_name) {
-    setFullName(profile.full_name);
-    setPhone(profile.phone ?? "");
-    setParroquiaCode(profile.parroquia_code ?? "");
-  }
+  useEffect(() => {
+    if (profile) {
+      setDisplayName(profile.display_name ?? profile.full_name ?? "");
+      setPhone(profile.phone ?? "");
+    }
+  }, [profile]);
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,22 +32,92 @@ export default function ProfilePage() {
     const { error } = await supabase
       .from("profiles")
       .update({
-        full_name: fullName,
+        full_name: displayName,
+        display_name: displayName,
         phone: phone || null,
-        parroquia_code: parroquiaCode || null,
       })
       .eq("id", user.id);
     setSaving(false);
     if (error) {
-      toast.error(error.message);
+      if (error.message.toLowerCase().includes("duplicate") || error.message.includes("23505")) {
+        toast.error("Ese nombre ya está en uso por otra cuenta.");
+      } else {
+        toast.error(error.message);
+      }
       return;
     }
     toast.success("Perfil actualizado");
     refreshProfile();
   };
 
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+    if (file.size > 3 * 1024 * 1024) {
+      toast.error("La imagen no puede pesar más de 3MB");
+      return;
+    }
+    setUploadingAvatar(true);
+    const ext = file.name.split(".").pop();
+    const fileName = `${user.id}/avatar-${Date.now()}.${ext}`;
+
+    // Quita la foto vieja si existe
+    if (profile?.avatar_url) {
+      try {
+        const u = new URL(profile.avatar_url);
+        const idx = u.pathname.indexOf("/avatars/");
+        if (idx >= 0) {
+          const oldPath = u.pathname.substring(idx + "/avatars/".length);
+          await supabase.storage.from("avatars").remove([oldPath]);
+        }
+      } catch {
+        // ignore
+      }
+    }
+
+    const { error: upErr } = await supabase.storage
+      .from("avatars")
+      .upload(fileName, file, { upsert: false, contentType: file.type });
+
+    if (upErr) {
+      setUploadingAvatar(false);
+      toast.error(upErr.message);
+      return;
+    }
+    const { data: pub } = supabase.storage.from("avatars").getPublicUrl(fileName);
+    const { error: dbErr } = await supabase
+      .from("profiles")
+      .update({ avatar_url: pub.publicUrl })
+      .eq("id", user.id);
+    setUploadingAvatar(false);
+    if (dbErr) {
+      toast.error(dbErr.message);
+      return;
+    }
+    toast.success("Foto actualizada");
+    refreshProfile();
+  };
+
+  const handleAvatarRemove = async () => {
+    if (!user || !profile?.avatar_url) return;
+    if (!confirm("¿Quitar la foto de perfil?")) return;
+    try {
+      const u = new URL(profile.avatar_url);
+      const idx = u.pathname.indexOf("/avatars/");
+      if (idx >= 0) {
+        const path = u.pathname.substring(idx + "/avatars/".length);
+        await supabase.storage.from("avatars").remove([path]);
+      }
+    } catch {
+      // ignore
+    }
+    await supabase.from("profiles").update({ avatar_url: null }).eq("id", user.id);
+    toast.success("Foto eliminada");
+    refreshProfile();
+  };
+
   const balance = profile?.points_balance ?? 0;
-  const displayName = profile?.full_name ?? "Cliente Deluxe";
+  const shownName = profile?.display_name ?? profile?.full_name ?? "Cliente Deluxe";
 
   return (
     <div className="flex flex-col gap-10">
@@ -70,9 +140,33 @@ export default function ProfilePage() {
           <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-soft">
             <div className="bg-gradient-ink h-28" />
             <div className="-mt-12 flex flex-col items-center px-6 pb-6 text-center">
-              <Avatar name={displayName} size="xl" ring />
+              <div className="relative">
+                <Avatar name={shownName} url={profile?.avatar_url} size="xl" ring />
+                <label className="absolute -bottom-1 -right-1 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-colors hover:bg-gold hover:text-gold-foreground">
+                  {uploadingAvatar ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Camera className="h-4 w-4" />
+                  )}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleAvatarUpload}
+                    disabled={uploadingAvatar}
+                    className="hidden"
+                  />
+                </label>
+              </div>
+              {profile?.avatar_url && (
+                <button
+                  onClick={handleAvatarRemove}
+                  className="mt-2 inline-flex items-center gap-1 text-[10px] uppercase tracking-[0.2em] text-muted-foreground hover:text-terracotta"
+                >
+                  <Trash2 className="h-3 w-3" /> Quitar foto
+                </button>
+              )}
               <h2 className="mt-4 font-serif text-2xl font-semibold text-foreground">
-                {displayName}
+                {shownName}
               </h2>
               <p className="mt-1 inline-flex items-center gap-1 text-xs uppercase tracking-[0.22em] text-gold-foreground">
                 <Sparkles className="h-3 w-3" /> Club Deluxe
@@ -91,11 +185,11 @@ export default function ProfilePage() {
                   </p>
                 </div>
                 <div className="border-l border-border">
-                  <p className="font-serif text-base font-semibold text-foreground">
-                    {profile?.parroquia_code ?? "—"}
+                  <p className="font-serif text-base font-semibold text-foreground capitalize">
+                    {profile?.account_type ?? "—"}
                   </p>
                   <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                    Parroquia
+                    Tipo de cuenta
                   </p>
                 </div>
               </div>
@@ -126,17 +220,17 @@ export default function ProfilePage() {
                 Información personal
               </h3>
               <p className="mt-1 text-sm text-muted-foreground">
-                Estos datos se usan para identificarte cuando compras en tienda física.
+                El nombre se usa para iniciar sesión, así que recuerda cómo lo escribiste.
               </p>
             </div>
 
             <div className="grid gap-5 md:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="fullName">Nombre completo</Label>
+              <div className="space-y-2 md:col-span-2">
+                <Label htmlFor="displayName">Nombre de la cuenta</Label>
                 <Input
-                  id="fullName"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
+                  id="displayName"
+                  value={displayName}
+                  onChange={(e) => setDisplayName(e.target.value)}
                   required
                 />
               </div>
@@ -152,7 +246,7 @@ export default function ProfilePage() {
                 </Label>
                 <Input id="nit" value={profile?.nit_id ?? ""} disabled />
               </div>
-              <div className="space-y-2">
+              <div className="space-y-2 md:col-span-2">
                 <Label htmlFor="phone">
                   <Phone className="mr-1.5 inline h-3 w-3" /> Teléfono
                 </Label>
@@ -161,17 +255,6 @@ export default function ProfilePage() {
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="+57 300 000 0000"
-                />
-              </div>
-              <div className="space-y-2 md:col-span-2">
-                <Label htmlFor="parroquia">
-                  <MapPin className="mr-1.5 inline h-3 w-3" /> Código de Parroquia
-                </Label>
-                <Input
-                  id="parroquia"
-                  value={parroquiaCode}
-                  onChange={(e) => setParroquiaCode(e.target.value)}
-                  placeholder="PARR-001"
                 />
               </div>
             </div>

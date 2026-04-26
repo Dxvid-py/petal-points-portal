@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import {
@@ -7,16 +7,16 @@ import {
   Gift,
   ArrowRight,
   Sparkles,
-  Flower2,
-  HardHat,
-  SprayCan,
-  Fuel,
   Play,
 } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { Button } from "@/components/ui/button";
 import { AccumulateStepsModal } from "@/components/landing/AccumulateStepsModal";
+import { supabase } from "@/lib/supabase";
+import { fetchSiteContent, getText, getUrl, type SiteContentMap } from "@/lib/site-content";
+import { SITE_KEYS, type Reward, type GalleryItem } from "@/lib/types";
+import { formatPoints } from "@/lib/format";
 
 const fidelityPillars = [
   {
@@ -42,39 +42,34 @@ const fidelityPillars = [
   },
 ];
 
-const redemptionCards = [
-  {
-    icon: Flower2,
-    title: "Flores Premium",
-    desc: "Ramos y arreglos de autor con flores de temporada.",
-    img: "https://images.unsplash.com/photo-1561181286-d3fee7d55364?w=800&auto=format&fit=crop",
-    badge: "Desde 800 pts",
-  },
-  {
-    icon: HardHat,
-    title: "Mano de Obra",
-    desc: "Decoración profesional para tus eventos y celebraciones.",
-    img: "https://images.unsplash.com/photo-1519741497674-611481863552?w=800&auto=format&fit=crop",
-    badge: "Desde 2.500 pts",
-  },
-  {
-    icon: SprayCan,
-    title: "Útiles de Aseo",
-    desc: "Productos para mantener tus arreglos siempre frescos.",
-    img: "https://images.unsplash.com/photo-1583947215259-38e31be8751f?w=800&auto=format&fit=crop",
-    badge: "Desde 600 pts",
-  },
-  {
-    icon: Fuel,
-    title: "Bono de Combustible",
-    desc: "Canjea tus puntos por bonos de combustible Terpel.",
-    img: "https://images.unsplash.com/photo-1545262810-77515befe149?w=800&auto=format&fit=crop",
-    badge: "Desde 3.000 pts",
-  },
-];
+// Catálogo de redención y galería se cargan desde la BD (rewards / gallery_items)
 
 export default function LandingPage() {
   const [stepsOpen, setStepsOpen] = useState(false);
+  const [content, setContent] = useState<SiteContentMap>({});
+  const [rewards, setRewards] = useState<Reward[]>([]);
+  const [gallery, setGallery] = useState<GalleryItem[]>([]);
+
+  useEffect(() => {
+    Promise.all([
+      fetchSiteContent(),
+      supabase.from("rewards").select("*").eq("active", true).order("points_cost").limit(4),
+      supabase.from("gallery_items").select("*").order("created_at", { ascending: false }).limit(8),
+    ]).then(([map, rwRes, gRes]) => {
+      setContent(map);
+      setRewards((rwRes.data ?? []) as Reward[]);
+      setGallery((gRes.data ?? []) as GalleryItem[]);
+    });
+  }, []);
+
+  const heroVideoUrl = getUrl(content, SITE_KEYS.heroVideoUrl);
+  const heroTitle = getText(content, SITE_KEYS.heroTitle, "Floristería Deluxe");
+  const heroSubtitle = getText(
+    content,
+    SITE_KEYS.heroSubtitle,
+    "Únete al club exclusivo de Floristería Deluxe. Acumula puntos con cada compra y redime experiencias únicas.",
+  );
+  const heroCta = getText(content, SITE_KEYS.heroCta, "Regístrate gratis");
 
   const scrollTo = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -265,26 +260,27 @@ export default function LandingPage() {
 
           <div className="mt-14 flex justify-center">
             <div className="relative">
-              {/* Marco rosa */}
               <div className="absolute -inset-3 rounded-[2.5rem] bg-gradient-gold opacity-50 blur-xl" />
-              <div className="relative aspect-[9/16] w-[320px] overflow-hidden rounded-[2rem] border-2 border-primary/30 bg-white shadow-glow md:w-[380px]">
-                <iframe
-                  className="absolute inset-0 h-full w-full"
-                  src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=0&mute=1&controls=1&rel=0"
-                  title="Floristería Deluxe Reel"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                />
-                {/* Decorative play overlay (visual only) */}
-                <div className="pointer-events-none absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full border border-primary/30 bg-white/80 backdrop-blur">
-                  <Play className="h-4 w-4 text-primary" fill="currentColor" />
-                </div>
+              <div className="relative aspect-[9/16] w-[320px] overflow-hidden rounded-[2rem] border-2 border-primary/30 bg-foreground shadow-glow md:w-[380px]">
+                {heroVideoUrl ? (
+                  <video
+                    src={heroVideoUrl}
+                    className="absolute inset-0 h-full w-full object-cover"
+                    controls
+                    playsInline
+                    preload="metadata"
+                  />
+                ) : (
+                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-gradient-to-br from-primary/20 to-gold/20 text-center text-primary-foreground">
+                    <Play className="h-10 w-10 text-white/60" />
+                    <p className="px-6 text-xs text-white/60">
+                      Pronto: video Reel del atelier Deluxe.
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           </div>
-          <p className="mt-6 text-center text-xs text-muted-foreground">
-            Próximamente podrás administrar este video desde el panel de admin.
-          </p>
         </div>
       </section>
 
@@ -303,37 +299,57 @@ export default function LandingPage() {
             </p>
           </div>
 
-          <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {redemptionCards.map((card, i) => (
-              <article
-                key={card.title}
-                className="group relative overflow-hidden rounded-3xl border border-primary/15 bg-card transition-all hover:-translate-y-2 hover:border-primary/40 hover:shadow-pink animate-fade-up"
-                style={{ animationDelay: `${i * 100}ms` }}
-              >
-                <div className="aspect-[4/5] overflow-hidden">
-                  <img
-                    src={card.img}
-                    alt={card.title}
-                    loading="lazy"
-                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-foreground/85 via-foreground/30 to-transparent" />
-                </div>
-                <div className="absolute right-3 top-3 rounded-full border border-primary/30 bg-white/90 px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-primary backdrop-blur">
-                  {card.badge}
-                </div>
-                <div className="absolute bottom-0 left-0 right-0 p-5 text-white">
-                  <div className="mb-2 flex h-9 w-9 items-center justify-center rounded-xl border border-white/40 bg-white/15 text-white backdrop-blur">
-                    <card.icon className="h-4 w-4" strokeWidth={1.75} />
+          {rewards.length === 0 ? (
+            <div className="mt-16 rounded-3xl border border-dashed border-primary/30 bg-card/60 p-12 text-center">
+              <Gift className="mx-auto h-10 w-10 text-primary/40" />
+              <p className="mt-4 font-serif text-xl text-foreground">Catálogo en construcción</p>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Pronto encontrarás aquí todas las recompensas que puedes canjear.
+              </p>
+            </div>
+          ) : (
+            <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              {rewards.map((r, i) => (
+                <article
+                  key={r.id}
+                  className="group relative overflow-hidden rounded-3xl border border-primary/15 bg-card transition-all hover:-translate-y-2 hover:border-primary/40 hover:shadow-pink animate-fade-up"
+                  style={{ animationDelay: `${i * 100}ms` }}
+                >
+                  <div className="relative aspect-[4/5] overflow-hidden bg-gradient-bone">
+                    {r.image_url ? (
+                      <img
+                        src={r.image_url}
+                        alt={r.title}
+                        loading="lazy"
+                        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center">
+                        <Gift className="h-16 w-16 text-primary/30" />
+                      </div>
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-foreground/85 via-foreground/30 to-transparent" />
                   </div>
-                  <h3 className="font-serif text-xl font-semibold text-white">
-                    {card.title}
-                  </h3>
-                  <p className="mt-1 text-xs text-white/85">{card.desc}</p>
-                </div>
-              </article>
-            ))}
-          </div>
+                  <div className="absolute right-3 top-3 rounded-full border border-primary/30 bg-white/90 px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-primary backdrop-blur">
+                    {formatPoints(r.points_cost)} pts
+                  </div>
+                  <div className="absolute bottom-0 left-0 right-0 p-5 text-white">
+                    {r.category && (
+                      <span className="text-[10px] uppercase tracking-[0.2em] text-white/70">
+                        {r.category}
+                      </span>
+                    )}
+                    <h3 className="mt-1 font-serif text-xl font-semibold text-white">
+                      {r.title}
+                    </h3>
+                    {r.description && (
+                      <p className="mt-1 line-clamp-2 text-xs text-white/85">{r.description}</p>
+                    )}
+                  </div>
+                </article>
+              ))}
+            </div>
+          )}
 
           <div className="mt-12 text-center">
             <Button
