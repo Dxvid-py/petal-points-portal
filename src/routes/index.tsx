@@ -42,36 +42,7 @@ const fidelityPillars = [
   },
 ];
 
-const redemptionCards = [
-  {
-    icon: Flower2,
-    title: "Flores Premium",
-    desc: "Ramos y arreglos de autor con flores de temporada.",
-    img: "https://images.unsplash.com/photo-1561181286-d3fee7d55364?w=800&auto=format&fit=crop",
-    badge: "Desde 800 pts",
-  },
-  {
-    icon: HardHat,
-    title: "Mano de Obra",
-    desc: "Decoración profesional para tus eventos y celebraciones.",
-    img: "https://images.unsplash.com/photo-1519741497674-611481863552?w=800&auto=format&fit=crop",
-    badge: "Desde 2.500 pts",
-  },
-  {
-    icon: SprayCan,
-    title: "Útiles de Aseo",
-    desc: "Productos para mantener tus arreglos siempre frescos.",
-    img: "https://images.unsplash.com/photo-1583947215259-38e31be8751f?w=800&auto=format&fit=crop",
-    badge: "Desde 600 pts",
-  },
-  {
-    icon: Fuel,
-    title: "Bono de Combustible",
-    desc: "Canjea tus puntos por bonos de combustible Terpel.",
-    img: "https://images.unsplash.com/photo-1545262810-77515befe149?w=800&auto=format&fit=crop",
-    badge: "Desde 3.000 pts",
-  },
-];
+// Catálogo de redención y galería se cargan desde la BD (rewards / gallery_items)
 
 export default function LandingPage() {
   const [stepsOpen, setStepsOpen] = useState(false);
