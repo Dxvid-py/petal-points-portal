@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { Search, Loader2, User as UserIcon, Plus } from "lucide-react";
+import { Search, Loader2, User as UserIcon, Plus, UserPlus, Church, User } from "lucide-react";
 import { PageHeader } from "@/components/dashboard/PageHeader";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase";
-import type { ProfileRow, AppRole } from "@/lib/types";
+import type { ProfileRow, AppRole, AccountType } from "@/lib/types";
 import { formatPoints, formatDate, formatCOP } from "@/lib/format";
 import { POINTS_PER_COP } from "@/lib/supabase";
 import {
@@ -13,7 +13,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
@@ -27,11 +26,21 @@ export default function AdminClientesPage() {
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState<Row | null>(null);
+  const [createOpen, setCreateOpen] = useState(false);
 
   // Form para añadir puntos manualmente
   const [amountCop, setAmountCop] = useState("");
   const [reason, setReason] = useState("");
   const [adjusting, setAdjusting] = useState(false);
+
+  // Form crear cuenta
+  const [newAccountType, setNewAccountType] = useState<AccountType>("parroquia");
+  const [newDisplayName, setNewDisplayName] = useState("");
+  const [newEmail, setNewEmail] = useState("");
+  const [newNit, setNewNit] = useState("");
+  const [newPhone, setNewPhone] = useState("");
+  const [newPin, setNewPin] = useState("");
+  const [creating, setCreating] = useState(false);
 
   const load = async () => {
     setLoading(true);
