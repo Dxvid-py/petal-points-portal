@@ -153,6 +153,8 @@ export default function AdminClientesPage() {
     setCreateOpen(false);
     load();
   };
+
+  return (
     <div className="flex flex-col gap-10">
       <Helmet>
         <title>Clientes — Admin Deluxe</title>
