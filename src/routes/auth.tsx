@@ -8,7 +8,9 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Logo } from "@/components/Logo";
 import { isUsingFallbackSupabaseConfig, supabase } from "@/lib/supabase";
-import { ArrowLeft, Loader2 } from "lucide-react";
+import { ArrowLeft, Loader2, Church, User } from "lucide-react";
+
+type AccountType = "parroquia" | "persona";
 
 export default function AuthPage() {
   const [params] = useSearchParams();
@@ -17,58 +19,111 @@ export default function AuthPage() {
   const [mode, setMode] = useState<"signin" | "signup">(initialMode);
   const [loading, setLoading] = useState(false);
 
-  // Form state
+  // SIGN IN (solo nombre + PIN)
+  const [loginName, setLoginName] = useState("");
+  const [loginPin, setLoginPin] = useState("");
+
+  // SIGN UP
+  const [accountType, setAccountType] = useState<AccountType>("parroquia");
+  const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [fullName, setFullName] = useState("");
   const [nit, setNit] = useState("");
   const [phone, setPhone] = useState("");
-  const [parishCode, setParishCode] = useState("");
+  const [pin, setPin] = useState("");
+  const [pinConfirm, setPinConfirm] = useState("");
   const [acceptedTerms, setAcceptedTerms] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
+  const checkConfig = () => {
     if (isUsingFallbackSupabaseConfig && window.location.hostname !== "localhost") {
       toast.error(
-        "La app todavía no está conectada a tu Supabase externo. Configura VITE_SUPABASE_URL y VITE_SUPABASE_ANON_KEY en Vercel antes de registrar usuarios.",
+        "La app todavía no está conectada a Supabase. Configura las variables en Vercel.",
       );
+      return false;
+    }
+    return true;
+  };
+
+  const handleSignIn = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!checkConfig()) return;
+    if (!loginName.trim() || !loginPin.trim()) {
+      toast.error("Ingresa el nombre y el PIN");
       return;
     }
-
     setLoading(true);
     try {
-      if (mode === "signup") {
-        if (!acceptedTerms) {
-          toast.error("Debes aceptar el tratamiento de datos personales");
-          setLoading(false);
-          return;
-        }
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            emailRedirectTo: window.location.origin,
-            data: {
-              full_name: fullName,
-              nit: nit,
-              phone: phone || null,
-              parish_code: parishCode || null,
-            },
-          },
-        });
-        if (error) throw error;
-        toast.success("¡Cuenta creada! Bienvenido al Club Deluxe.");
-        navigate("/dashboard");
-      } else {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
-        toast.success("Bienvenido de vuelta");
-        navigate("/dashboard");
+      // Traduce nombre -> email vía RPC
+      const { data: foundEmail, error: rpcErr } = await supabase.rpc("lookup_email_by_name", {
+        _name: loginName.trim(),
+      });
+      if (rpcErr) throw rpcErr;
+      if (!foundEmail) {
+        toast.error("No encontramos esa cuenta. Verifica el nombre exacto.");
+        setLoading(false);
+        return;
       }
+      const { error } = await supabase.auth.signInWithPassword({
+        email: foundEmail as string,
+        password: loginPin.trim(),
+      });
+      if (error) {
+        toast.error("PIN incorrecto. Inténtalo de nuevo.");
+        setLoading(false);
+        return;
+      }
+      toast.success(`Bienvenido, ${loginName.trim()}`);
+      navigate("/dashboard");
     } catch (err) {
-      const msg = err instanceof Error ? err.message : "Error inesperado";
-      toast.error(msg);
+      toast.error(err instanceof Error ? err.message : "Error inesperado");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSignUp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!checkConfig()) return;
+    if (!acceptedTerms) {
+      toast.error("Debes aceptar el tratamiento de datos personales");
+      return;
+    }
+    if (pin.length < 4 || pin.length > 6 || !/^\d+$/.test(pin)) {
+      toast.error("El PIN debe ser 4 a 6 dígitos numéricos");
+      return;
+    }
+    if (pin !== pinConfirm) {
+      toast.error("Los PIN no coinciden");
+      return;
+    }
+    setLoading(true);
+    try {
+      const { error } = await supabase.auth.signUp({
+        email: email.trim(),
+        password: pin,
+        options: {
+          emailRedirectTo: window.location.origin,
+          data: {
+            full_name: displayName.trim(),
+            display_name: displayName.trim(),
+            account_type: accountType,
+            nit: nit.trim() || null,
+            phone: phone.trim() || null,
+          },
+        },
+      });
+      if (error) {
+        if (error.message.toLowerCase().includes("duplicate") || error.message.includes("23505")) {
+          toast.error("Ese nombre ya está registrado. Usa una variación distinta.");
+        } else {
+          toast.error(error.message);
+        }
+        setLoading(false);
+        return;
+      }
+      toast.success("¡Cuenta creada! Bienvenido al Club Deluxe.");
+      navigate("/dashboard");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Error inesperado");
     } finally {
       setLoading(false);
     }
@@ -80,7 +135,6 @@ export default function AuthPage() {
         <title>{mode === "signup" ? "Regístrate" : "Ingresar"} — Puntos Deluxe</title>
       </Helmet>
 
-      {/* Decoración */}
       <div className="pointer-events-none absolute -left-32 -top-32 h-96 w-96 rounded-full bg-primary/20 blur-3xl" />
       <div className="pointer-events-none absolute -bottom-32 -right-32 h-96 w-96 rounded-full bg-gold/10 blur-3xl" />
 
@@ -94,39 +148,161 @@ export default function AuthPage() {
             <Logo to="/" />
           </div>
 
-          <h1 className="text-center font-serif text-3xl font-semibold text-foreground">
-            {mode === "signup" ? "Únete al Club" : "Bienvenido de vuelta"}
-          </h1>
-          <p className="mt-2 text-center text-sm text-muted-foreground">
-            {mode === "signup"
-              ? "Crea tu cuenta y empieza a acumular puntos Deluxe."
-              : "Ingresa para ver tus puntos y recompensas."}
-          </p>
+          {/* Tabs */}
+          <div className="mb-6 grid grid-cols-2 rounded-full border border-border/40 bg-background/40 p-1">
+            <button
+              type="button"
+              onClick={() => setMode("signin")}
+              className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                mode === "signin" ? "bg-primary text-primary-foreground" : "text-muted-foreground"
+              }`}
+            >
+              Iniciar sesión
+            </button>
+            <button
+              type="button"
+              onClick={() => setMode("signup")}
+              className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                mode === "signup" ? "bg-primary text-primary-foreground" : "text-muted-foreground"
+              }`}
+            >
+              Registrarme
+            </button>
+          </div>
 
-          <form onSubmit={handleSubmit} className="mt-7 space-y-4">
-            {mode === "signup" && (
-              <>
+          {mode === "signin" ? (
+            <>
+              <h1 className="text-center font-serif text-3xl font-semibold text-foreground">
+                Bienvenido de vuelta
+              </h1>
+              <p className="mt-2 text-center text-sm text-muted-foreground">
+                Ingresa con el nombre de tu cuenta y tu PIN.
+              </p>
+              <form onSubmit={handleSignIn} className="mt-7 space-y-4">
                 <div>
-                  <Label htmlFor="fullName" className="text-foreground">Nombre completo *</Label>
+                  <Label htmlFor="loginName" className="text-foreground">Nombre de la cuenta</Label>
                   <Input
-                    id="fullName"
+                    id="loginName"
                     required
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
+                    autoFocus
+                    value={loginName}
+                    onChange={(e) => setLoginName(e.target.value)}
                     className="mt-1.5 border-border/50 bg-background/40 text-foreground"
-                    placeholder="Angie Restrepo"
+                    placeholder="Parroquia San José"
                   />
                 </div>
+                <div>
+                  <Label htmlFor="loginPin" className="text-foreground">PIN</Label>
+                  <Input
+                    id="loginPin"
+                    type="password"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    required
+                    minLength={4}
+                    maxLength={6}
+                    value={loginPin}
+                    onChange={(e) => setLoginPin(e.target.value.replace(/\D/g, ""))}
+                    className="mt-1.5 border-border/50 bg-background/40 text-center font-serif text-2xl tracking-[0.5em] text-foreground"
+                    placeholder="• • • •"
+                  />
+                </div>
+                <Button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full rounded-full bg-primary text-primary-foreground hover:bg-gold hover:text-gold-foreground"
+                  size="lg"
+                >
+                  {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Ingresar"}
+                </Button>
+                <p className="text-center text-xs text-muted-foreground">
+                  ¿Eres del equipo?{" "}
+                  <Link to="/staff-login" className="font-medium text-gold hover:underline">
+                    Iniciar sesión como staff
+                  </Link>
+                </p>
+              </form>
+            </>
+          ) : (
+            <>
+              <h1 className="text-center font-serif text-3xl font-semibold text-foreground">
+                Únete al Club
+              </h1>
+              <p className="mt-2 text-center text-sm text-muted-foreground">
+                Crea tu cuenta y empieza a acumular puntos Deluxe.
+              </p>
+
+              <form onSubmit={handleSignUp} className="mt-7 space-y-4">
+                {/* Tipo de cuenta */}
+                <div>
+                  <Label className="text-foreground">Tipo de cuenta</Label>
+                  <div className="mt-2 grid grid-cols-2 gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setAccountType("parroquia")}
+                      className={`flex flex-col items-center gap-1 rounded-2xl border p-3 text-xs transition-all ${
+                        accountType === "parroquia"
+                          ? "border-primary bg-primary/10 text-foreground"
+                          : "border-border/40 bg-background/30 text-muted-foreground hover:border-border"
+                      }`}
+                    >
+                      <Church className="h-5 w-5" />
+                      <span className="font-medium">Parroquia</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setAccountType("persona")}
+                      className={`flex flex-col items-center gap-1 rounded-2xl border p-3 text-xs transition-all ${
+                        accountType === "persona"
+                          ? "border-primary bg-primary/10 text-foreground"
+                          : "border-border/40 bg-background/30 text-muted-foreground hover:border-border"
+                      }`}
+                    >
+                      <User className="h-5 w-5" />
+                      <span className="font-medium">Persona común</span>
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <Label htmlFor="displayName" className="text-foreground">
+                    {accountType === "parroquia" ? "Nombre de la parroquia" : "Tu nombre"} *
+                  </Label>
+                  <Input
+                    id="displayName"
+                    required
+                    value={displayName}
+                    onChange={(e) => setDisplayName(e.target.value)}
+                    className="mt-1.5 border-border/50 bg-background/40 text-foreground"
+                    placeholder={accountType === "parroquia" ? "Parroquia San José" : "Angie Restrepo"}
+                  />
+                  <p className="mt-1 text-[10px] text-muted-foreground">
+                    Este será el nombre con el que inicies sesión. Debe ser único.
+                  </p>
+                </div>
+
+                <div>
+                  <Label htmlFor="email" className="text-foreground">Correo *</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="mt-1.5 border-border/50 bg-background/40 text-foreground"
+                    placeholder="contacto@correo.com"
+                  />
+                </div>
+
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div>
-                    <Label htmlFor="nit" className="text-foreground">NIT / Cédula *</Label>
+                    <Label htmlFor="nit" className="text-foreground">NIT / Cédula</Label>
                     <Input
                       id="nit"
-                      required
                       value={nit}
                       onChange={(e) => setNit(e.target.value)}
                       className="mt-1.5 border-border/50 bg-background/40 text-foreground"
-                      placeholder="1.045.xxx.xxx"
+                      placeholder="900.xxx.xxx"
                     />
                   </div>
                   <div>
@@ -140,99 +316,65 @@ export default function AuthPage() {
                     />
                   </div>
                 </div>
-                <div>
-                  <Label htmlFor="parishCode" className="text-foreground">
-                    Código de Parroquia <span className="text-muted-foreground">(opcional)</span>
-                  </Label>
-                  <Input
-                    id="parishCode"
-                    value={parishCode}
-                    onChange={(e) => setParishCode(e.target.value)}
-                    className="mt-1.5 border-border/50 bg-background/40 text-foreground"
-                    placeholder="PARR-001"
-                  />
+
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div>
+                    <Label htmlFor="pin" className="text-foreground">PIN (4-6 dígitos) *</Label>
+                    <Input
+                      id="pin"
+                      type="password"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
+                      required
+                      minLength={4}
+                      maxLength={6}
+                      value={pin}
+                      onChange={(e) => setPin(e.target.value.replace(/\D/g, ""))}
+                      className="mt-1.5 border-border/50 bg-background/40 text-center tracking-[0.4em] text-foreground"
+                      placeholder="••••"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="pinConfirm" className="text-foreground">Confirmar PIN *</Label>
+                    <Input
+                      id="pinConfirm"
+                      type="password"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
+                      required
+                      minLength={4}
+                      maxLength={6}
+                      value={pinConfirm}
+                      onChange={(e) => setPinConfirm(e.target.value.replace(/\D/g, ""))}
+                      className="mt-1.5 border-border/50 bg-background/40 text-center tracking-[0.4em] text-foreground"
+                      placeholder="••••"
+                    />
+                  </div>
                 </div>
-              </>
-            )}
-            <div>
-              <Label htmlFor="email" className="text-foreground">Correo *</Label>
-              <Input
-                id="email"
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="mt-1.5 border-border/50 bg-background/40 text-foreground"
-                placeholder="tu@correo.com"
-              />
-            </div>
-            <div>
-              <Label htmlFor="password" className="text-foreground">Contraseña *</Label>
-              <Input
-                id="password"
-                type="password"
-                required
-                minLength={6}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="mt-1.5 border-border/50 bg-background/40 text-foreground"
-                placeholder="Mínimo 6 caracteres"
-              />
-            </div>
 
-            {mode === "signup" && (
-              <div className="flex items-start gap-3 rounded-lg border border-border/40 bg-background/30 p-3">
-                <Checkbox
-                  id="terms"
-                  checked={acceptedTerms}
-                  onCheckedChange={(v) => setAcceptedTerms(!!v)}
-                  className="mt-0.5 border-gold/50 data-[state=checked]:bg-primary"
-                />
-                <label htmlFor="terms" className="text-xs leading-relaxed text-muted-foreground">
-                  Acepto el{" "}
-                  <a href="#" className="text-gold underline-offset-2 hover:underline">
-                    tratamiento de mis datos personales
-                  </a>{" "}
-                  conforme al marco legal del Programa Puntos Deluxe.
-                </label>
-              </div>
-            )}
+                <div className="flex items-start gap-3 rounded-lg border border-border/40 bg-background/30 p-3">
+                  <Checkbox
+                    id="terms"
+                    checked={acceptedTerms}
+                    onCheckedChange={(v) => setAcceptedTerms(!!v)}
+                    className="mt-0.5 border-gold/50 data-[state=checked]:bg-primary"
+                  />
+                  <label htmlFor="terms" className="text-xs leading-relaxed text-muted-foreground">
+                    Acepto el tratamiento de datos personales conforme al marco del Programa Puntos Deluxe.
+                  </label>
+                </div>
 
-            <Button
-              type="submit"
-              disabled={loading}
-              className="w-full rounded-full bg-primary text-primary-foreground transition-colors hover:bg-gold hover:text-gold-foreground"
-              size="lg"
-            >
-              {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : mode === "signup" ? "Crear cuenta" : "Ingresar"}
-            </Button>
-          </form>
-
-          <p className="mt-6 text-center text-sm text-muted-foreground">
-            {mode === "signup" ? (
-              <>
-                ¿Ya tienes cuenta?{" "}
-                <button
-                  type="button"
-                  onClick={() => setMode("signin")}
-                  className="font-medium text-gold hover:underline"
+                <Button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full rounded-full bg-primary text-primary-foreground hover:bg-gold hover:text-gold-foreground"
+                  size="lg"
                 >
-                  Ingresa
-                </button>
-              </>
-            ) : (
-              <>
-                ¿Nuevo aquí?{" "}
-                <button
-                  type="button"
-                  onClick={() => setMode("signup")}
-                  className="font-medium text-gold hover:underline"
-                >
-                  Crea tu cuenta
-                </button>
-              </>
-            )}
-          </p>
+                  {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Crear cuenta"}
+                </Button>
+              </form>
+            </>
+          )}
         </div>
       </div>
     </div>
