@@ -30,7 +30,7 @@ export function DashboardSidebar() {
   const location = useLocation();
   const navigate = useNavigate();
   const { profile, signOut } = useAuth();
-  const displayName = profile?.full_name ?? "Cliente Deluxe";
+  const displayName = profile?.display_name ?? profile?.full_name ?? "Cliente Deluxe";
   const balance = profile?.points_balance ?? 0;
 
   const handleSignOut = async () => {
@@ -46,7 +46,7 @@ export function DashboardSidebar() {
 
       <div className="mx-6 mb-6 rounded-2xl border border-sidebar-border bg-sidebar-accent/40 p-4">
         <div className="flex items-center gap-3">
-          <Avatar name={displayName} size="md" ring />
+          <Avatar name={displayName} url={profile?.avatar_url} size="md" ring />
           <div className="min-w-0 leading-tight">
             <p className="truncate text-sm font-medium text-sidebar-foreground">{displayName}</p>
             <p className="text-[10px] uppercase tracking-[0.22em] text-gold">✦ Club Deluxe</p>

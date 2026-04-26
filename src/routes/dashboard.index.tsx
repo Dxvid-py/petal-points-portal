@@ -40,7 +40,7 @@ export default function DashboardHome() {
   }, [user]);
 
   const balance = profile?.points_balance ?? 0;
-  const firstName = profile?.full_name?.split(" ")[0] ?? "Cliente";
+  const greeting = profile?.display_name ?? profile?.full_name ?? "Cliente";
   const equivalent = balance * POINTS_PER_COP;
 
   const totalEarned = transactions
@@ -59,7 +59,7 @@ export default function DashboardHome() {
         eyebrow="Mi atelier"
         title={
           <>
-            Hola, <em className="italic">{firstName}</em>.<br />
+            Hola, <em className="italic">{greeting}</em>.<br />
             Bienvenida al club.
           </>
         }
