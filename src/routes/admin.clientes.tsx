@@ -365,6 +365,99 @@ export default function AdminClientesPage() {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Dialog crear cuenta manualmente */}
+      <Dialog open={createOpen} onOpenChange={setCreateOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="font-serif">Crear nueva cuenta</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label>Tipo de cuenta</Label>
+              <div className="mt-2 grid grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  onClick={() => setNewAccountType("parroquia")}
+                  className={`flex flex-col items-center gap-1 rounded-2xl border p-3 text-xs transition-all ${
+                    newAccountType === "parroquia"
+                      ? "border-primary bg-primary/10 text-foreground"
+                      : "border-border bg-secondary/40 text-muted-foreground"
+                  }`}
+                >
+                  <Church className="h-5 w-5" /> Parroquia
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setNewAccountType("persona")}
+                  className={`flex flex-col items-center gap-1 rounded-2xl border p-3 text-xs transition-all ${
+                    newAccountType === "persona"
+                      ? "border-primary bg-primary/10 text-foreground"
+                      : "border-border bg-secondary/40 text-muted-foreground"
+                  }`}
+                >
+                  <User className="h-5 w-5" /> Persona
+                </button>
+              </div>
+            </div>
+            <div>
+              <Label htmlFor="newName">Nombre de la cuenta *</Label>
+              <Input
+                id="newName"
+                value={newDisplayName}
+                onChange={(e) => setNewDisplayName(e.target.value)}
+                placeholder={newAccountType === "parroquia" ? "Parroquia San José" : "María López"}
+                className="mt-1.5"
+              />
+            </div>
+            <div>
+              <Label htmlFor="newEmail">Correo *</Label>
+              <Input
+                id="newEmail"
+                type="email"
+                value={newEmail}
+                onChange={(e) => setNewEmail(e.target.value)}
+                placeholder="contacto@correo.com"
+                className="mt-1.5"
+              />
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div>
+                <Label htmlFor="newNit">NIT / Cédula</Label>
+                <Input id="newNit" value={newNit} onChange={(e) => setNewNit(e.target.value)} className="mt-1.5" />
+              </div>
+              <div>
+                <Label htmlFor="newPhone">Teléfono</Label>
+                <Input id="newPhone" value={newPhone} onChange={(e) => setNewPhone(e.target.value)} className="mt-1.5" />
+              </div>
+            </div>
+            <div>
+              <Label htmlFor="newPin">PIN (4-6 dígitos) *</Label>
+              <Input
+                id="newPin"
+                type="text"
+                inputMode="numeric"
+                maxLength={6}
+                value={newPin}
+                onChange={(e) => setNewPin(e.target.value.replace(/\D/g, ""))}
+                placeholder="••••"
+                className="mt-1.5 text-center tracking-[0.4em]"
+              />
+              <p className="mt-1 text-[11px] text-muted-foreground">
+                Comparte este PIN con el cliente para que pueda iniciar sesión.
+              </p>
+            </div>
+            <Button
+              onClick={handleCreateAccount}
+              disabled={creating}
+              className="w-full rounded-full bg-primary text-primary-foreground hover:bg-gold hover:text-gold-foreground"
+            >
+              {creating ? <Loader2 className="h-4 w-4 animate-spin" /> : "Crear cuenta"}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
+}
 }
