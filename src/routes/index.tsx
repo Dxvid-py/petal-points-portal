@@ -188,7 +188,7 @@ export default function LandingPage() {
       {/* SECCIÓN FIDELIZACIÓN — 3 columnas */}
       <section id="fidelizacion" className="relative bg-gradient-bone py-24">
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="mx-auto max-w-2xl text-center">
+          <Reveal className="mx-auto max-w-2xl text-center">
             <span className="text-xs font-medium uppercase tracking-[0.28em] text-gold">
               Programa de Fidelización
             </span>
@@ -197,14 +197,18 @@ export default function LandingPage() {
               <br />
               es muy fácil.
             </h2>
-          </div>
+          </Reveal>
 
-          <div className="mt-16 grid gap-6 md:grid-cols-3">
+          <StaggerGroup className="mt-16 grid gap-6 md:grid-cols-3" stagger={0.15}>
             {fidelityPillars.map((p, i) => (
-              <article
+              <motion.article
                 key={p.title}
-                className="group relative flex flex-col rounded-3xl border border-gold/15 bg-card/60 p-8 backdrop-blur-sm transition-all hover:-translate-y-2 hover:border-gold/40 hover:shadow-gold animate-fade-up"
-                style={{ animationDelay: `${i * 120}ms` }}
+                variants={{
+                  hidden: { opacity: 0, y: 32 },
+                  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } },
+                }}
+                whileHover={{ y: -8 }}
+                className="group relative flex flex-col rounded-3xl border border-gold/15 bg-card/60 p-8 backdrop-blur-sm transition-colors hover:border-gold/40 hover:shadow-gold"
               >
                 <div className="absolute -top-5 left-8 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-terracotta shadow-glow transition-transform group-hover:scale-110 group-hover:rotate-3">
                   <p.icon className="h-6 w-6 text-primary-foreground" strokeWidth={1.75} />
@@ -247,9 +251,9 @@ export default function LandingPage() {
                     {p.cta} <ArrowRight className="ml-1 h-4 w-4" />
                   </Button>
                 )}
-              </article>
+              </motion.article>
             ))}
-          </div>
+          </StaggerGroup>
         </div>
       </section>
 
