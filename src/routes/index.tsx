@@ -17,6 +17,8 @@ import { supabase } from "@/lib/supabase";
 import { fetchSiteContent, getText, getUrl, type SiteContentMap } from "@/lib/site-content";
 import { SITE_KEYS, type Reward, type GalleryItem } from "@/lib/types";
 import { formatPoints } from "@/lib/format";
+import { Reveal, StaggerGroup } from "@/components/Reveal";
+import { motion } from "framer-motion";
 
 const fidelityPillars = [
   {
@@ -102,7 +104,7 @@ export default function LandingPage() {
         </div>
 
         <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-6 py-20 md:grid-cols-2 md:py-28 lg:px-10 lg:py-36">
-          <div className="animate-fade-up">
+          <Reveal inView={false} y={32}>
             <span className="inline-flex items-center gap-2 rounded-full border border-gold/30 bg-gold/5 px-4 py-1.5 text-xs font-medium uppercase tracking-[0.24em] text-gold backdrop-blur">
               <Sparkles className="h-3 w-3" />
               Programa Deluxe
@@ -153,9 +155,14 @@ export default function LandingPage() {
                 <p className="mt-1 text-xs uppercase tracking-wider text-muted-foreground">Rating</p>
               </div>
             </div>
-          </div>
+          </Reveal>
 
-          <div className="relative animate-scale-in">
+          <motion.div
+            className="relative"
+            initial={{ opacity: 0, scale: 0.92 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
+          >
             <div className="absolute -inset-6 -z-10 rounded-[2.5rem] bg-primary/20 blur-3xl" />
             <div className="overflow-hidden rounded-[2rem] border border-primary/20 shadow-glow">
               <img
@@ -164,21 +171,24 @@ export default function LandingPage() {
                 className="h-[520px] w-full object-cover md:h-[640px]"
               />
             </div>
-            {/* Floating pink badge */}
-            <div className="absolute -bottom-5 -left-5 animate-float rounded-2xl border border-primary/30 bg-white/90 p-4 shadow-pink backdrop-blur">
+            <motion.div
+              className="absolute -bottom-5 -left-5 rounded-2xl border border-primary/30 bg-white/90 p-4 shadow-pink backdrop-blur"
+              animate={{ y: [0, -8, 0] }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+            >
               <p className="text-[10px] uppercase tracking-widest text-primary">Equivalencia</p>
               <p className="mt-1 font-serif text-xl font-semibold text-foreground">
                 1 pt <span className="text-muted-foreground">=</span> $1.760
               </p>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 
       {/* SECCIÓN FIDELIZACIÓN — 3 columnas */}
       <section id="fidelizacion" className="relative bg-gradient-bone py-24">
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="mx-auto max-w-2xl text-center">
+          <Reveal className="mx-auto max-w-2xl text-center">
             <span className="text-xs font-medium uppercase tracking-[0.28em] text-gold">
               Programa de Fidelización
             </span>
@@ -187,14 +197,18 @@ export default function LandingPage() {
               <br />
               es muy fácil.
             </h2>
-          </div>
+          </Reveal>
 
-          <div className="mt-16 grid gap-6 md:grid-cols-3">
+          <StaggerGroup className="mt-16 grid gap-6 md:grid-cols-3" stagger={0.15}>
             {fidelityPillars.map((p, i) => (
-              <article
+              <motion.article
                 key={p.title}
-                className="group relative flex flex-col rounded-3xl border border-gold/15 bg-card/60 p-8 backdrop-blur-sm transition-all hover:-translate-y-2 hover:border-gold/40 hover:shadow-gold animate-fade-up"
-                style={{ animationDelay: `${i * 120}ms` }}
+                variants={{
+                  hidden: { opacity: 0, y: 32 },
+                  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } },
+                }}
+                whileHover={{ y: -8 }}
+                className="group relative flex flex-col rounded-3xl border border-gold/15 bg-card/60 p-8 backdrop-blur-sm transition-colors hover:border-gold/40 hover:shadow-gold"
               >
                 <div className="absolute -top-5 left-8 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-terracotta shadow-glow transition-transform group-hover:scale-110 group-hover:rotate-3">
                   <p.icon className="h-6 w-6 text-primary-foreground" strokeWidth={1.75} />
@@ -237,16 +251,16 @@ export default function LandingPage() {
                     {p.cta} <ArrowRight className="ml-1 h-4 w-4" />
                   </Button>
                 )}
-              </article>
+              </motion.article>
             ))}
-          </div>
+          </StaggerGroup>
         </div>
       </section>
 
       {/* VIDEO ESTILO REEL */}
       <section id="video" className="relative py-24">
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="mx-auto max-w-2xl text-center">
+          <Reveal className="mx-auto max-w-2xl text-center">
             <span className="text-xs font-medium uppercase tracking-[0.28em] text-gold">
               En Vivo · Deluxe
             </span>
@@ -256,9 +270,15 @@ export default function LandingPage() {
             <p className="mt-4 text-muted-foreground">
               Descubre nuestros últimos arreglos y momentos especiales en formato Reel.
             </p>
-          </div>
+          </Reveal>
 
-          <div className="mt-14 flex justify-center">
+          <motion.div
+            className="mt-14 flex justify-center"
+            initial={{ opacity: 0, scale: 0.9, rotate: -2 }}
+            whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          >
             <div className="relative">
               <div className="absolute -inset-3 rounded-[2.5rem] bg-gradient-gold opacity-50 blur-xl" />
               <div className="relative aspect-[9/16] w-[320px] overflow-hidden rounded-[2rem] border-2 border-primary/30 bg-foreground shadow-glow md:w-[380px]">
@@ -280,14 +300,14 @@ export default function LandingPage() {
                 )}
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* CATÁLOGO REDIME */}
       <section id="redime" className="relative bg-gradient-bone py-24">
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="mx-auto max-w-2xl text-center">
+          <Reveal className="mx-auto max-w-2xl text-center">
             <span className="text-xs font-medium uppercase tracking-[0.28em] text-gold">
               Catálogo de Redención
             </span>
@@ -297,23 +317,27 @@ export default function LandingPage() {
             <p className="mt-4 text-muted-foreground">
               Convierte tus puntos en flores premium, servicios profesionales o bonos.
             </p>
-          </div>
+          </Reveal>
 
           {rewards.length === 0 ? (
-            <div className="mt-16 rounded-3xl border border-dashed border-primary/30 bg-card/60 p-12 text-center">
+            <Reveal className="mt-16 rounded-3xl border border-dashed border-primary/30 bg-card/60 p-12 text-center">
               <Gift className="mx-auto h-10 w-10 text-primary/40" />
               <p className="mt-4 font-serif text-xl text-foreground">Catálogo en construcción</p>
               <p className="mt-2 text-sm text-muted-foreground">
                 Pronto encontrarás aquí todas las recompensas que puedes canjear.
               </p>
-            </div>
+            </Reveal>
           ) : (
-            <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              {rewards.map((r, i) => (
-                <article
+            <StaggerGroup className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4" stagger={0.1}>
+              {rewards.map((r) => (
+                <motion.article
                   key={r.id}
-                  className="group relative overflow-hidden rounded-3xl border border-primary/15 bg-card transition-all hover:-translate-y-2 hover:border-primary/40 hover:shadow-pink animate-fade-up"
-                  style={{ animationDelay: `${i * 100}ms` }}
+                  variants={{
+                    hidden: { opacity: 0, y: 28 },
+                    show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] } },
+                  }}
+                  whileHover={{ y: -8 }}
+                  className="group relative overflow-hidden rounded-3xl border border-primary/15 bg-card transition-colors hover:border-primary/40 hover:shadow-pink"
                 >
                   <div className="relative aspect-[4/5] overflow-hidden bg-gradient-bone">
                     {r.image_url ? (
@@ -346,9 +370,9 @@ export default function LandingPage() {
                       <p className="mt-1 line-clamp-2 text-xs text-white/85">{r.description}</p>
                     )}
                   </div>
-                </article>
+                </motion.article>
               ))}
-            </div>
+            </StaggerGroup>
           )}
 
           <div className="mt-12 text-center">
@@ -371,7 +395,7 @@ export default function LandingPage() {
           <div className="pointer-events-none absolute -left-20 -top-20 h-64 w-64 rounded-full bg-primary/30 blur-3xl" />
           <div className="pointer-events-none absolute -right-16 -bottom-16 h-72 w-72 rounded-full bg-blush/60 blur-3xl" />
 
-          <div className="relative">
+          <Reveal className="relative">
             <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-white/70 px-4 py-1.5 text-[10px] font-medium uppercase tracking-[0.28em] text-primary backdrop-blur">
               <Sparkles className="h-3 w-3" />
               Únete hoy
@@ -382,17 +406,23 @@ export default function LandingPage() {
             <p className="mx-auto mt-5 max-w-xl text-base text-muted-foreground md:text-lg">
               Regístrate gratis y obtén acceso inmediato al programa de fidelización más exclusivo de Barranquilla.
             </p>
-            <Button
-              asChild
-              size="lg"
-              className="mt-9 rounded-full bg-primary px-8 text-primary-foreground hover:bg-foreground hover:text-background"
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.97 }}
+              className="mt-9 inline-block"
             >
-              <Link to="/auth?mode=signup">
-                Crear mi cuenta Deluxe
-                <ArrowRight className="ml-1 h-4 w-4" />
-              </Link>
-            </Button>
-          </div>
+              <Button
+                asChild
+                size="lg"
+                className="rounded-full bg-primary px-8 text-primary-foreground hover:bg-foreground hover:text-background"
+              >
+                <Link to="/auth?mode=signup">
+                  Crear mi cuenta Deluxe
+                  <ArrowRight className="ml-1 h-4 w-4" />
+                </Link>
+              </Button>
+            </motion.div>
+          </Reveal>
         </div>
       </section>
 
