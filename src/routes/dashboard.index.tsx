@@ -40,7 +40,11 @@ export default function DashboardHome() {
   }, [user]);
 
   const balance = profile?.points_balance ?? 0;
-  const greeting = profile?.display_name ?? profile?.full_name ?? "Cliente";
+  const greeting =
+    profile?.display_name?.trim() ||
+    profile?.full_name?.trim() ||
+    profile?.email?.split("@")[0] ||
+    "amiga";
   const equivalent = balance * POINTS_PER_COP;
 
   const totalEarned = transactions
@@ -67,25 +71,26 @@ export default function DashboardHome() {
       />
 
       <section className="grid gap-6 lg:grid-cols-5">
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-ink p-8 text-primary-foreground shadow-ink lg:col-span-3 md:p-10">
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-ink p-8 text-white shadow-ink lg:col-span-3 md:p-10">
           <div className="relative">
             <div className="flex items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-gold/20 px-3 py-1 text-[10px] font-medium uppercase tracking-[0.22em] text-gold">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-[10px] font-medium uppercase tracking-[0.22em] text-white">
                 <Sparkles className="h-3 w-3" />
                 Club Deluxe
               </span>
             </div>
 
-            <h2 className="mt-8 font-serif text-7xl font-light leading-none tracking-tight md:text-8xl">
+            <h2 className="mt-8 font-serif text-7xl font-light leading-none tracking-tight text-white md:text-8xl">
               {formatPoints(balance)}
-              <span className="ml-3 align-top font-serif text-base italic font-normal text-primary-foreground/60">
+              <span className="ml-3 align-top font-serif text-base italic font-normal text-white/70">
                 puntos
               </span>
             </h2>
 
-            <p className="mt-6 max-w-md text-sm text-primary-foreground/80">
-              Equivale a <span className="font-serif text-base text-gold">{formatCOP(equivalent)}</span> en
-              compras realizadas. Cada $1.760 COP se convierte en 1 punto.
+            <p className="mt-6 max-w-md text-sm text-white/85">
+              Equivale a{" "}
+              <span className="font-serif text-base text-white">{formatCOP(equivalent)}</span>{" "}
+              en compras realizadas. Cada $1.760 COP se convierte en 1 punto.
             </p>
 
             <div className="mt-8 flex flex-wrap gap-3">
@@ -101,7 +106,7 @@ export default function DashboardHome() {
               <Button
                 asChild
                 variant="outline"
-                className="rounded-full border-primary-foreground/25 bg-transparent text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground"
+                className="rounded-full border-white/30 bg-transparent text-white hover:bg-white/10 hover:text-white"
               >
                 <Link to="/dashboard/perfil">Ver mi perfil</Link>
               </Button>

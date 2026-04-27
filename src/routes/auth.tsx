@@ -87,8 +87,8 @@ export default function AuthPage() {
       toast.error("Debes aceptar el tratamiento de datos personales");
       return;
     }
-    if (pin.length < 4 || pin.length > 6 || !/^\d+$/.test(pin)) {
-      toast.error("El PIN debe ser 4 a 6 dígitos numéricos");
+    if (pin.length !== 4 || !/^\d{4}$/.test(pin)) {
+      toast.error("El PIN debe ser exactamente 4 dígitos numéricos");
       return;
     }
     if (pin !== pinConfirm) {
@@ -200,9 +200,9 @@ export default function AuthPage() {
                     pattern="[0-9]*"
                     required
                     minLength={4}
-                    maxLength={6}
+                    maxLength={4}
                     value={loginPin}
-                    onChange={(e) => setLoginPin(e.target.value.replace(/\D/g, ""))}
+                    onChange={(e) => setLoginPin(e.target.value.replace(/\D/g, "").slice(0, 4))}
                     className="mt-1.5 border-border/50 bg-background/40 text-center font-serif text-2xl tracking-[0.5em] text-foreground"
                     placeholder="• • • •"
                   />
@@ -319,7 +319,7 @@ export default function AuthPage() {
 
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div>
-                    <Label htmlFor="pin" className="text-foreground">PIN (4-6 dígitos) *</Label>
+                    <Label htmlFor="pin" className="text-foreground">PIN (4 dígitos) *</Label>
                     <Input
                       id="pin"
                       type="password"
@@ -327,10 +327,10 @@ export default function AuthPage() {
                       pattern="[0-9]*"
                       required
                       minLength={4}
-                      maxLength={6}
+                      maxLength={4}
                       value={pin}
-                      onChange={(e) => setPin(e.target.value.replace(/\D/g, ""))}
-                      className="mt-1.5 border-border/50 bg-background/40 text-center tracking-[0.4em] text-foreground"
+                      onChange={(e) => setPin(e.target.value.replace(/\D/g, "").slice(0, 4))}
+                      className="mt-1.5 border-background/40 bg-background/40 text-center tracking-[0.4em] text-foreground"
                       placeholder="••••"
                     />
                   </div>
@@ -343,9 +343,9 @@ export default function AuthPage() {
                       pattern="[0-9]*"
                       required
                       minLength={4}
-                      maxLength={6}
+                      maxLength={4}
                       value={pinConfirm}
-                      onChange={(e) => setPinConfirm(e.target.value.replace(/\D/g, ""))}
+                      onChange={(e) => setPinConfirm(e.target.value.replace(/\D/g, "").slice(0, 4))}
                       className="mt-1.5 border-border/50 bg-background/40 text-center tracking-[0.4em] text-foreground"
                       placeholder="••••"
                     />
