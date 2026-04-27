@@ -16,7 +16,11 @@ export function PageHeader({
   showAvatar = true,
 }: PageHeaderProps) {
   const { profile } = useAuth();
-  const displayName = profile?.display_name ?? profile?.full_name ?? "Cliente Deluxe";
+  const displayName =
+    profile?.display_name?.trim() ||
+    profile?.full_name?.trim() ||
+    profile?.email?.split("@")[0] ||
+    "Cliente Deluxe";
   const since = profile?.created_at ? `Miembro desde ${formatDate(profile.created_at)}` : "Club Deluxe";
 
   return (

@@ -40,7 +40,11 @@ export default function DashboardHome() {
   }, [user]);
 
   const balance = profile?.points_balance ?? 0;
-  const greeting = profile?.display_name ?? profile?.full_name ?? "Cliente";
+  const greeting =
+    profile?.display_name?.trim() ||
+    profile?.full_name?.trim() ||
+    profile?.email?.split("@")[0] ||
+    "amiga";
   const equivalent = balance * POINTS_PER_COP;
 
   const totalEarned = transactions
