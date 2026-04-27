@@ -114,8 +114,8 @@ export default function AdminClientesPage() {
       toast.error("Nombre, correo y PIN son obligatorios");
       return;
     }
-    if (newPin.length < 4 || newPin.length > 6 || !/^\d+$/.test(newPin)) {
-      toast.error("El PIN debe ser 4 a 6 dígitos");
+    if (newPin.length !== 4 || !/^\d{4}$/.test(newPin)) {
+      toast.error("El PIN debe ser exactamente 4 dígitos");
       return;
     }
     setCreating(true);
@@ -434,14 +434,15 @@ export default function AdminClientesPage() {
               </div>
             </div>
             <div>
-              <Label htmlFor="newPin">PIN (4-6 dígitos) *</Label>
+              <Label htmlFor="newPin">PIN (4 dígitos) *</Label>
               <Input
                 id="newPin"
                 type="text"
                 inputMode="numeric"
-                maxLength={6}
+                minLength={4}
+                maxLength={4}
                 value={newPin}
-                onChange={(e) => setNewPin(e.target.value.replace(/\D/g, ""))}
+                onChange={(e) => setNewPin(e.target.value.replace(/\D/g, "").slice(0, 4))}
                 placeholder="••••"
                 className="mt-1.5 text-center tracking-[0.4em]"
               />
