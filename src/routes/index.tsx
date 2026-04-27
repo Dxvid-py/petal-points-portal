@@ -104,7 +104,7 @@ export default function LandingPage() {
         </div>
 
         <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-6 py-20 md:grid-cols-2 md:py-28 lg:px-10 lg:py-36">
-          <div className="animate-fade-up">
+          <Reveal inView={false} y={32}>
             <span className="inline-flex items-center gap-2 rounded-full border border-gold/30 bg-gold/5 px-4 py-1.5 text-xs font-medium uppercase tracking-[0.24em] text-gold backdrop-blur">
               <Sparkles className="h-3 w-3" />
               Programa Deluxe
@@ -155,9 +155,14 @@ export default function LandingPage() {
                 <p className="mt-1 text-xs uppercase tracking-wider text-muted-foreground">Rating</p>
               </div>
             </div>
-          </div>
+          </Reveal>
 
-          <div className="relative animate-scale-in">
+          <motion.div
+            className="relative"
+            initial={{ opacity: 0, scale: 0.92 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
+          >
             <div className="absolute -inset-6 -z-10 rounded-[2.5rem] bg-primary/20 blur-3xl" />
             <div className="overflow-hidden rounded-[2rem] border border-primary/20 shadow-glow">
               <img
@@ -166,14 +171,17 @@ export default function LandingPage() {
                 className="h-[520px] w-full object-cover md:h-[640px]"
               />
             </div>
-            {/* Floating pink badge */}
-            <div className="absolute -bottom-5 -left-5 animate-float rounded-2xl border border-primary/30 bg-white/90 p-4 shadow-pink backdrop-blur">
+            <motion.div
+              className="absolute -bottom-5 -left-5 rounded-2xl border border-primary/30 bg-white/90 p-4 shadow-pink backdrop-blur"
+              animate={{ y: [0, -8, 0] }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+            >
               <p className="text-[10px] uppercase tracking-widest text-primary">Equivalencia</p>
               <p className="mt-1 font-serif text-xl font-semibold text-foreground">
                 1 pt <span className="text-muted-foreground">=</span> $1.760
               </p>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 
