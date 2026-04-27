@@ -260,7 +260,7 @@ export default function LandingPage() {
       {/* VIDEO ESTILO REEL */}
       <section id="video" className="relative py-24">
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="mx-auto max-w-2xl text-center">
+          <Reveal className="mx-auto max-w-2xl text-center">
             <span className="text-xs font-medium uppercase tracking-[0.28em] text-gold">
               En Vivo · Deluxe
             </span>
@@ -270,9 +270,15 @@ export default function LandingPage() {
             <p className="mt-4 text-muted-foreground">
               Descubre nuestros últimos arreglos y momentos especiales en formato Reel.
             </p>
-          </div>
+          </Reveal>
 
-          <div className="mt-14 flex justify-center">
+          <motion.div
+            className="mt-14 flex justify-center"
+            initial={{ opacity: 0, scale: 0.9, rotate: -2 }}
+            whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          >
             <div className="relative">
               <div className="absolute -inset-3 rounded-[2.5rem] bg-gradient-gold opacity-50 blur-xl" />
               <div className="relative aspect-[9/16] w-[320px] overflow-hidden rounded-[2rem] border-2 border-primary/30 bg-foreground shadow-glow md:w-[380px]">
@@ -294,7 +300,7 @@ export default function LandingPage() {
                 )}
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
