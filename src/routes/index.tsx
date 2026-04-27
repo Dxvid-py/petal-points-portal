@@ -307,7 +307,7 @@ export default function LandingPage() {
       {/* CATÁLOGO REDIME */}
       <section id="redime" className="relative bg-gradient-bone py-24">
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="mx-auto max-w-2xl text-center">
+          <Reveal className="mx-auto max-w-2xl text-center">
             <span className="text-xs font-medium uppercase tracking-[0.28em] text-gold">
               Catálogo de Redención
             </span>
@@ -317,23 +317,27 @@ export default function LandingPage() {
             <p className="mt-4 text-muted-foreground">
               Convierte tus puntos en flores premium, servicios profesionales o bonos.
             </p>
-          </div>
+          </Reveal>
 
           {rewards.length === 0 ? (
-            <div className="mt-16 rounded-3xl border border-dashed border-primary/30 bg-card/60 p-12 text-center">
+            <Reveal className="mt-16 rounded-3xl border border-dashed border-primary/30 bg-card/60 p-12 text-center">
               <Gift className="mx-auto h-10 w-10 text-primary/40" />
               <p className="mt-4 font-serif text-xl text-foreground">Catálogo en construcción</p>
               <p className="mt-2 text-sm text-muted-foreground">
                 Pronto encontrarás aquí todas las recompensas que puedes canjear.
               </p>
-            </div>
+            </Reveal>
           ) : (
-            <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              {rewards.map((r, i) => (
-                <article
+            <StaggerGroup className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4" stagger={0.1}>
+              {rewards.map((r) => (
+                <motion.article
                   key={r.id}
-                  className="group relative overflow-hidden rounded-3xl border border-primary/15 bg-card transition-all hover:-translate-y-2 hover:border-primary/40 hover:shadow-pink animate-fade-up"
-                  style={{ animationDelay: `${i * 100}ms` }}
+                  variants={{
+                    hidden: { opacity: 0, y: 28 },
+                    show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] } },
+                  }}
+                  whileHover={{ y: -8 }}
+                  className="group relative overflow-hidden rounded-3xl border border-primary/15 bg-card transition-colors hover:border-primary/40 hover:shadow-pink"
                 >
                   <div className="relative aspect-[4/5] overflow-hidden bg-gradient-bone">
                     {r.image_url ? (
@@ -366,9 +370,9 @@ export default function LandingPage() {
                       <p className="mt-1 line-clamp-2 text-xs text-white/85">{r.description}</p>
                     )}
                   </div>
-                </article>
+                </motion.article>
               ))}
-            </div>
+            </StaggerGroup>
           )}
 
           <div className="mt-12 text-center">
