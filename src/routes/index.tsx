@@ -395,7 +395,7 @@ export default function LandingPage() {
           <div className="pointer-events-none absolute -left-20 -top-20 h-64 w-64 rounded-full bg-primary/30 blur-3xl" />
           <div className="pointer-events-none absolute -right-16 -bottom-16 h-72 w-72 rounded-full bg-blush/60 blur-3xl" />
 
-          <div className="relative">
+          <Reveal className="relative">
             <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-white/70 px-4 py-1.5 text-[10px] font-medium uppercase tracking-[0.28em] text-primary backdrop-blur">
               <Sparkles className="h-3 w-3" />
               Únete hoy
@@ -406,17 +406,23 @@ export default function LandingPage() {
             <p className="mx-auto mt-5 max-w-xl text-base text-muted-foreground md:text-lg">
               Regístrate gratis y obtén acceso inmediato al programa de fidelización más exclusivo de Barranquilla.
             </p>
-            <Button
-              asChild
-              size="lg"
-              className="mt-9 rounded-full bg-primary px-8 text-primary-foreground hover:bg-foreground hover:text-background"
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.97 }}
+              className="mt-9 inline-block"
             >
-              <Link to="/auth?mode=signup">
-                Crear mi cuenta Deluxe
-                <ArrowRight className="ml-1 h-4 w-4" />
-              </Link>
-            </Button>
-          </div>
+              <Button
+                asChild
+                size="lg"
+                className="rounded-full bg-primary px-8 text-primary-foreground hover:bg-foreground hover:text-background"
+              >
+                <Link to="/auth?mode=signup">
+                  Crear mi cuenta Deluxe
+                  <ArrowRight className="ml-1 h-4 w-4" />
+                </Link>
+              </Button>
+            </motion.div>
+          </Reveal>
         </div>
       </section>
 
