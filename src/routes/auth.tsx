@@ -202,7 +202,7 @@ export default function AuthPage() {
                     minLength={4}
                     maxLength={4}
                     value={loginPin}
-                    onChange={(e) => setLoginPin(e.target.value.replace(/\D/g, ""))}
+                    onChange={(e) => setLoginPin(e.target.value.replace(/\D/g, "").slice(0, 4))}
                     className="mt-1.5 border-border/50 bg-background/40 text-center font-serif text-2xl tracking-[0.5em] text-foreground"
                     placeholder="• • • •"
                   />
@@ -329,8 +329,8 @@ export default function AuthPage() {
                       minLength={4}
                       maxLength={4}
                       value={pin}
-                      onChange={(e) => setPin(e.target.value.replace(/\D/g, ""))}
-                      className="mt-1.5 border-border/50 bg-background/40 text-center tracking-[0.4em] text-foreground"
+                      onChange={(e) => setPin(e.target.value.replace(/\D/g, "").slice(0, 4))}
+                      className="mt-1.5 border-background/40 bg-background/40 text-center tracking-[0.4em] text-foreground"
                       placeholder="••••"
                     />
                   </div>
@@ -345,7 +345,7 @@ export default function AuthPage() {
                       minLength={4}
                       maxLength={4}
                       value={pinConfirm}
-                      onChange={(e) => setPinConfirm(e.target.value.replace(/\D/g, ""))}
+                      onChange={(e) => setPinConfirm(e.target.value.replace(/\D/g, "").slice(0, 4))}
                       className="mt-1.5 border-border/50 bg-background/40 text-center tracking-[0.4em] text-foreground"
                       placeholder="••••"
                     />
