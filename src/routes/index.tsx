@@ -17,6 +17,8 @@ import { supabase } from "@/lib/supabase";
 import { fetchSiteContent, getText, getUrl, type SiteContentMap } from "@/lib/site-content";
 import { SITE_KEYS, type Reward, type GalleryItem } from "@/lib/types";
 import { formatPoints } from "@/lib/format";
+import { Reveal, StaggerGroup } from "@/components/Reveal";
+import { motion } from "framer-motion";
 
 const fidelityPillars = [
   {
