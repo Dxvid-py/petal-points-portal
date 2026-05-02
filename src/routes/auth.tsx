@@ -29,15 +29,14 @@ export default function AuthPage() {
   const [email, setEmail] = useState("");
   const [nit, setNit] = useState("");
   const [phone, setPhone] = useState("");
+  const [address, setAddress] = useState("");
   const [pin, setPin] = useState("");
   const [pinConfirm, setPinConfirm] = useState("");
   const [acceptedTerms, setAcceptedTerms] = useState(false);
 
   const checkConfig = () => {
     if (isUsingFallbackSupabaseConfig && window.location.hostname !== "localhost") {
-      toast.error(
-        "La app todavía no está conectada a Supabase. Configura las variables en Vercel.",
-      );
+      toast.error("La app todavía no está conectada a Supabase.");
       return false;
     }
     return true;
@@ -52,7 +51,6 @@ export default function AuthPage() {
     }
     setLoading(true);
     try {
-      // Traduce nombre -> email vía RPC
       const { data: foundEmail, error: rpcErr } = await supabase.rpc("lookup_email_by_name", {
         _name: loginName.trim(),
       });
@@ -71,7 +69,7 @@ export default function AuthPage() {
         setLoading(false);
         return;
       }
-      toast.success(`Bienvenido, ${loginName.trim()}`);
+      toast.success(`Hola, ${loginName.trim()}`);
       navigate("/dashboard");
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Error inesperado");
@@ -87,12 +85,16 @@ export default function AuthPage() {
       toast.error("Debes aceptar el tratamiento de datos personales");
       return;
     }
-    if (pin.length !== 4 || !/^\d{4}$/.test(pin)) {
-      toast.error("El PIN debe ser exactamente 4 dígitos numéricos");
+    if (pin.length !== 6 || !/^\d{6}$/.test(pin)) {
+      toast.error("El PIN debe ser exactamente 6 dígitos numéricos");
       return;
     }
     if (pin !== pinConfirm) {
       toast.error("Los PIN no coinciden");
+      return;
+    }
+    if (!address.trim()) {
+      toast.error("La dirección es obligatoria");
       return;
     }
     setLoading(true);
@@ -108,6 +110,7 @@ export default function AuthPage() {
             account_type: accountType,
             nit: nit.trim() || null,
             phone: phone.trim() || null,
+            address: address.trim() || null,
           },
         },
       });
@@ -148,7 +151,6 @@ export default function AuthPage() {
             <Logo to="/" />
           </div>
 
-          {/* Tabs */}
           <div className="mb-6 grid grid-cols-2 rounded-full border border-border/40 bg-background/40 p-1">
             <button
               type="button"
@@ -199,12 +201,12 @@ export default function AuthPage() {
                     inputMode="numeric"
                     pattern="[0-9]*"
                     required
-                    minLength={4}
-                    maxLength={4}
+                    minLength={6}
+                    maxLength={6}
                     value={loginPin}
-                    onChange={(e) => setLoginPin(e.target.value.replace(/\D/g, "").slice(0, 4))}
+                    onChange={(e) => setLoginPin(e.target.value.replace(/\D/g, "").slice(0, 6))}
                     className="mt-1.5 border-border/50 bg-background/40 text-center font-serif text-2xl tracking-[0.5em] text-foreground"
-                    placeholder="• • • •"
+                    placeholder="• • • • • •"
                   />
                 </div>
                 <Button
@@ -233,7 +235,6 @@ export default function AuthPage() {
               </p>
 
               <form onSubmit={handleSignUp} className="mt-7 space-y-4">
-                {/* Tipo de cuenta */}
                 <div>
                   <Label className="text-foreground">Tipo de cuenta</Label>
                   <div className="mt-2 grid grid-cols-2 gap-2">
@@ -294,6 +295,18 @@ export default function AuthPage() {
                   />
                 </div>
 
+                <div>
+                  <Label htmlFor="address" className="text-foreground">Dirección *</Label>
+                  <Input
+                    id="address"
+                    required
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                    className="mt-1.5 border-border/50 bg-background/40 text-foreground"
+                    placeholder="Cra 10 # 20-30, Barrio Centro, Cali"
+                  />
+                </div>
+
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div>
                     <Label htmlFor="nit" className="text-foreground">NIT / Cédula</Label>
@@ -319,19 +332,19 @@ export default function AuthPage() {
 
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div>
-                    <Label htmlFor="pin" className="text-foreground">PIN (4 dígitos) *</Label>
+                    <Label htmlFor="pin" className="text-foreground">PIN (6 dígitos) *</Label>
                     <Input
                       id="pin"
                       type="password"
                       inputMode="numeric"
                       pattern="[0-9]*"
                       required
-                      minLength={4}
-                      maxLength={4}
+                      minLength={6}
+                      maxLength={6}
                       value={pin}
-                      onChange={(e) => setPin(e.target.value.replace(/\D/g, "").slice(0, 4))}
+                      onChange={(e) => setPin(e.target.value.replace(/\D/g, "").slice(0, 6))}
                       className="mt-1.5 border-background/40 bg-background/40 text-center tracking-[0.4em] text-foreground"
-                      placeholder="••••"
+                      placeholder="••••••"
                     />
                   </div>
                   <div>
@@ -342,12 +355,12 @@ export default function AuthPage() {
                       inputMode="numeric"
                       pattern="[0-9]*"
                       required
-                      minLength={4}
-                      maxLength={4}
+                      minLength={6}
+                      maxLength={6}
                       value={pinConfirm}
-                      onChange={(e) => setPinConfirm(e.target.value.replace(/\D/g, "").slice(0, 4))}
+                      onChange={(e) => setPinConfirm(e.target.value.replace(/\D/g, "").slice(0, 6))}
                       className="mt-1.5 border-border/50 bg-background/40 text-center tracking-[0.4em] text-foreground"
-                      placeholder="••••"
+                      placeholder="••••••"
                     />
                   </div>
                 </div>
