@@ -443,6 +443,16 @@ export default function AdminClientesPage() {
                 className="mt-1.5"
               />
             </div>
+            <div>
+              <Label htmlFor="newAddress">Dirección *</Label>
+              <Input
+                id="newAddress"
+                value={newAddress}
+                onChange={(e) => setNewAddress(e.target.value)}
+                placeholder="Cra 10 # 20-30, Cali"
+                className="mt-1.5"
+              />
+            </div>
             <div className="grid gap-3 sm:grid-cols-2">
               <div>
                 <Label htmlFor="newNit">NIT / Cédula</Label>
