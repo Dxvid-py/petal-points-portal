@@ -232,20 +232,20 @@ export default function AdminClientesPage() {
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex flex-wrap gap-1">
-                          {r.roles.map((role) => (
-                            <span
-                              key={role}
-                              className={`rounded-full px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider ${
-                                role === "admin"
-                                  ? "bg-gold/20 text-gold-foreground"
-                                  : role === "asesora"
-                                    ? "bg-blush text-blush-foreground"
-                                    : "bg-secondary text-muted-foreground"
-                              }`}
-                            >
-                              {role}
+                          <span
+                            className={`rounded-full px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider ${
+                              r.account_type === "parroquia"
+                                ? "bg-gold/20 text-gold-foreground"
+                                : "bg-blush text-blush-foreground"
+                            }`}
+                          >
+                            {r.account_type === "parroquia" ? "Parroquia" : "Persona"}
+                          </span>
+                          {r.roles.includes("admin") && (
+                            <span className="rounded-full bg-primary/20 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-primary">
+                              admin
                             </span>
-                          ))}
+                          )}
                         </div>
                       </td>
                       <td className="px-6 py-4 font-serif text-base text-foreground">
