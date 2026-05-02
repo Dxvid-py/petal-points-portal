@@ -5,10 +5,10 @@ import {
   Gift,
   Image as ImageIcon,
   History,
-  ShieldCheck,
   LogOut,
   ArrowLeft,
   Megaphone,
+  Wallet,
 } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { Avatar } from "@/components/dashboard/Avatar";
@@ -22,7 +22,7 @@ const adminNav = [
   { to: "/admin/contenido", label: "Contenido home", icon: Megaphone },
   { to: "/admin/galeria", label: "Galería", icon: ImageIcon },
   { to: "/admin/transacciones", label: "Transacciones", icon: History },
-  { to: "/admin/roles", label: "Roles del equipo", icon: ShieldCheck },
+  { to: "/admin/adelantos", label: "Adelantos", icon: Wallet },
 ];
 
 export default function AdminLayout() {
