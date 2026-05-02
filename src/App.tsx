@@ -17,8 +17,7 @@ import AdminRecompensas from "./routes/admin.recompensas";
 import AdminGaleria from "./routes/admin.galeria";
 import AdminContenido from "./routes/admin.contenido";
 import AdminTransacciones from "./routes/admin.transacciones";
-import AdminRoles from "./routes/admin.roles";
-import AsesoraPage from "./routes/asesora";
+import AdminAdelantos from "./routes/admin.adelantos";
 
 function NotFound() {
   return (
@@ -62,9 +61,8 @@ export default function App() {
           <Route path="galeria" element={<AdminGaleria />} />
           <Route path="contenido" element={<AdminContenido />} />
           <Route path="transacciones" element={<AdminTransacciones />} />
-          <Route path="roles" element={<AdminRoles />} />
+          <Route path="adelantos" element={<AdminAdelantos />} />
         </Route>
-        <Route path="/asesora" element={<AsesoraPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Toaster position="top-right" />

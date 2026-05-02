@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { Mail, Phone, IdCard, Sparkles, Loader2, Camera, Trash2 } from "lucide-react";
+import { Mail, Phone, IdCard, Sparkles, Loader2, Camera, Trash2, MapPin } from "lucide-react";
 import { PageHeader } from "@/components/dashboard/PageHeader";
 import { Avatar } from "@/components/dashboard/Avatar";
 import { Button } from "@/components/ui/button";
@@ -17,11 +17,13 @@ export default function ProfilePage() {
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [displayName, setDisplayName] = useState("");
   const [phone, setPhone] = useState("");
+  const [address, setAddress] = useState("");
 
   useEffect(() => {
     if (profile) {
       setDisplayName(profile.display_name ?? profile.full_name ?? "");
       setPhone(profile.phone ?? "");
+      setAddress(profile.address ?? "");
     }
   }, [profile]);
 
@@ -35,6 +37,7 @@ export default function ProfilePage() {
         full_name: displayName,
         display_name: displayName,
         phone: phone || null,
+        address: address || null,
       })
       .eq("id", user.id);
     setSaving(false);
@@ -255,6 +258,17 @@ export default function ProfilePage() {
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="+57 300 000 0000"
+                />
+              </div>
+              <div className="space-y-2 md:col-span-2">
+                <Label htmlFor="address">
+                  <MapPin className="mr-1.5 inline h-3 w-3" /> Dirección
+                </Label>
+                <Input
+                  id="address"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  placeholder="Cra 10 # 20-30, Cali"
                 />
               </div>
             </div>

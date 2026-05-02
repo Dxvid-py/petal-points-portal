@@ -39,6 +39,7 @@ export default function AdminClientesPage() {
   const [newEmail, setNewEmail] = useState("");
   const [newNit, setNewNit] = useState("");
   const [newPhone, setNewPhone] = useState("");
+  const [newAddress, setNewAddress] = useState("");
   const [newPin, setNewPin] = useState("");
   const [creating, setCreating] = useState(false);
 
@@ -115,10 +116,18 @@ export default function AdminClientesPage() {
       return;
     }
     if (newPin.length !== 6 || !/^\d{6}$/.test(newPin)) {
-  toast.error("El PIN debe ser exactamente 6 dígitos");
+      toast.error("El PIN debe ser exactamente 6 dígitos");
+      return;
+    }
+    if (!newAddress.trim()) {
+      toast.error("La dirección es obligatoria");
       return;
     }
     setCreating(true);
+
+    // Guardar la sesión del admin para restaurarla después del signUp
+    const { data: { session: currentSession } } = await supabase.auth.getSession();
+
     const { error } = await supabase.auth.signUp({
       email: newEmail.trim(),
       password: newPin.trim(),
@@ -129,9 +138,19 @@ export default function AdminClientesPage() {
           account_type: newAccountType,
           nit: newNit.trim() || null,
           phone: newPhone.trim() || null,
+          address: newAddress.trim() || null,
         },
       },
     });
+
+    // Restaurar la sesión del admin (signUp logea al nuevo usuario)
+    if (currentSession) {
+      await supabase.auth.setSession({
+        access_token: currentSession.access_token,
+        refresh_token: currentSession.refresh_token,
+      });
+    }
+
     setCreating(false);
     if (error) {
       if (error.message.toLowerCase().includes("already") || error.message.toLowerCase().includes("registered")) {
@@ -143,11 +162,12 @@ export default function AdminClientesPage() {
       }
       return;
     }
-    toast.success(`Cuenta creada: ${newDisplayName.trim()}`);
+    toast.success(`Usuario creado: ${newDisplayName.trim()}`);
     setNewDisplayName("");
     setNewEmail("");
     setNewNit("");
     setNewPhone("");
+    setNewAddress("");
     setNewPin("");
     setNewAccountType("parroquia");
     setCreateOpen(false);
@@ -232,20 +252,20 @@ export default function AdminClientesPage() {
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex flex-wrap gap-1">
-                          {r.roles.map((role) => (
-                            <span
-                              key={role}
-                              className={`rounded-full px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider ${
-                                role === "admin"
-                                  ? "bg-gold/20 text-gold-foreground"
-                                  : role === "asesora"
-                                    ? "bg-blush text-blush-foreground"
-                                    : "bg-secondary text-muted-foreground"
-                              }`}
-                            >
-                              {role}
+                          <span
+                            className={`rounded-full px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider ${
+                              r.account_type === "parroquia"
+                                ? "bg-gold/20 text-gold-foreground"
+                                : "bg-blush text-blush-foreground"
+                            }`}
+                          >
+                            {r.account_type === "parroquia" ? "Parroquia" : "Persona"}
+                          </span>
+                          {r.roles.includes("admin") && (
+                            <span className="rounded-full bg-primary/20 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-primary">
+                              admin
                             </span>
-                          ))}
+                          )}
                         </div>
                       </td>
                       <td className="px-6 py-4 font-serif text-base text-foreground">
@@ -420,6 +440,16 @@ export default function AdminClientesPage() {
                 value={newEmail}
                 onChange={(e) => setNewEmail(e.target.value)}
                 placeholder="contacto@correo.com"
+                className="mt-1.5"
+              />
+            </div>
+            <div>
+              <Label htmlFor="newAddress">Dirección *</Label>
+              <Input
+                id="newAddress"
+                value={newAddress}
+                onChange={(e) => setNewAddress(e.target.value)}
+                placeholder="Cra 10 # 20-30, Cali"
                 className="mt-1.5"
               />
             </div>
