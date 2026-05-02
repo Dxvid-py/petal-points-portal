@@ -116,10 +116,18 @@ export default function AdminClientesPage() {
       return;
     }
     if (newPin.length !== 6 || !/^\d{6}$/.test(newPin)) {
-  toast.error("El PIN debe ser exactamente 6 dígitos");
+      toast.error("El PIN debe ser exactamente 6 dígitos");
+      return;
+    }
+    if (!newAddress.trim()) {
+      toast.error("La dirección es obligatoria");
       return;
     }
     setCreating(true);
+
+    // Guardar la sesión del admin para restaurarla después del signUp
+    const { data: { session: currentSession } } = await supabase.auth.getSession();
+
     const { error } = await supabase.auth.signUp({
       email: newEmail.trim(),
       password: newPin.trim(),
@@ -130,9 +138,19 @@ export default function AdminClientesPage() {
           account_type: newAccountType,
           nit: newNit.trim() || null,
           phone: newPhone.trim() || null,
+          address: newAddress.trim() || null,
         },
       },
     });
+
+    // Restaurar la sesión del admin (signUp logea al nuevo usuario)
+    if (currentSession) {
+      await supabase.auth.setSession({
+        access_token: currentSession.access_token,
+        refresh_token: currentSession.refresh_token,
+      });
+    }
+
     setCreating(false);
     if (error) {
       if (error.message.toLowerCase().includes("already") || error.message.toLowerCase().includes("registered")) {
@@ -144,11 +162,12 @@ export default function AdminClientesPage() {
       }
       return;
     }
-    toast.success(`Cuenta creada: ${newDisplayName.trim()}`);
+    toast.success(`Usuario creado: ${newDisplayName.trim()}`);
     setNewDisplayName("");
     setNewEmail("");
     setNewNit("");
     setNewPhone("");
+    setNewAddress("");
     setNewPin("");
     setNewAccountType("parroquia");
     setCreateOpen(false);
