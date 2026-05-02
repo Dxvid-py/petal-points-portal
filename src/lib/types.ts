@@ -12,10 +12,22 @@ export interface ProfileRow {
   avatar_url: string | null;
   nit_id: string | null;
   phone: string | null;
+  address: string | null;
   email: string | null;
   parroquia_code: string | null;
   points_balance: number;
   created_at?: string;
+}
+
+export interface Advance {
+  id: string;
+  employee_name: string;
+  amount: number;
+  advance_date: string;
+  note: string | null;
+  paid: boolean;
+  paid_at: string | null;
+  created_at: string;
 }
 
 export interface PointsTransaction {
