@@ -39,6 +39,7 @@ export default function AdminClientesPage() {
   const [newEmail, setNewEmail] = useState("");
   const [newNit, setNewNit] = useState("");
   const [newPhone, setNewPhone] = useState("");
+  const [newAddress, setNewAddress] = useState("");
   const [newPin, setNewPin] = useState("");
   const [creating, setCreating] = useState(false);
 
