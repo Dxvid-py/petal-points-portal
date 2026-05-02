@@ -60,7 +60,7 @@ export default function DashboardHome() {
         <title>Mi Atelier — Puntos Deluxe</title>
       </Helmet>
       <PageHeader
-        eyebrow="Mi atelier"
+        eyebrow={profile?.account_type === "parroquia" ? "Parroquia · Mi atelier" : "Mi atelier"}
         title={
           <>
             Hola, <em className="italic">{greeting}</em>.<br />
@@ -69,6 +69,12 @@ export default function DashboardHome() {
         }
         description={`Tu balance equivale a ${formatCOP(equivalent)} en compras realizadas con nosotros.`}
       />
+
+      {profile?.account_type === "parroquia" && (
+        <div className="-mt-6 inline-flex w-fit items-center gap-2 rounded-full border border-gold/40 bg-gold/10 px-4 py-1.5 text-xs font-medium uppercase tracking-[0.2em] text-gold">
+          ✦ Cuenta Parroquia
+        </div>
+      )}
 
       <section className="grid gap-6 lg:grid-cols-5">
         <div className="relative overflow-hidden rounded-3xl bg-gradient-ink p-8 text-white shadow-ink lg:col-span-3 md:p-10">
