@@ -332,25 +332,30 @@ export default function AdminClientesPage() {
                       {formatPoints(r.points_balance ?? 0)}
                     </span>
                   </div>
-                  <div className="flex items-center justify-between border-t border-border/40 pt-2">
+                  {r.address && (
+                    <p className="text-[11px] text-muted-foreground flex items-start gap-1">
+                      <MapPin className="mt-0.5 h-3 w-3 shrink-0" />{r.address}
+                    </p>
+                  )}
+                  <div className="flex flex-wrap items-center justify-between gap-2 border-t border-border/40 pt-2">
                     <div className="flex flex-wrap gap-1">
                       {r.roles.map((role) => (
-                        <span
-                          key={role}
-                          className="rounded-full bg-secondary px-2 py-0.5 text-[10px] uppercase text-muted-foreground"
-                        >
+                        <span key={role} className="rounded-full bg-secondary px-2 py-0.5 text-[10px] uppercase text-muted-foreground">
                           {role}
                         </span>
                       ))}
                     </div>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => setSelected(r)}
-                      className="rounded-full"
-                    >
-                      <Plus className="h-3.5 w-3.5" /> Cargar
-                    </Button>
+                    <div className="flex gap-1.5">
+                      <Button size="sm" variant="outline" onClick={() => { setAdjustMode("add"); setSelected(r); }} className="rounded-full">
+                        <Plus className="h-3.5 w-3.5" />
+                      </Button>
+                      <Button size="sm" variant="outline" onClick={() => { setAdjustMode("subtract"); setSelected(r); }} className="rounded-full">
+                        <Minus className="h-3.5 w-3.5" />
+                      </Button>
+                      <Button size="sm" variant="ghost" onClick={() => handleDelete(r)} className="rounded-full text-terracotta hover:bg-terracotta/10">
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </Button>
+                    </div>
                   </div>
                 </li>
               ))}
@@ -364,7 +369,7 @@ export default function AdminClientesPage() {
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="font-serif">
-              Cargar puntos a {selected?.full_name}
+              {adjustMode === "add" ? "Cargar puntos a" : "Restar puntos a"} {selected?.full_name}
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
@@ -375,19 +380,20 @@ export default function AdminClientesPage() {
               </p>
             </div>
             <div>
-              <Label htmlFor="cop">Monto de la compra (COP)</Label>
+              <Label htmlFor="cop">
+                {adjustMode === "add" ? "Monto de la compra (COP)" : "Monto a restar (COP)"}
+              </Label>
               <Input
-                id="cop"
-                type="number"
-                min="0"
-                value={amountCop}
+                id="cop" type="number" min="0" value={amountCop}
                 onChange={(e) => setAmountCop(e.target.value)}
-                placeholder="100000"
-                className="mt-1.5"
+                placeholder="100000" className="mt-1.5"
               />
               {amountCop && Number(amountCop) > 0 && (
                 <p className="mt-2 text-xs text-muted-foreground">
-                  Genera <span className="font-semibold text-forest">+{Math.floor(Number(amountCop) / POINTS_PER_COP)} puntos</span>{" "}
+                  {adjustMode === "add" ? "Genera" : "Resta"}{" "}
+                  <span className={`font-semibold ${adjustMode === "add" ? "text-forest" : "text-terracotta"}`}>
+                    {adjustMode === "add" ? "+" : "−"}{Math.floor(Number(amountCop) / POINTS_PER_COP)} puntos
+                  </span>{" "}
                   ({formatCOP(POINTS_PER_COP)} = 1 punto)
                 </p>
               )}
@@ -395,19 +401,23 @@ export default function AdminClientesPage() {
             <div>
               <Label htmlFor="reason">Motivo (opcional)</Label>
               <Input
-                id="reason"
-                value={reason}
+                id="reason" value={reason}
                 onChange={(e) => setReason(e.target.value)}
-                placeholder="Ramo aniversario"
+                placeholder={adjustMode === "add" ? "Ramo aniversario" : "Corrección"}
                 className="mt-1.5"
               />
             </div>
             <Button
               onClick={handleAddPoints}
               disabled={adjusting}
-              className="w-full rounded-full bg-primary text-primary-foreground hover:bg-gold hover:text-gold-foreground"
+              className={`w-full rounded-full ${
+                adjustMode === "add"
+                  ? "bg-primary text-primary-foreground hover:bg-gold hover:text-gold-foreground"
+                  : "bg-terracotta text-terracotta-foreground hover:bg-terracotta/90"
+              }`}
             >
-              {adjusting ? <Loader2 className="h-4 w-4 animate-spin" /> : "Cargar puntos"}
+              {adjusting ? <Loader2 className="h-4 w-4 animate-spin" /> :
+                adjustMode === "add" ? "Cargar puntos" : "Restar puntos"}
             </Button>
           </div>
         </DialogContent>
