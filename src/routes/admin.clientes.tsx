@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { Search, Loader2, User as UserIcon, Plus, UserPlus, Church, User } from "lucide-react";
+import { Search, Loader2, User as UserIcon, Plus, Minus, Trash2, UserPlus, Church, User, MapPin } from "lucide-react";
 import { PageHeader } from "@/components/dashboard/PageHeader";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -28,7 +28,8 @@ export default function AdminClientesPage() {
   const [selected, setSelected] = useState<Row | null>(null);
   const [createOpen, setCreateOpen] = useState(false);
 
-  // Form para añadir puntos manualmente
+  // Form para añadir / restar puntos manualmente
+  const [adjustMode, setAdjustMode] = useState<"add" | "subtract">("add");
   const [amountCop, setAmountCop] = useState("");
   const [reason, setReason] = useState("");
   const [adjusting, setAdjusting] = useState(false);
@@ -91,22 +92,33 @@ export default function AdminClientesPage() {
       toast.error(`Mínimo ${formatCOP(POINTS_PER_COP)} para generar 1 punto`);
       return;
     }
+    const signedPoints = adjustMode === "add" ? points : -points;
     setAdjusting(true);
     const { error } = await supabase.from("points_transactions").insert({
       profile_id: selected.id,
-      amount: points,
-      type: "compra",
-      reason: reason || `Compra por ${formatCOP(cop)}`,
+      amount: signedPoints,
+      type: adjustMode === "add" ? "compra" : "ajuste",
+      reason: reason || (adjustMode === "add"
+        ? `Compra por ${formatCOP(cop)}`
+        : `Ajuste -${formatCOP(cop)}`),
     });
     setAdjusting(false);
     if (error) {
       toast.error(error.message);
       return;
     }
-    toast.success(`+${points} puntos cargados a ${selected.full_name}`);
+    toast.success(`${signedPoints > 0 ? "+" : ""}${signedPoints} puntos a ${selected.full_name}`);
     setAmountCop("");
     setReason("");
     setSelected(null);
+    load();
+  };
+
+  const handleDelete = async (r: Row) => {
+    if (!confirm(`¿Eliminar la cuenta de ${r.full_name}? Esta acción es irreversible.`)) return;
+    const { error } = await supabase.rpc("admin_delete_user", { _user_id: r.id });
+    if (error) { toast.error(error.message); return; }
+    toast.success("Cuenta eliminada");
     load();
   };
 
