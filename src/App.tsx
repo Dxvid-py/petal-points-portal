@@ -18,6 +18,9 @@ import AdminGaleria from "./routes/admin.galeria";
 import AdminContenido from "./routes/admin.contenido";
 import AdminTransacciones from "./routes/admin.transacciones";
 import AdminAdelantos from "./routes/admin.adelantos";
+import AdminRoles from "./routes/admin.roles";
+import AdminCanjes from "./routes/admin.canjes";
+import DashboardCanjes from "./routes/dashboard.canjes";
 
 function NotFound() {
   return (
@@ -52,15 +55,18 @@ export default function App() {
           <Route path="perfil" element={<ProfilePage />} />
           <Route path="recompensas" element={<RewardsPage />} />
           <Route path="compras" element={<PurchasesPage />} />
+          <Route path="canjes" element={<DashboardCanjes />} />
           <Route path="soporte" element={<SupportPage />} />
         </Route>
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminHome />} />
           <Route path="clientes" element={<AdminClientes />} />
+          <Route path="canjes" element={<AdminCanjes />} />
           <Route path="recompensas" element={<AdminRecompensas />} />
-          <Route path="galeria" element={<AdminGaleria />} />
           <Route path="contenido" element={<AdminContenido />} />
+          <Route path="galeria" element={<AdminGaleria />} />
           <Route path="transacciones" element={<AdminTransacciones />} />
+          <Route path="roles" element={<AdminRoles />} />
           <Route path="adelantos" element={<AdminAdelantos />} />
         </Route>
         <Route path="*" element={<NotFound />} />

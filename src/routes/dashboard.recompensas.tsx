@@ -37,19 +37,33 @@ export default function RewardsPage() {
     if (!user) return;
     if (userPoints < r.points_cost) return;
     setRedeemingId(r.id);
-    const { error } = await supabase.from("points_transactions").insert({
-      profile_id: user.id,
-      amount: -r.points_cost,
-      type: "canje",
-      reason: r.title,
-    });
-    setRedeemingId(null);
+    const { data: tx, error } = await supabase
+      .from("points_transactions")
+      .insert({
+        profile_id: user.id,
+        amount: -r.points_cost,
+        type: "canje",
+        reason: r.title,
+      })
+      .select()
+      .single();
     if (error) {
+      setRedeemingId(null);
       toast.error(error.message);
       return;
     }
+    // Crear el registro de canje (estado/pedido)
+    await supabase.from("redemptions").insert({
+      profile_id: user.id,
+      reward_id: r.id,
+      reward_title: r.title,
+      points_cost: r.points_cost,
+      transaction_id: tx?.id ?? null,
+      status: "pendiente",
+    });
+    setRedeemingId(null);
     toast.success("¡Recompensa canjeada!", {
-      description: `${r.title} · −${r.points_cost} puntos.`,
+      description: `Sigue el estado en "Mis canjes".`,
     });
     refreshProfile();
   };

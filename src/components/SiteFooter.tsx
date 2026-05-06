@@ -1,4 +1,4 @@
-import { Flower2, Instagram, Facebook, Phone } from "lucide-react";
+import { Flower2, Instagram, Phone, Mail, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export function SiteFooter() {
@@ -33,15 +33,32 @@ export function SiteFooter() {
             Contáctanos
           </p>
           <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
-            <li className="flex items-center gap-2"><Phone className="h-4 w-4" /> +57 300 000 0000</li>
-            <li className="flex items-center gap-2"><Instagram className="h-4 w-4" /> @floristeriadeluxe</li>
-            <li className="flex items-center gap-2"><Facebook className="h-4 w-4" /> Floristería Deluxe</li>
+            <li>
+              <a href="mailto:contacto.puntosdeluxe@floristeriadeluxe.com" className="flex items-center gap-2 hover:text-foreground">
+                <Mail className="h-4 w-4" /> contacto.puntosdeluxe@floristeriadeluxe.com
+              </a>
+            </li>
+            <li>
+              <a href="https://wa.me/573011940530" target="_blank" rel="noreferrer" className="flex items-center gap-2 hover:text-foreground">
+                <Phone className="h-4 w-4" /> WhatsApp +57 301 1940530
+              </a>
+            </li>
+            <li>
+              <a href="https://www.instagram.com/floristeriadeluxe/" target="_blank" rel="noreferrer" className="flex items-center gap-2 hover:text-foreground">
+                <Instagram className="h-4 w-4" /> @floristeriadeluxe
+              </a>
+            </li>
+            <li>
+              <a href="https://maps.app.goo.gl/KH1nQLmvDwUcQng9A" target="_blank" rel="noreferrer" className="flex items-center gap-2 hover:text-foreground">
+                <MapPin className="h-4 w-4" /> Ver ubicación en Google Maps
+              </a>
+            </li>
           </ul>
         </div>
       </div>
       <div className="border-t border-border/60 px-6 py-5 text-center">
         <p className="text-xs text-muted-foreground">
-          © 2024 Puntos Floristería Deluxe · Todos los derechos reservados
+          © {new Date().getFullYear()} Puntos Floristería Deluxe · Todos los derechos reservados
         </p>
       </div>
     </footer>

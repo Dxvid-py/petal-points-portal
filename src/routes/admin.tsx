@@ -9,6 +9,8 @@ import {
   ArrowLeft,
   Megaphone,
   Wallet,
+  ShieldCheck,
+  Package,
 } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { Avatar } from "@/components/dashboard/Avatar";
@@ -18,10 +20,12 @@ import { RoleGuard } from "@/components/RoleGuard";
 const adminNav = [
   { to: "/admin", label: "Resumen", icon: LayoutDashboard, exact: true },
   { to: "/admin/clientes", label: "Clientes", icon: Users },
+  { to: "/admin/canjes", label: "Canjes", icon: Package },
   { to: "/admin/recompensas", label: "Recompensas", icon: Gift },
   { to: "/admin/contenido", label: "Contenido home", icon: Megaphone },
   { to: "/admin/galeria", label: "Galería", icon: ImageIcon },
   { to: "/admin/transacciones", label: "Transacciones", icon: History },
+  { to: "/admin/roles", label: "Roles", icon: ShieldCheck },
   { to: "/admin/adelantos", label: "Adelantos", icon: Wallet },
 ];
 
