@@ -4,6 +4,7 @@ import {
   User,
   Gift,
   ShoppingBag,
+  Package,
   MessageCircle,
   LogOut,
 } from "lucide-react";
@@ -22,6 +23,7 @@ const navItems: NavItem[] = [
   { to: "/dashboard", label: "Resumen", icon: LayoutDashboard, exact: true },
   { to: "/dashboard/perfil", label: "Mi perfil", icon: User },
   { to: "/dashboard/recompensas", label: "Recompensas", icon: Gift },
+  { to: "/dashboard/canjes", label: "Mis canjes", icon: Package },
   { to: "/dashboard/compras", label: "Mis compras", icon: ShoppingBag },
   { to: "/dashboard/soporte", label: "Soporte", icon: MessageCircle },
 ];
