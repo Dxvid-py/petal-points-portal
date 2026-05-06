@@ -241,26 +241,31 @@ export default function AdminClientesPage() {
                 <thead>
                   <tr className="border-b border-border bg-secondary/40 text-left text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
                     <th className="px-6 py-4 font-medium">Cliente</th>
-                    <th className="px-6 py-4 font-medium">NIT</th>
-                    <th className="px-6 py-4 font-medium">Parroquia</th>
-                    <th className="px-6 py-4 font-medium">Roles</th>
+                    <th className="px-6 py-4 font-medium">Contacto</th>
+                    <th className="px-6 py-4 font-medium">Tipo</th>
                     <th className="px-6 py-4 font-medium">Puntos</th>
                     <th className="px-6 py-4 font-medium">Registro</th>
-                    <th className="px-6 py-4" />
+                    <th className="px-6 py-4 text-right">Acciones</th>
                   </tr>
                 </thead>
                 <tbody>
                   {filtered.map((r) => (
-                    <tr key={r.id} className="border-b border-border/60 hover:bg-secondary/30">
+                    <tr key={r.id} className="border-b border-border/60 hover:bg-secondary/30 align-top">
                       <td className="px-6 py-4">
                         <p className="font-medium text-foreground">{r.full_name || "—"}</p>
                         <p className="text-xs text-muted-foreground">{r.email}</p>
-                      </td>
-                      <td className="px-6 py-4 font-mono text-xs text-muted-foreground">
-                        {r.nit_id ?? "—"}
+                        {r.nit_id && (
+                          <p className="mt-1 font-mono text-[11px] text-muted-foreground">NIT: {r.nit_id}</p>
+                        )}
                       </td>
                       <td className="px-6 py-4 text-xs text-muted-foreground">
-                        {r.parroquia_code ?? "—"}
+                        {r.phone && <p>{r.phone}</p>}
+                        {r.address && (
+                          <p className="mt-1 flex items-start gap-1">
+                            <MapPin className="mt-0.5 h-3 w-3 shrink-0" />{r.address}
+                          </p>
+                        )}
+                        {!r.phone && !r.address && "—"}
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex flex-wrap gap-1">
@@ -286,16 +291,24 @@ export default function AdminClientesPage() {
                       <td className="px-6 py-4 text-xs text-muted-foreground">
                         {r.created_at ? formatDate(r.created_at) : "—"}
                       </td>
-                      <td className="px-6 py-4 text-right">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => setSelected(r)}
-                          className="rounded-full"
-                        >
-                          <Plus className="h-3.5 w-3.5" />
-                          Cargar
-                        </Button>
+                      <td className="px-6 py-4">
+                        <div className="flex flex-wrap justify-end gap-1.5">
+                          <Button size="sm" variant="outline"
+                            onClick={() => { setAdjustMode("add"); setSelected(r); }}
+                            className="rounded-full">
+                            <Plus className="h-3.5 w-3.5" /> Sumar
+                          </Button>
+                          <Button size="sm" variant="outline"
+                            onClick={() => { setAdjustMode("subtract"); setSelected(r); }}
+                            className="rounded-full">
+                            <Minus className="h-3.5 w-3.5" /> Restar
+                          </Button>
+                          <Button size="sm" variant="ghost"
+                            onClick={() => handleDelete(r)}
+                            className="rounded-full text-terracotta hover:bg-terracotta/10">
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </Button>
+                        </div>
                       </td>
                     </tr>
                   ))}
