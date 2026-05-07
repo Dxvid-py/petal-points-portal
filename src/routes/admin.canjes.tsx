@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { Loader2, Gift, Trash2 } from "lucide-react";
+import { Loader2, Gift, Trash2, MessageCircle } from "lucide-react";
 import { PageHeader } from "@/components/dashboard/PageHeader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -139,7 +139,19 @@ export default function AdminCanjesPage() {
                 </div>
               </div>
 
-              <div className="mt-4 flex justify-end">
+              <div className="mt-4 flex flex-wrap justify-end gap-2">
+                {r.profiles?.phone && (
+                  <a
+                    href={`https://wa.me/${r.profiles.phone.replace(/\D/g, "")}?text=${encodeURIComponent(
+                      `Hola ${r.profiles?.full_name ?? ""}, te escribimos de Floristería Deluxe sobre tu canje "${r.reward_title}". Estado actual: ${statusLabels[r.status]}.`
+                    )}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-1.5 rounded-full bg-forest px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-forest/90"
+                  >
+                    <MessageCircle className="h-3.5 w-3.5" /> WhatsApp
+                  </a>
+                )}
                 <Button size="sm" variant="ghost" onClick={() => remove(r.id)}
                   className="rounded-full text-terracotta hover:bg-terracotta/10">
                   <Trash2 className="h-3.5 w-3.5" /> Eliminar

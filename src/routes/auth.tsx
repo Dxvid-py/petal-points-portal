@@ -373,7 +373,11 @@ export default function AuthPage() {
                     className="mt-0.5 border-gold/50 data-[state=checked]:bg-primary"
                   />
                   <label htmlFor="terms" className="text-xs leading-relaxed text-muted-foreground">
-                    Acepto el tratamiento de datos personales conforme al marco del Programa Puntos Deluxe.
+                    Acepto el{" "}
+                    <Link to="/legal" target="_blank" className="font-medium text-gold underline hover:text-primary">
+                      tratamiento de datos personales
+                    </Link>{" "}
+                    conforme al marco del Programa Puntos Deluxe (Ley 1581 de 2012).
                   </label>
                 </div>
 

@@ -21,6 +21,7 @@ import AdminAdelantos from "./routes/admin.adelantos";
 import AdminRoles from "./routes/admin.roles";
 import AdminCanjes from "./routes/admin.canjes";
 import DashboardCanjes from "./routes/dashboard.canjes";
+import LegalPage from "./routes/legal";
 
 function NotFound() {
   return (
@@ -50,6 +51,7 @@ export default function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/auth" element={<AuthPage />} />
         <Route path="/staff-login" element={<StaffLoginPage />} />
+        <Route path="/legal" element={<LegalPage />} />
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={<DashboardHome />} />
           <Route path="perfil" element={<ProfilePage />} />

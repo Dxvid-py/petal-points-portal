@@ -26,6 +26,7 @@ export function SiteFooter() {
             <li><a href="#redime" className="hover:text-foreground">Catálogo de Redención</a></li>
             <li><Link to="/dashboard" className="hover:text-foreground">Mi Cuenta</Link></li>
             <li><Link to="/auth?mode=signup" className="hover:text-foreground">Regístrate</Link></li>
+            <li><Link to="/legal" className="hover:text-foreground">Tratamiento de datos</Link></li>
           </ul>
         </div>
         <div>
