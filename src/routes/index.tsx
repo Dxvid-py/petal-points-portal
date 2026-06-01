@@ -8,6 +8,8 @@ import {
   ArrowRight,
   Sparkles,
   Play,
+  ShoppingBag,
+  ExternalLink,
 } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
