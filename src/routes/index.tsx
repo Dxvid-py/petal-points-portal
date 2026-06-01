@@ -391,6 +391,59 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* TIENDA OFICIAL */}
+      <section className="relative overflow-hidden py-24">
+        <div className="pointer-events-none absolute inset-0">
+          <div className="absolute -left-20 top-1/3 h-72 w-72 rounded-full bg-primary/15 blur-3xl" />
+          <div className="absolute -right-20 bottom-0 h-72 w-72 rounded-full bg-gold/15 blur-3xl" />
+        </div>
+        <div className="relative mx-auto max-w-6xl px-6 lg:px-10">
+          <motion.a
+            href="https://floristeriadeluxe.com"
+            target="_blank"
+            rel="noreferrer"
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+            whileHover={{ scale: 1.015 }}
+            className="group relative grid items-center gap-10 overflow-hidden rounded-[2.5rem] border border-primary/25 bg-gradient-hero p-10 md:grid-cols-[1.2fr_1fr] md:p-14"
+          >
+            <div className="pointer-events-none absolute -top-10 -right-10 h-48 w-48 rounded-full bg-gold/20 blur-3xl transition-all duration-700 group-hover:scale-150" />
+            <div className="relative">
+              <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-white/70 px-4 py-1.5 text-[10px] font-medium uppercase tracking-[0.28em] text-primary backdrop-blur">
+                <ShoppingBag className="h-3 w-3" />
+                Tienda Oficial
+              </span>
+              <h2 className="mt-6 font-serif text-4xl font-semibold leading-tight text-foreground md:text-5xl">
+                Compra en <em className="text-shimmer-gold">floristeriadeluxe.com</em> y suma puntos.
+              </h2>
+              <p className="mt-5 max-w-lg text-base text-muted-foreground md:text-lg">
+                Cada pedido en nuestra tienda online se traduce en puntos Deluxe que podrás canjear aquí por flores, servicios y experiencias premium.
+              </p>
+              <div className="mt-8 inline-flex items-center gap-2 rounded-full bg-foreground px-7 py-3 text-sm font-medium text-background shadow-glow transition-all group-hover:bg-primary group-hover:text-primary-foreground">
+                Ir a la tienda
+                <ExternalLink className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </div>
+            </div>
+            <motion.div
+              className="relative mx-auto aspect-square w-full max-w-sm"
+              animate={{ y: [0, -12, 0] }}
+              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <div className="absolute inset-0 rounded-full bg-gradient-gold opacity-40 blur-2xl" />
+              <div className="relative flex h-full w-full items-center justify-center rounded-full border-2 border-primary/30 bg-white/80 p-10 shadow-pink backdrop-blur">
+                <div className="text-center">
+                  <p className="text-[10px] uppercase tracking-[0.3em] text-primary">Floristería</p>
+                  <p className="mt-2 font-serif text-5xl font-bold leading-none text-shimmer-gold">Deluxe</p>
+                  <p className="mt-4 text-xs text-muted-foreground">floristeriadeluxe.com</p>
+                </div>
+              </div>
+            </motion.div>
+          </motion.a>
+        </div>
+      </section>
+
       {/* CTA FINAL */}
       <section id="galeria" className="px-6 pb-24 lg:px-10">
         <div className="relative mx-auto max-w-7xl overflow-hidden rounded-3xl border border-primary/20 bg-gradient-hero p-12 text-center md:p-20">
