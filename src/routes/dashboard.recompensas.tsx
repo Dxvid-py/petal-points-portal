@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { Filter, Lock, ArrowUpRight, Check, Loader2, Gift } from "lucide-react";
+import { Filter, Lock, ArrowUpRight, Check, Loader2, Gift, ShoppingBag, ExternalLink } from "lucide-react";
 import { PageHeader } from "@/components/dashboard/PageHeader";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
