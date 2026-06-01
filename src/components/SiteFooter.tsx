@@ -57,10 +57,26 @@ export function SiteFooter() {
           </ul>
         </div>
       </div>
-      <div className="border-t border-border/60 px-6 py-5 text-center">
-        <p className="text-xs text-muted-foreground">
-          © {new Date().getFullYear()} Puntos Floristería Deluxe · Todos los derechos reservados
-        </p>
+      <div className="border-t border-border/60 px-6 py-5">
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 text-center md:flex-row md:text-left">
+          <p className="text-xs text-muted-foreground">
+            © {new Date().getFullYear()} Puntos Floristería Deluxe · Todos los derechos reservados
+          </p>
+          <a
+            href="https://tuuweb.com"
+            target="_blank"
+            rel="noreferrer"
+            className="group inline-flex items-center gap-2 text-xs text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <span>Desarrollado por</span>
+            <img
+              src="https://www.tuuweb.com/assets/logo-CcpPtAvR.png"
+              alt="Tuuweb"
+              className="h-5 w-auto opacity-80 transition-opacity group-hover:opacity-100"
+              loading="lazy"
+            />
+          </a>
+        </div>
       </div>
     </footer>
   );
