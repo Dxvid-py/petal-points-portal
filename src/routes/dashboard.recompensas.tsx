@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { Filter, Lock, ArrowUpRight, Check, Loader2, Gift } from "lucide-react";
+import { Filter, Lock, ArrowUpRight, Check, Loader2, Gift, ShoppingBag, ExternalLink } from "lucide-react";
 import { PageHeader } from "@/components/dashboard/PageHeader";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -82,6 +82,30 @@ export default function RewardsPage() {
         }
         description={`Tienes ${formatPoints(userPoints)} puntos disponibles.`}
       />
+
+      <a
+        href="https://floristeriadeluxe.com"
+        target="_blank"
+        rel="noreferrer"
+        className="group relative flex items-center justify-between gap-4 overflow-hidden rounded-3xl border border-primary/30 bg-gradient-to-r from-primary/15 via-gold/10 to-primary/15 p-5 shadow-soft transition-all hover:-translate-y-0.5 hover:shadow-pink md:p-6"
+      >
+        <div className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-gold/30 blur-2xl transition-all duration-500 group-hover:scale-150" />
+        <div className="relative flex items-center gap-4">
+          <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-foreground text-background">
+            <ShoppingBag className="h-5 w-5" />
+          </span>
+          <div>
+            <p className="text-[10px] uppercase tracking-[0.24em] text-primary">¿Necesitas más puntos?</p>
+            <p className="mt-0.5 font-serif text-lg font-semibold text-foreground">
+              Compra en <em className="text-shimmer-gold">floristeriadeluxe.com</em>
+            </p>
+          </div>
+        </div>
+        <span className="relative hidden items-center gap-2 rounded-full bg-foreground px-5 py-2 text-xs font-medium text-background transition-colors group-hover:bg-primary group-hover:text-primary-foreground md:inline-flex">
+          Ir a la tienda
+          <ExternalLink className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+        </span>
+      </a>
 
       <section className="flex flex-col gap-4 rounded-3xl border border-border bg-card p-5 shadow-soft md:flex-row md:items-center md:justify-between md:p-6">
         <div className="flex items-center gap-5">
