@@ -432,11 +432,52 @@ export default function LandingPage() {
               transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
             >
               <div className="absolute inset-0 rounded-full bg-gradient-gold opacity-40 blur-2xl" />
-              <div className="relative flex h-full w-full items-center justify-center rounded-full border-2 border-primary/30 bg-white/80 p-10 shadow-pink backdrop-blur">
-                <div className="text-center">
-                  <p className="text-[10px] uppercase tracking-[0.3em] text-primary">Floristería</p>
-                  <p className="mt-2 font-serif text-5xl font-bold leading-none text-shimmer-gold">Deluxe</p>
-                  <p className="mt-4 text-xs text-muted-foreground">floristeriadeluxe.com</p>
+              {/* Marco floral */}
+              <svg
+                viewBox="0 0 200 200"
+                className="absolute inset-0 h-full w-full text-primary"
+                aria-hidden="true"
+              >
+                <defs>
+                  <radialGradient id="tiendaPetal" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stopColor="currentColor" stopOpacity="0.95" />
+                    <stop offset="100%" stopColor="currentColor" stopOpacity="0.5" />
+                  </radialGradient>
+                </defs>
+                {Array.from({ length: 12 }).map((_, i) => (
+                  <ellipse
+                    key={`p-${i}`}
+                    cx="100"
+                    cy="14"
+                    rx="9"
+                    ry="16"
+                    fill="url(#tiendaPetal)"
+                    transform={`rotate(${i * 30} 100 100)`}
+                  />
+                ))}
+                {Array.from({ length: 12 }).map((_, i) => (
+                  <ellipse
+                    key={`l-${i}`}
+                    cx="100"
+                    cy="22"
+                    rx="4"
+                    ry="8"
+                    className="text-forest"
+                    fill="currentColor"
+                    opacity="0.6"
+                    transform={`rotate(${i * 30 + 15} 100 100)`}
+                  />
+                ))}
+              </svg>
+              {/* Logo cuadrado con marco floral */}
+              <div className="relative flex h-full w-full items-center justify-center p-12">
+                <div className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-2xl border-2 border-primary/40 bg-white shadow-pink">
+                  <img
+                    src="https://i.ibb.co/yc50fWW4/Captura-de-pantalla-2026-04-24-001156.png"
+                    alt="Floristería Deluxe"
+                    className="h-full w-full object-cover"
+                    loading="lazy"
+                  />
                 </div>
               </div>
             </motion.div>
