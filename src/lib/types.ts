@@ -70,6 +70,26 @@ export interface SiteContentRow {
   updated_at: string;
 }
 
+export interface HeroSlide {
+  id: string;
+  eyebrow: string | null;
+  title: string;
+  subtitle: string | null;
+  cta_label: string | null;
+  cta_url: string | null;
+  image_url: string | null;
+  position: number;
+  active: boolean;
+}
+
+export interface Faq {
+  id: string;
+  question: string;
+  answer: string;
+  position: number;
+  active: boolean;
+}
+
 /** Claves conocidas en site_content para evitar typos */
 export const SITE_KEYS = {
   heroTitle: "hero_title",
@@ -77,4 +97,8 @@ export const SITE_KEYS = {
   heroCta: "hero_cta",
   heroVideoUrl: "hero_video_url",
   heroPosterUrl: "hero_poster_url",
+  atelierName: "atelier_name",
+  contactEmail: "contact_email",
+  contactPhone: "contact_phone",
+  whatsappNumber: "whatsapp_number",
 } as const;
