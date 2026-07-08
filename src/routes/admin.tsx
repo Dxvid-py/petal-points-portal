@@ -11,6 +11,7 @@ import {
   Wallet,
   ShieldCheck,
   Package,
+  UserCheck,
 } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { Avatar } from "@/components/dashboard/Avatar";
@@ -21,6 +22,7 @@ const adminNav = [
   { to: "/admin", label: "Resumen", icon: LayoutDashboard, exact: true },
   { to: "/admin/clientes", label: "Clientes", icon: Users },
   { to: "/admin/canjes", label: "Canjes", icon: Package },
+  { to: "/admin/redimir", label: "Redimir presencial", icon: UserCheck },
   { to: "/admin/recompensas", label: "Recompensas", icon: Gift },
   { to: "/admin/contenido", label: "Contenido home", icon: Megaphone },
   { to: "/admin/galeria", label: "Galería", icon: ImageIcon },
@@ -28,6 +30,7 @@ const adminNav = [
   { to: "/admin/roles", label: "Roles", icon: ShieldCheck },
   { to: "/admin/adelantos", label: "Adelantos", icon: Wallet },
 ];
+
 
 export default function AdminLayout() {
   const location = useLocation();
