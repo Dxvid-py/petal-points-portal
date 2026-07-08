@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { Filter, Lock, ArrowUpRight, Check, Loader2, Gift, ShoppingBag, ExternalLink } from "lucide-react";
+import { Filter, Lock, ArrowUpRight, Loader2, Gift, ShoppingBag, ExternalLink } from "lucide-react";
 import { PageHeader } from "@/components/dashboard/PageHeader";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -8,6 +8,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/lib/supabase";
 import type { Reward } from "@/lib/types";
 import { formatPoints } from "@/lib/format";
+import { notifyRedemptionViaWhatsApp } from "@/lib/whatsapp";
+
 
 export default function RewardsPage() {
   const { profile, user, refreshProfile } = useAuth();
@@ -63,10 +65,18 @@ export default function RewardsPage() {
     });
     setRedeemingId(null);
     toast.success("¡Recompensa canjeada!", {
-      description: `Sigue el estado en "Mis canjes".`,
+      description: `Sigue el estado en "Mis canjes". Te abriremos WhatsApp para avisarle al atelier.`,
+    });
+    // Notificar al atelier vía WhatsApp (link wa.me)
+    await notifyRedemptionViaWhatsApp({
+      clientName: profile?.full_name || profile?.email || "Cliente",
+      clientPhone: profile?.phone,
+      rewardTitle: r.title,
+      points: r.points_cost,
     });
     refreshProfile();
   };
+
 
   return (
     <div className="flex flex-col gap-10">
