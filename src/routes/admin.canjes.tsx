@@ -8,6 +8,8 @@ import { Label } from "@/components/ui/label";
 import { supabase } from "@/lib/supabase";
 import { formatDateTime, formatPoints } from "@/lib/format";
 import { toast } from "sonner";
+import { MdyDatePicker } from "@/components/MdyDatePicker";
+
 
 type Status = "pendiente" | "en_proceso" | "listo" | "entregado" | "cancelado";
 
@@ -125,11 +127,13 @@ export default function AdminCanjesPage() {
                   </select>
                 </div>
                 <div>
-                  <Label className="text-xs">Entrega estimada</Label>
-                  <Input type="date" value={r.estimated_delivery ?? ""}
-                    onChange={(e) => updateRow(r.id, { estimated_delivery: e.target.value || null })}
-                    className="mt-1.5" />
+                  <MdyDatePicker
+                    label="Entrega estimada (Mes / Día / Año)"
+                    value={r.estimated_delivery}
+                    onChange={(val) => updateRow(r.id, { estimated_delivery: val })}
+                  />
                 </div>
+
                 <div>
                   <Label className="text-xs">Nota</Label>
                   <Input value={r.notes ?? ""}

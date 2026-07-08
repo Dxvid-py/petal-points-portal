@@ -20,8 +20,12 @@ import AdminTransacciones from "./routes/admin.transacciones";
 import AdminAdelantos from "./routes/admin.adelantos";
 import AdminRoles from "./routes/admin.roles";
 import AdminCanjes from "./routes/admin.canjes";
+import AdminRedimir from "./routes/admin.redimir";
 import DashboardCanjes from "./routes/dashboard.canjes";
 import LegalPage from "./routes/legal";
+import CatalogoPage from "./routes/catalogo";
+import MomentosPage from "./routes/momentos";
+
 
 function NotFound() {
   return (
@@ -52,9 +56,12 @@ export default function App() {
         <Route path="/auth" element={<AuthPage />} />
         <Route path="/staff-login" element={<StaffLoginPage />} />
         <Route path="/legal" element={<LegalPage />} />
+        <Route path="/catalogo" element={<CatalogoPage />} />
+        <Route path="/momentos" element={<MomentosPage />} />
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={<DashboardHome />} />
           <Route path="perfil" element={<ProfilePage />} />
+
           <Route path="recompensas" element={<RewardsPage />} />
           <Route path="compras" element={<PurchasesPage />} />
           <Route path="canjes" element={<DashboardCanjes />} />
@@ -64,7 +71,9 @@ export default function App() {
           <Route index element={<AdminHome />} />
           <Route path="clientes" element={<AdminClientes />} />
           <Route path="canjes" element={<AdminCanjes />} />
+          <Route path="redimir" element={<AdminRedimir />} />
           <Route path="recompensas" element={<AdminRecompensas />} />
+
           <Route path="contenido" element={<AdminContenido />} />
           <Route path="galeria" element={<AdminGaleria />} />
           <Route path="transacciones" element={<AdminTransacciones />} />
